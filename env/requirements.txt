@@ -1,0 +1,17 @@
+certifi==2018.4.16
+chardet==3.0.4
+decorator==4.3.0
+future==0.16.0
+idna==2.7
+isodate==0.6.0
+KafNafParserPy==1.88
+lxml==4.2.2
+networkx==2.1
+pynaf==2.0.2
+pyparsing==2.2.0
+PyYAML==3.12
+rdflib==4.2.2
+requests==2.19.1
+six==1.11.0
+SPARQLWrapper==1.8.2
+urllib3==1.23

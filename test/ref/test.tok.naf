@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NAF xml:lang="nl" version="v3">
+  <nafHeader>
+    <fileDesc creationtime="2014-11-04T00:00:00Z" title="Allerzielen" />
+    <linguisticProcessors layer="text">
+      <lp name="ixa-pipe-tok-nl" beginTimestamp="2018-07-05T22:18:08+0200" endTimestamp="2018-07-05T22:18:08+0200" version="1.8.0-56f83ce4b61680346f15e5d4e6de6293764f7383" hostname="kyoto.vu.nl" />
+    </linguisticProcessors>
+  </nafHeader>
+  <raw><![CDATA[Allerzielen
+Allerzielen is een hoogtijdag uit de rooms-katholieke traditie.]]></raw>
+  <text>
+    <wf id="w1" sent="1" para="1" offset="0" length="11">Allerzielen</wf>
+    <wf id="w2" sent="1" para="1" offset="12" length="11">Allerzielen</wf>
+    <wf id="w3" sent="1" para="1" offset="24" length="2">is</wf>
+    <wf id="w4" sent="1" para="1" offset="27" length="3">een</wf>
+    <wf id="w5" sent="1" para="1" offset="31" length="10">hoogtijdag</wf>
+    <wf id="w6" sent="1" para="1" offset="42" length="3">uit</wf>
+    <wf id="w7" sent="1" para="1" offset="46" length="2">de</wf>
+    <wf id="w8" sent="1" para="1" offset="49" length="16">rooms-katholieke</wf>
+    <wf id="w9" sent="1" para="1" offset="66" length="8">traditie</wf>
+    <wf id="w10" sent="1" para="1" offset="74" length="1">.</wf>
+  </text>
+</NAF>

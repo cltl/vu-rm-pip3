@@ -1,0 +1,280 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NAF version="v3" xml:lang="nl">
+  <nafHeader>
+    <fileDesc creationtime="2014-11-04T00:00:00Z" title="Allerzielen"/>
+    <linguisticProcessors layer="text">
+      <lp beginTimestamp="2018-07-05T22:18:08+0200" endTimestamp="2018-07-05T22:18:08+0200" hostname="kyoto.vu.nl" name="ixa-pipe-tok-nl" version="1.8.0-56f83ce4b61680346f15e5d4e6de6293764f7383"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp beginTimestamp="2018-07-05T22:18:12CEST" endTimestamp="2018-07-05T22:18:12CEST" hostname="kyoto" name="Morphosyntactic parser based on Alpino" timestamp="2018-07-05T22:18:12CEST" version="0.2_22sept2015"/>
+      <lp beginTimestamp="2018-07-05T22:18:21CEST" endTimestamp="2018-07-05T22:18:21CEST" hostname="kyoto" name="VUA-DSC-WSD" timestamp="2018-07-05T22:18:21CEST" version="1.2#20jan2015"/>
+      <lp beginTimestamp="2018-07-05T22:18:26+0200" endTimestamp="2018-07-05T22:18:26+0200" hostname="kyoto.vu.nl" name="vua-predicate-matrix-tagger" timestamp="2018-07-05T22:18:26+0200" version="1.0"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="deps">
+      <lp beginTimestamp="2018-07-05T22:18:12CEST" endTimestamp="2018-07-05T22:18:12CEST" hostname="kyoto" name="Morphosyntactic parser based on Alpino" timestamp="2018-07-05T22:18:12CEST" version="0.2_22sept2015"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="constituents">
+      <lp beginTimestamp="2018-07-05T22:18:12CEST" endTimestamp="2018-07-05T22:18:12CEST" hostname="kyoto" name="Morphosyntactic parser based on Alpino" timestamp="2018-07-05T22:18:12CEST" version="0.2_22sept2015"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="entities">
+      <lp beginTimestamp="2018-07-05T22:18:13+0200" endTimestamp="2018-07-05T22:18:19+0200" hostname="kyoto.vu.nl" name="ixa-pipe-nerc-nl-6-class-clusters-sonar" version="1.6.1-1cdc3c3924b49b3d86fc2243b40becb7818120fb"/>
+      <lp beginTimestamp="2018-07-05T22:18:21+0200" endTimestamp="2018-07-05T22:18:22+0200" hostname="kyoto.vu.nl" name="ixa-pipe-ned-nl" version="1.1.6-062a983087b0cb27203ed626d95be8fbd89f4fa9"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="timeExpressions">
+      <lp beginTimestamp="2018-07-05T22:18:22+0200" endTimestamp="2018-07-05T22:18:24+0200" hostname="kyoto.vu.nl" name="ixa-pipe-heideltime-nl" version="1.0.1-2229a0042ea00ae96d7aadf51fcc7df0572cfdff"/>
+    </linguisticProcessors>
+    <linguisticProcessors layer="srl">
+      <lp name="SoNaR-News-trained-SRL" version="1.1" timestamp="2018-07-05T22:18:26CEST" beginTimestamp="2018-07-05T22:18:26CEST" endTimestamp="2018-07-05T22:18:26CEST" hostname="kyoto"/>
+    </linguisticProcessors>
+  </nafHeader>
+  <raw>Allerzielen
+Allerzielen is een hoogtijdag uit de rooms-katholieke traditie.</raw>
+  <text>
+    <wf id="w1" length="11" offset="0" para="1" sent="1">Allerzielen</wf>
+    <wf id="w2" length="11" offset="12" para="1" sent="1">Allerzielen</wf>
+    <wf id="w3" length="2" offset="24" para="1" sent="1">is</wf>
+    <wf id="w4" length="3" offset="27" para="1" sent="1">een</wf>
+    <wf id="w5" length="10" offset="31" para="1" sent="1">hoogtijdag</wf>
+    <wf id="w6" length="3" offset="42" para="1" sent="1">uit</wf>
+    <wf id="w7" length="2" offset="46" para="1" sent="1">de</wf>
+    <wf id="w8" length="16" offset="49" para="1" sent="1">rooms-katholieke</wf>
+    <wf id="w9" length="8" offset="66" para="1" sent="1">traditie</wf>
+    <wf id="w10" length="1" offset="74" para="1" sent="1">.</wf>
+  </text>
+  <terms>
+    <term id="t_0" lemma="Allerzielen" morphofeat="SPEC(deeleigen)" pos="name" type="open">
+      <span>
+        <!--Allerzielen-->
+        <target id="w1"/>
+      </span>
+    </term>
+    <term id="t_1" lemma="Allerzielen" morphofeat="SPEC(deeleigen)" pos="name" type="open">
+      <span>
+        <!--Allerzielen-->
+        <target id="w2"/>
+      </span>
+    </term>
+    <term id="t_2" lemma="zijn" morphofeat="WW(pv,tgw,ev)" pos="verb" type="open">
+      <span>
+        <!--is-->
+        <target id="w3"/>
+      </span>
+      <externalReferences>
+        <externalRef confidence="0.0178533" reference="eng-30-02702508-v" reftype="Synset" resource="ODWN"/>
+        <externalRef confidence="0.011663479" reference="eng-30-02603699-v" reftype="Synset" resource="ODWN"/>
+        <externalRef confidence="0.0066350386" reference="odwn-10-104942472-v" reftype="Synset" resource="ODWN"/>
+        <externalRef confidence="0.009366364" reference="eng-30-02719930-v" reftype="Synset" resource="ODWN"/>
+        <externalRef confidence="0.016078008" reference="eng-30-02655135-v" reftype="Synset" resource="ODWN"/>
+        <externalRef confidence="0.0071198577" reference="odwn-10-101477390-v" reftype="Synset" resource="ODWN"/>
+        <externalRef reference="grammatical" resource=""/>
+      </externalReferences>
+    </term>
+    <term id="t_3" lemma="een" morphofeat="LID(onbep,stan,agr)" pos="det" type="close">
+      <span>
+        <!--een-->
+        <target id="w4"/>
+      </span>
+    </term>
+    <term id="t_4" lemma="hoogtij_dag" morphofeat="N(soort,ev,basis,zijd,stan)" pos="noun" type="open">
+      <span>
+        <!--hoogtijdag-->
+        <target id="w5"/>
+      </span>
+    </term>
+    <term id="t_5" lemma="uit" morphofeat="VZ(init)" pos="prep" type="close">
+      <span>
+        <!--uit-->
+        <target id="w6"/>
+      </span>
+    </term>
+    <term id="t_6" lemma="de" morphofeat="LID(bep,stan,rest)" pos="det" type="close">
+      <span>
+        <!--de-->
+        <target id="w7"/>
+      </span>
+    </term>
+    <term id="t_7" lemma="rooms-katholiek" morphofeat="ADJ(prenom,basis,met-e,stan)" pos="adj" type="open">
+      <span>
+        <!--rooms-katholieke-->
+        <target id="w8"/>
+      </span>
+    </term>
+    <term id="t_8" lemma="traditie" morphofeat="N(soort,ev,basis,zijd,stan)" pos="noun" type="open">
+      <span>
+        <!--traditie-->
+        <target id="w9"/>
+      </span>
+      <externalReferences>
+        <externalRef reference="odwn-10-109703884-n" reftype="Synset" resource="ODWN"/>
+      </externalReferences>
+    </term>
+    <term id="t_9" lemma="." morphofeat="LET()" pos="punct" type="open">
+      <span>
+        <!--.-->
+        <target id="w10"/>
+      </span>
+    </term>
+  </terms>
+  <deps>
+    <!--hd/su(is,Allerzielen)-->
+    <dep from="t_2" rfunc="hd/su" to="t_0"/>
+    <!--mwp/mwp(Allerzielen,Allerzielen)-->
+    <dep from="t_0" rfunc="mwp/mwp" to="t_1"/>
+    <!--hd/predc(is,hoogtijdag)-->
+    <dep from="t_2" rfunc="hd/predc" to="t_4"/>
+    <!--hd/det(hoogtijdag,een)-->
+    <dep from="t_4" rfunc="hd/det" to="t_3"/>
+    <!--hd/mod(hoogtijdag,uit)-->
+    <dep from="t_4" rfunc="hd/mod" to="t_5"/>
+    <!--hd/obj1(uit,traditie)-->
+    <dep from="t_5" rfunc="hd/obj1" to="t_8"/>
+    <!--hd/det(traditie,de)-->
+    <dep from="t_8" rfunc="hd/det" to="t_6"/>
+    <!--hd/mod(traditie,rooms-katholieke)-->
+    <dep from="t_8" rfunc="hd/mod" to="t_7"/>
+    <!--- - / - -(is,.)-->
+    <dep from="t_2" rfunc="-- / --" to="t_9"/>
+  </deps>
+  <entities>
+    <entity id="e1" type="ORG">
+      <references>
+        <span>
+          <!--Allerzielen Allerzielen-->
+          <target id="t_0"/>
+          <target id="t_1"/>
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <constituency>
+    <tree>
+      <t id="ter0">
+        <!--Allerzielen-->
+        <span>
+          <target id="t_0"/>
+        </span>
+      </t>
+      <t id="ter1">
+        <!--Allerzielen-->
+        <span>
+          <target id="t_1"/>
+        </span>
+      </t>
+      <t id="ter2">
+        <!--is-->
+        <span>
+          <target id="t_2"/>
+        </span>
+      </t>
+      <t id="ter3">
+        <!--een-->
+        <span>
+          <target id="t_3"/>
+        </span>
+      </t>
+      <t id="ter4">
+        <!--hoogtijdag-->
+        <span>
+          <target id="t_4"/>
+        </span>
+      </t>
+      <t id="ter5">
+        <!--uit-->
+        <span>
+          <target id="t_5"/>
+        </span>
+      </t>
+      <t id="ter6">
+        <!--de-->
+        <span>
+          <target id="t_6"/>
+        </span>
+      </t>
+      <t id="ter7">
+        <!--rooms-katholieke-->
+        <span>
+          <target id="t_7"/>
+        </span>
+      </t>
+      <t id="ter8">
+        <!--traditie-->
+        <span>
+          <target id="t_8"/>
+        </span>
+      </t>
+      <t id="ter9">
+        <!--.-->
+        <span>
+          <target id="t_9"/>
+        </span>
+      </t>
+      <nt id="nter0" label="top"/>
+      <nt id="nter1" label="smain"/>
+      <nt id="nter2" label="mwu"/>
+      <nt id="nter3" label="name"/>
+      <nt id="nter4" label="name"/>
+      <nt id="nter5" label="verb"/>
+      <nt id="nter6" label="np"/>
+      <nt id="nter7" label="det"/>
+      <nt id="nter8" label="noun"/>
+      <nt id="nter9" label="pp"/>
+      <nt id="nter10" label="prep"/>
+      <nt id="nter11" label="np"/>
+      <nt id="nter12" label="det"/>
+      <nt id="nter13" label="adj"/>
+      <nt id="nter14" label="noun"/>
+      <nt id="nter15" label="punct"/>
+      <edge from="nter1" id="tre0" to="nter0"/>
+      <edge from="nter2" id="tre1" to="nter1"/>
+      <edge from="nter3" id="tre2" to="nter2"/>
+      <edge from="ter0" id="tre3" to="nter3"/>
+      <edge from="nter4" id="tre4" to="nter2"/>
+      <edge from="ter1" id="tre5" to="nter4"/>
+      <edge from="nter5" head="yes" id="tre6" to="nter1"/>
+      <edge from="ter2" id="tre7" to="nter5"/>
+      <edge from="nter6" id="tre8" to="nter1"/>
+      <edge from="nter7" id="tre9" to="nter6"/>
+      <edge from="ter3" id="tre10" to="nter7"/>
+      <edge from="nter8" head="yes" id="tre11" to="nter6"/>
+      <edge from="ter4" id="tre12" to="nter8"/>
+      <edge from="nter9" id="tre13" to="nter6"/>
+      <edge from="nter10" head="yes" id="tre14" to="nter9"/>
+      <edge from="ter5" id="tre15" to="nter10"/>
+      <edge from="nter11" id="tre16" to="nter9"/>
+      <edge from="nter12" id="tre17" to="nter11"/>
+      <edge from="ter6" id="tre18" to="nter12"/>
+      <edge from="nter13" id="tre19" to="nter11"/>
+      <edge from="ter7" id="tre20" to="nter13"/>
+      <edge from="nter14" head="yes" id="tre21" to="nter11"/>
+      <edge from="ter8" id="tre22" to="nter14"/>
+      <edge from="nter15" id="tre23" to="nter0"/>
+      <edge from="ter9" id="tre24" to="nter15"/>
+    </tree>
+  </constituency>
+  <timeExpressions>
+    <timex3 functionInDocument="CREATION_TIME" id="tx1" type="DATE" value="2014-11-04"/>
+  </timeExpressions>
+  <srl>
+    <predicate id="pr1">
+      <span>
+        <target id="t_2"/>
+      </span>
+      <role id="r1" semRole="#">
+        <span>
+          <target id="t_3"/>
+          <target id="t_4" head="yes"/>
+          <target id="t_5"/>
+          <target id="t_6"/>
+          <target id="t_7"/>
+          <target id="t_8"/>
+        </span>
+      </role>
+      <role id="r2" semRole="#">
+        <span>
+          <target id="t_0" head="yes"/>
+          <target id="t_1"/>
+        </span>
+      </role>
+    </predicate>
+  </srl>
+</NAF>
