@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
@@ -8,9 +8,9 @@ usage() {
   exit 1
 }
 
-if [ $# -ne 4 ]; then
-  usage
-fi
+#if [ $# -ne 1 ]; then
+#  usage
+#fi
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
 finish() {
@@ -19,10 +19,11 @@ finish() {
 trap finish EXIT
 
 #------------------------------------------------
+export workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 github_sfx=$1
 commit_nb=$2
-mvn_cmd=$3
-jar_sfx=$4  # the version number or the full name of the jar
+#mvn_cmd=$3
+#jar_sfx=$4  # the version number or the full name of the jar
 
 module=$(basename ${github_sfx})
 
@@ -32,14 +33,7 @@ cd $scratch
 git clone https://github.com/${github_sfx}.git
 cd $module
 git checkout $commit_nb
-mvn clean $mvn_cmd
-if [ -f "target/${module}-${jar_sfx}.jar" ]; then
-  mv target/$module-$jar_sfx.jar $jarsdir
-else 
-  mv target/$jar_sfx.jar $jarsdir
-fi
-# check
-if [ -f "${jarsdir}/${module}-${jar_sfx}.jar" ] || [ -f "${jarsdir}/${jar_sfx}.jar" ]; then
-  echo "successfully moved jar to ${jarsdir}"
-fi
+mvn clean package
+mv target/*.jar $javadir
+
 

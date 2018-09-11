@@ -22,29 +22,23 @@ module=$(basename ${github_sfx})
 
 # clone and package / install module ------------
 # set up module dir
-cd $modulesdir
+wdir=$resourcesdir/$module
+mkdir -p $wdir
+
+cd $scratch
 echo "cloning https://github.com/${github_sfx}.git"
 git clone https://github.com/${github_sfx}.git
 echo "checking out commit $commit_nb"
 cd $module
 git checkout $commit_nb
-
-echo "$scratch" 
-cd $scratch
+mvn clean package
+mv target/*.jar $javadir
+mv lib/alpino-to-treetagger.csv $wdir
 echo "getting Heideltime props..." 
 git clone https://github.com/HeidelTime/heideltime.git
-cp heideltime/conf/config.props $modulesdir/$module
+cp heideltime/conf/config.props $wdir
 
 echo "getting jvntextpro..."
 wget http://ixa2.si.ehu.es/~jibalari/jvntextpro-2.0.jar
-mv jvntextpro-2.0.jar $modulesdir/$module/lib/
+mv jvntextpro-2.0.jar $wdir
 
-echo "getting install-to-project-repo"
-git clone https://github.com/carchrae/install-to-project-repo.git
-cp install-to-project-repo/install-to-project-repo.py $modulesdir/$module
-
-cd $modulesdir/$module
-python --version
-python install-to-project-repo.py
-
-mvn clean install

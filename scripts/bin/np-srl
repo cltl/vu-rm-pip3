@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Module calls: np-srl 
+#----------------------------------------------------
+  
+workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
+modulesdir=$workdir/components/python
+python $modulesdir/vua-srl-dutch-nominal-events/vua-srl-dutch-additional-roles.py

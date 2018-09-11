@@ -24,7 +24,7 @@ The pipeline processes documents in [NAF](https://github.com/newsreader/NAF) for
 
 ----
 ## Installation
-The script *install.sh* will install the pipeline components, and most of their dependencies. 
+The script *install.sh* will install the pipeline components (in *./components*), and most of their dependencies. 
 
 Missing dependencies notably include [timbl](http://ilk.uvt.nl/timbl). Please refer to the home page of the relevant modules for additional information. 
 
@@ -48,21 +48,23 @@ pip install -r ./env/requirements.txt
 #### Python 3 compatibility
 Not all python components are python3-compatible yet. Call the script *./scripts/util/port-to-python3.sh* to back-up the relevant modules and convert them to python2/3-compatible code. The script uses 2to3, futurize and module-specific patches. 
 
-#### Scripts
-You can test the pipeline against a short reference document with the *test-components.sh* script. This will test each component against a reference NAF file.
+#### Python wrapper (Python 3 only)
+The pipeline can be run with the *./wrapper/pipeline.py* script (for python 3 only). You will first need to set ALPINO_HOME with:
 ```
-./scripts/test-components.sh [-v]
+source .newsreader
 ```
-The *v* flag creates a log file in the *./test/out/* folder.
 
-A second test script, *test-pipeline.sh*, runs a raw NAF input through each component in the pipeline and tests whether each component adds a processing layer to the NAF header. 
+The pipeline expects a raw input NAF file from stdin, for instance:
 ```
-./scripts/test-pipeline.sh [-v] [-i <naf.raw>]
+cat tests/data/example/test.raw | wrapper pipeline.py > test.out
 ```
-By default, the script runs the pipeline on a short example raw NAF (*./test/example/test.raw.naf*), but you can provide your own input with the *i* flag. The script outputs all intermediary annotations in the same folder as the input file.
+If provided with a directory name or a file name prefix, the pipeline script will print out the intermediary files produced by each component, for instance:
+```
+cat tests/data/example/test.raw | wrapper pipeline.py -d tests/data/out/ -f test > test.out
+```
 
-Finally, the run script *run-pipeline.sh* reads an input raw NAF from stdin, and outputs the result to stdout:
+#### Run script
+Alternatively to the python wrapper, the run script *run-pipeline.sh* reads an input raw NAF from stdin, and outputs the result to stdout:
 ```
 ./scripts/run-pipeline.sh < naf.raw > naf.out
 ```
-

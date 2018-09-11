@@ -21,7 +21,7 @@ module=$(basename ${github_sfx})
 
 
 # clone and package / install module ------------
-cd $modulesdir
+cd $pythondir
 git clone https://github.com/${github_sfx}.git
 cd $module
 git checkout $commit_nb

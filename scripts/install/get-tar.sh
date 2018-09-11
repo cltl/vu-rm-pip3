@@ -4,6 +4,7 @@ set -euo pipefail
 IFS=$'\n\t' 
 
 link=$1
+targetdir=$2
 module=$(basename $link)
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
@@ -15,5 +16,5 @@ trap finish EXIT
 cd $scratch
 wget $link
 
-cd $modulesdir
+cd $targetdir
 tar -xzvf ${scratch}/${module} 

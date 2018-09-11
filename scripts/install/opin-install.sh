@@ -41,5 +41,9 @@ wget http://kyoto.let.vu.nl/~izquierdo/public/polarity_models.tgz
 tar xvzf polarity_models.tgz
 rm polarity_models.tgz
 
+for lang in de en es fr it
+do
+  rm -rf models/models*${lang}*
+done
 echo All Done
 

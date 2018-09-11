@@ -27,9 +27,8 @@ shift "$(($OPTIND -1))"
 
 
 #---- Variables and setup ---------------------------------
-export jarsdir=$workdir/target
-export modulesdir=$workdir/modules
-export scriptdir=$workdir/scripts/util
+bin=$workdir/scripts/bin
+scriptdir=$workdir/scripts/util
 envvars=$workdir/.newsreader
 source $envvars
 
@@ -52,8 +51,8 @@ fi
 
 #---- Module definitions --------------------------------------
 
-source $scriptdir/modules.sh
+cd $bin
 
 #---- Main ------------------------------------------------
-cat $infile | tok | mor | nerc | wsd | ned | time | onto | srl | \
-  nomev | npsrl | fnet | fact | opin | corf
+cat $infile | ./tok | ./alpino | ./ixa-nerc | ./svm-wsd | ./time | ./pm-tag \
+  | ./srl | ./nom-ev | ./np-srl | ./fnet | ./coref | ./opin | ./fact 

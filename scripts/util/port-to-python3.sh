@@ -7,8 +7,8 @@
 set -e
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/modules
-modulesdir2=$workdir/modules-old
+modulesdir=$workdir/components/python
+modulesdir2=$workdir/components/python2-only
 mkdir $modulesdir2
 
 dy1=svm_wsd
