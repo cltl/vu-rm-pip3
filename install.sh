@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
-export modulesdir=$workdir/components
+export modulesdir=$workdir/modules
 export resourcesdir=$modulesdir/resources
 export javadir=$modulesdir/java
 export pythondir=$modulesdir/python
@@ -36,21 +36,6 @@ function install-wsd {
   echo "Installing the WSD module ..."
   $scriptdir/install-from-git.sh cltl/svm_wsd 0300439 install_naf.sh
   echo "Finished installing WSD ..."
-}
-
-function install-ned {
-  echo "Installing NED module and dbpedia resources ..."
-  wdir=$resourcesdir/spotlight
-  mkdir $wdir
-  cd $wdir
-  wget http://sourceforge.net/projects/dbpedia-spotlight/files/2016-04/nl/model/nl.tar.gz
-  tar -zxvf nl.tar.gz
-  wget http://ixa2.si.ehu.es/ixa-pipes/models/wikipedia-db.tar.gz
-  tar -xzvf wikipedia-db.tar.gz
-  rm *tar.gz
-  
-  $scriptdir/install-maven-module.sh ixa-ehu/ixa-pipe-ned
-  echo "Finished installing NED module."
 }
 
 function install-heideltime {
@@ -104,7 +89,6 @@ function install-evcoref {
 install-mor
 install-ixa-pipes
 install-wsd
-install-ned
 install-heideltime
 install-onto
 install-vua-resources

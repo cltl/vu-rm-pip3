@@ -1,0 +1,103 @@
+- name: ixa_tok
+  input: 
+  output: 
+  - Token
+  cmd: ixa-tok
+- name: alpino
+  input:
+  - Token
+  output: 
+  - Term
+  - Dep
+  - Const
+  cmd: alpino
+- name: ixa_nerc
+  input:
+  - Token
+  - Term
+  output: 
+  - Entity
+  cmd: ixa-nerc
+- name: ixa_time
+  input:
+  - Token
+  - Term
+  output: 
+  - TimeExp
+  cmd: time
+- name: svm_wsd
+  input:
+  - Token
+  - Term
+  output: 
+  - Term
+  cmd: svm-wsd
+- name: sonar_srl
+  input:
+  - Term
+  - Const
+  - Dep
+  output: 
+  - SRL
+  cmd: srl
+- name: pm_tagger
+  input:
+  - Term
+  output: 
+  - Term
+  cmd: pm-tag
+- name: nom_event
+  input:
+  - Token
+  - Term
+  output: 
+  - SRL
+  cmd: nom-ev
+- name: nom_pred
+  input:
+  - Term
+  - Dep
+  - SRL
+  output: 
+  - SRL
+  cmd: np-srl
+  after: 
+  - nom_event
+- name: f_net
+  input:
+  - Term
+  - SRL
+  output: 
+  - SRL
+  cmd: fnet
+  after: 
+  - pm_tagger
+  - sonar_srl
+- name: coref
+  input:
+  - SRL
+  output: 
+  - Coref
+  cmd: coref
+  after: 
+  - sonar_srl
+  - nom_pred
+- name: opin
+  input:
+  - Token
+  - Term
+  - Const
+  - Dep
+  - Entity
+  output: 
+  - Opin
+  cmd: opin
+- name: fact
+  input:
+  - Term
+  - Opin
+  - Coref
+  output: 
+  - Fact
+  cmd: fact
+

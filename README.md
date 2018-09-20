@@ -4,12 +4,11 @@
 The VU Reading Machine (RM) pipeline annotates Dutch documents for high-level semantic analysis. 
 The pipeline builds on two projects, [Newsreader](http://www.newsreader-project.eu) and [BiographyNet](http://www.biographynet.nl), and aims at providing a flexible backbone for Digital Humanities projects.
 
-The pipeline processes documents in [NAF](https://github.com/newsreader/NAF) format, passing them through a number of annotators. The pipeline currently uses fixed resources for each annotator, and runs them in a fixed order:
+The pipeline processes documents in [NAF](https://github.com/newsreader/NAF) format, passing them through a number of annotators. The pipeline currently uses fixed resources for each annotator:
 
   - tokenizing: [ixa-pipe-tok](https://github.com/ixa-ehu/ixa-pipe-tok)
   - POS tagging, lemmatization and parsing: [Alpino NAF wrapper](https://github.com/cltl/morphosyntactic_parser_nl)
   - named entity recognition: [ixa-pipe-nerc](https://github.com/ixa-ehu/ixa-pipe-nerc/blob/master/README.md)
-  - named entity disambiguation: [ixa-pipe-ned](https://github.com/ixa-ehu/ixa-pipe-ned)
   - word sense disambiguation: [svm-wsd](https://github.com/cltl/svm_wsd)
   - time/date standardisation: [ixa-heideltime](https://github.com/ixa-ehu/ixa-heideltime) 
   - semantic role labelling: [vua-srl-nl](https://github.com/newsreader/vua-srl-nl)
@@ -40,7 +39,7 @@ export PATH=${MAVEN_HOME}/bin:${JAVA_HOME}/bin:${PATH}
 ## Running the pipeline
 #### Python environment
 The file *./env/requirements.txt* lists the python packages needed to run the pipeline. 
-Within the python environment of your choice (the pipeline was tested with python 2.7 and python 3.5.2), do:
+Within the python environment of your choice (the pipeline was tested with python 3.5.2), do:
 ```
 pip install -r ./env/requirements.txt
 ```
@@ -48,23 +47,33 @@ pip install -r ./env/requirements.txt
 #### Python 3 compatibility
 Not all python components are python3-compatible yet. Call the script *./scripts/util/port-to-python3.sh* to back-up the relevant modules and convert them to python2/3-compatible code. The script uses 2to3, futurize and module-specific patches. 
 
-#### Python wrapper (Python 3 only)
-The pipeline can be run with the *./wrapper/pipeline.py* script (for python 3 only). You will first need to set ALPINO_HOME with:
+#### Python wrapper 
+The pipeline runs with the *./wrapper/pipeline.py* script (for python 3 only). 
+
+The pipeline expects a yaml configuration file specifying which modules constitute the pipeline; each module specification provides the following information:
+- input layers: lists input NAF layers required by the module;
+- output layers: lists the NAF layers produced or modified by the module;
+- name: name of the module
+- [after]: lists the names of modules that need to be run before the module;
+- cmd: name of the shell script for running the module 
+
+
+The pipeline wrapper assembles the modules into a valid pipeline based on input/output layers and on module precedence (specified through 'after'); module precedence is useful for modules that must run in order while operating on the same layer. An example configuration file for the whole pipeline is provided in *./tests/data/example/pipeline.yml*.
+
+The pipeline assembled by the wrapper runs on 'stdin' input. The tokenization module script provided here currently expects a raw text input, but it can be modified to read a raw NAF input. Execution scripts for the modules are located in *./scripts/bin/*. To run the pipeline from outside the repository's directory, the path to these scripts can be specified with the option *-d*.
+
+The wrapper reads the 'stderr' stream produced by each module. Upon an error message, the wrapper rebuilds and runs a pipeline with the remaining modules. The wrapper produces the following files (in the directory from which it is called):
+
+- *pipeline.out*: the NAF file produced by the pipeline;
+- *cfg_out.yml*: the output configuration file copies the input configuration file and adds the execution 'status' of each module (this can be 'completed', 'failed' or 'not_run');
+- *pipeline.log*: the log file provides the 'stderr' stream produced by each module, and prints out an execution summary with the scheduled pipeline, the executed pipeline and the failing or remaining modules.
+
+
+The output configuration file and output NAF can be given again as input to the wrapper; this is useful if some module failed and can be fixed. The wrapper then builds a pipeline based on module status: previously 'failed' or 'not_run' modules are scheduled for execution, while the 'completed' modules are checked for validation (the layers in the NAF input are read from the 'completed' modules rather than from the NAF file itself). 
+
+#### Usage
+The wrapper produces output files in the directory from which it is called, e.g. 'workdir'. Assuming this directory contains an input configuration file 'cfg.yml' and an input file 'text.txt':
 ```
-source .newsreader
+cat text.txt | python <path-to-repo>/wrapper/pipeline.py -c cfg.yml -d <path-to-repo>/scripts/bin/ 
 ```
 
-The pipeline expects a raw input NAF file from stdin, for instance:
-```
-cat tests/data/example/test.raw | wrapper pipeline.py > test.out
-```
-If provided with a directory name or a file name prefix, the pipeline script will print out the intermediary files produced by each component, for instance:
-```
-cat tests/data/example/test.raw | wrapper pipeline.py -d tests/data/out/ -f test > test.out
-```
-
-#### Run script
-Alternatively to the python wrapper, the run script *run-pipeline.sh* reads an input raw NAF from stdin, and outputs the result to stdout:
-```
-./scripts/run-pipeline.sh < naf.raw > naf.out
-```

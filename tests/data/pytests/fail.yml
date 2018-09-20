@@ -1,0 +1,27 @@
+- name: ixa_tok
+  input: 
+  output: 
+  - Token
+  cmd: ixa-tok
+- name: alpino
+  input:
+  - Token
+  output: 
+  - Term
+  - Dep
+  - Const
+  cmd: alpino
+- name: svm_wsd
+  input:
+  - Token
+  - Term
+  output: 
+  - Term
+  cmd: svm-wsd_fail-test
+- name: ixa_nerc
+  input:
+  - Token
+  - Term
+  output: 
+  - Entity
+  cmd: ixa-nerc

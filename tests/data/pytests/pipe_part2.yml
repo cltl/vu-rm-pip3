@@ -1,0 +1,25 @@
+- cmd: ixa-tok
+  input: null
+  name: ixa_tok
+  output: [Token]
+  status: completed
+- cmd: alpino
+  input: [Token]
+  name: alpino
+  output: [Term, Dep, Const]
+  status: completed
+- cmd: ixa-nerc
+  input: [Token, Term]
+  name: ixa_nerc
+  output: [Entity]
+  status: completed
+- cmd: time
+  input: [Token, Term]
+  name: ixa_time
+  output: [TimeExp]
+  status: not_run
+- cmd: opin
+  input: [Token, Term, Const, Dep, Entity]
+  name: opin
+  output: [Opin]
+  status: failed

@@ -1,0 +1,5 @@
+**/__pycache__
+**/.cache
+**/.pytest_cache
+/components
+/tests/data/ref
