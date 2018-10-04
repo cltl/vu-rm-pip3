@@ -1,60 +1,33 @@
-import sys
-import argparse
+from wrapper import dag
+#import wrapper.dag.Graph
 import yaml 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-import itertools 
-import random
-import logging
 from subprocess import SubprocessError, Popen, PIPE
-
+import tempfile
+import logging
 logger = logging.getLogger(__name__)
-#logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
-logging.basicConfig(format='%(message)s',
-                filename='pipeline.log',
-                filemode='w',
-                level=logging.INFO)
+#logging.basicConfig(format='%(message)s',
+#                filename='pipeline.log',
+#                filemode='w',
+#                level=logging.INFO)
 
-"""
-finds a valid execution order for the pipeline
-"""    
-def pipe(modules, selector, completed=[]):
-    in_pipeline = []
-    available_outputs = []
-    if completed:
-        available_outputs = list(itertools.chain.from_iterable(m['output'] for m in completed))
-    else:
-        available_outputs = list(itertools.chain.from_iterable(m['output'] for m in modules if 'status' in m and m['status'] == 'completed'))
-        modules = [m for m in modules if 'status' not in m or m['status'] != 'completed']
-    
-    candidates = []
-    max_rank = len(modules)
-    def valid_input(mod, avail, pipe):
-        in_ok = not mod['input'] or all(i in avail for i in mod['input'])
-        after_ok = 'after' not in mod or all(any(n == m['name'] for m in pipe) for n in mod['after'])
-        return in_ok and after_ok        
 
-    for rank in range(max_rank):
-        if modules:
-            new_candidates = list(filter(lambda m: valid_input(m, available_outputs, in_pipeline), modules))
-            for c in new_candidates:
-                modules.remove(c)
-            candidates.extend(new_candidates)
-                
-        if candidates:
-            selected = selector(candidates)
-            candidates.remove(selected)
-            in_pipeline.append(selected)
-            available_outputs.extend(selected['output'])
-    return in_pipeline
+def build_pipeline(modules):
+    graph = dag.Graph()
+    graph.add_vertex('root', createRoot())
+    for m in modules:
+        graph.add_vertex(m.id, m)
 
-def repr_module(m):
-    after = None
-    if 'after' in m:
-        after = m['after']
-    return '{} -- in: {}; out: {}; after: {}'.format(m['name'], m['input'], m['output'], after) 
+    for m in modules:
+        if not m.ins:
+            graph.add_edge('root', m.id)
+        for m2 in modules:
+            if m.id != m2.id and m2.follows(m):
+                graph.add_edge(m.id, m2.id)
+    return graph
 
 def find_error(stderr_iterator):
     found_error = False
@@ -67,109 +40,209 @@ def find_error(stderr_iterator):
             logger.info(line)
     return found_error
 
+"""
+filters remaining modules (in executable order) that can be executed 
+after a list of completed modules
+"""
+def reschedule(completed, remaining): 
+    visited = [m.node.id for m in completed]
+    to_run = []
+    for m in remaining:
+        if all(x.node.id in visited for x in m.parents):
+            visited.append(m.node.id)
+            to_run.append(m)
+    return to_run    
 
-def run(scheduled, input_file, output_file, bindir):
+"""
+runs a pipeline from an ordered list of module vertices 
+"""
+def run(scheduled, input_file, bindir):
     modules = [m for m in scheduled]
     completed = []
     failed = []
     not_run = [m for m in modules]
-    with open(output_file, 'w') as fi:
-        fi.write(input_file.read())
+
+    infile = tempfile.TemporaryFile()
+    infile.write(bytes(input_file.read(), 'UTF-8'))
+
     while modules:
         m, *modules = modules
-        logger.info('-- Running ' + m['name'])
+        logger.info('-- Running ' + m.node.id)
         not_run.remove(m)
-        fi = open(output_file, 'r') 
-        p = Popen([bindir + m['cmd']], stdin=fi, stdout=PIPE, stderr=PIPE)
-        if find_error(iter(p.stderr.readline, b'')):
+
+        out = tempfile.TemporaryFile()
+        infile.seek(0) 
+        p = Popen([bindir + m.node.cmd], stdin=infile, stdout=out, stderr=PIPE)
+        module_failure = find_error(iter(p.stderr.readline, b''))
+        if module_failure:
             failed.append(m)
-            logger.error("module " + m['name'] + " returned an error")
+            logger.error("module " + m.node.id + " returned an error")
             logger.info('\n-- Rebuilding pipeline with remaining modules...')
-            modules = pipe(modules, lambda x: x[0], completed)
-            logger.info('pipeline can continue running with these modules: {}'.format([m['name'] for m in modules]))
+            #print('run {}'.format([m.node.id for m in modules]))
+            rescheduled = reschedule(completed, modules)
+            logger.info('pipeline can continue running with these modules: {}'.format([m.node.id for m in modules]))
         else:
             completed.append(m)
-            fi.close()
-            out, err = p.communicate()
-            with open(output_file, 'w') as fo:
-                fo.write(out.decode())
+            infile.close()   
+            infile =  out
+    infile.seek(0) 
+    print(infile.read().decode(), end="")
+    infile.close()
+    return update_status(scheduled, completed, failed, not_run)
     
-    update_status(scheduled, completed, failed, not_run)
-    with open(output_file, 'r') as f: 
-        out = f.read()
-    return out
-
 def update_status(scheduled, completed, failed, not_run):
+    status = {}
     for m in completed:
-        m['status'] = 'completed'
+        status[m.node.id] = 'completed'
     for m in not_run:
-        m['status'] = 'not_run'
+        status[m.node.id] = 'not_run'
     for m in failed:
-        m['status'] = 'failed'
+        status[m.node.id] = 'failed'
     logger.info('\n-- Finished running pipeline')
-    logger.info('- scheduled: {}'.format([m['name'] for m in scheduled]))
-    logger.info('- completed: {}'.format([m['name'] for m in completed]))
-    logger.info('- failed: {}'.format([m['name'] for m in failed]))
-    logger.info('- not run: {}'.format([m['name'] for m in not_run]))
+    logger.info('- scheduled: {}'.format([m.node.id for m in scheduled]))
+    logger.info('- completed: {}'.format([m.node.id for m in completed]))
+    logger.info('- failed: {}'.format([m.node.id for m in failed]))
+    logger.info('- not run: {}'.format([m.node.id for m in not_run]))
+    return status
 
-class Pipeline():
-    def __init__(self, yml_cfg, bindir='./scripts/bin/'):
+def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/'):
+    with open(yml_cfg, 'r') as f:
+        modules = yaml.load(f)
+    return Pipeline(modules, in_layers, goal_layers, goal_modules, bindir)
+
+def createRoot():
+    return Module({'name': 'root', 'output': 'raw', 'cmd': 'none'})
+
+"""
+Defines a module with input and output layers, and a name pointing to a shell script for running that module
+"""
+class Module:
+    def __init__(self, mdict):
+        if 'input' in mdict and mdict['input']:
+            self._ins = mdict['input']
+        else:
+            self._ins = []
+        self._out = mdict['output']
+        self._cmd = mdict['cmd']
+        self._id = mdict['name']
+        if 'after' in mdict:
+            self._after = mdict['after']
+        else:
+            self._after = []
+    
+    def __str__(self):
+        return self._id
+
+    @property
+    def ins(self):
+        return self._ins
+
+    @ins.setter
+    def ins(self, val):
+        self._ins = val
+
+    @property
+    def out(self):
+        return self._out
+
+    @out.setter
+    def out(self, val):
+        self._out = val
+
+    @property
+    def after(self):
+        return self._after
+
+    @after.setter
+    def after(self, val):
+        self._after = val
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, val):
+        self._id = val
+
+    @property
+    def cmd(self):
+        return self._cmd
+
+    @cmd.setter
+    def cmd(self, val):
+        self._cmd = val
+
+    """
+    parent is either required by 'after' or it *produces* an input layer to this module;
+    a module either produces a layer (if it is *not in its input*) or modifies it.
+    """
+    def follows(self, parent):
+        return parent.id in self._after or any(x in self._ins and x not in parent.ins for x in parent.out)
+
+
+class Pipeline:
+    def __init__(self, module_dicts, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/'):
         self.bindir = bindir
-        with open(yml_cfg, 'r') as f:    
-            self.modules = yaml.load(f)
-        self.build_pipeline()
+        modules = [Module(m) for m in module_dicts]
+        self.graph = build_pipeline(modules)
+        if goal_layers:
+            self.filter_layers(goal_layers)
+        if goal_modules:
+            try:
+                self.filter_goals(goal_modules)
+            except KeyError:
+                logger.error('Error while filtering modules; verify that they are within your goal layers')
+                raise KeyError
+        if in_layers:
+            self.filter_input_layers(in_layers, goal_modules)
 
-    @property
-    def bindir(self):
-        return self._bindir
+    def nb_modules(self):
+        return len(self.graph.items()) - 1
+
+    def topological_sort(self):
+        stack = self.graph.topological_sort()
+        stack.pop(0) # pops root
+        return stack
+
+    def filter_goals(self, goals):
+        path = set()
+        for g in goals:
+            path.update(self.graph.on_path_to(g)) 
+        to_filter = [k for k in self.graph.get_keys() if k not in path]
+        for k in to_filter:
+            self.graph.remove_key(k)
+        for v in self.graph.get_vertices():
+            v.children = [c for c in v.children if c.node.id not in to_filter] 
+
+    def filter_layers(self, layers):
+        goals = set(self.graph.find_keys(lambda v: any(x in v.node.out for x in layers))) 
+        self.filter_goals(goals) 
  
-    @property
-    def modules(self):
-        return self._modules
- 
-    @modules.setter
-    def modules(self, val):
-        self._modules = val
+    def filter_input_layers(self, layers, goal_modules):
+        # filter modules producing 'layers'
+        to_filter = set(self.graph.find_keys(lambda v: any(x in v.node.out for x in layers))) 
+        # ... excepted modules in 'with_modules'
+        for m in goal_modules:
+            to_filter.remove(m)
+        # ... and their dependencies
+            for d in self.graph.on_path_from(m):
+                if d in to_filter:
+                    to_filter.remove(d)
 
-    @bindir.setter
-    def bindir(self, val):
-        self._bindir = val
+        # remove input layers and reconnect their direct children to root
+        for k in to_filter:
+            self.graph.remove_key(k)
+        # remove edges from filtered parents 
+        for v in self.graph.get_vertices():    
+            v.parents = [p for p in v.parents if p.node.id not in to_filter]
+        self.graph.get_vertex('root').children = [] 
+        for k in self.graph.get_keys():
+            if k != 'root' and not self.graph.get_vertex(k).parents:
+                self.graph.add_edge('root', k)
 
-    def build_pipeline(self):
-        self.modules = pipe(self._modules, lambda xs: xs[0]) 
 
-    def build_random_pipeline(self):
-        self.modules = pipe(self._modules, lambda xs: random.choice(xs)) 
+    def execute(self, infile):
+        summary = run(self.topological_sort(), infile, self.bindir)
+        return summary
 
-    def run(self, infile, outfile):
-        out = run(self._modules, infile, outfile, self._bindir)
-        with open('cfg_out.yml', 'w') as f:
-            f.write(yaml.dump(self._modules))
-
-        return out
-
-    def completed(self):
-        return [m for m in self._modules if m['status'] == 'completed']
-
-    def failed(self):
-        return [m for m in self._modules if m['status'] == 'failed']
-
-    def not_run(self):
-        return [m for m in self._modules if 'status' not in m or  m['status'] == 'not_run']
- 
-
-if __name__ == "__main__":
-    import sys
-    import io
-
-    parser = argparse.ArgumentParser(description='Newsreader pipeline')
-    parser.add_argument('-c', '--cfg_file', dest='cfg_file', type=str, help='config file')
-    parser.add_argument('-d', '--bin_dir', dest='bin_dir', default='./scripts/bin/', type=str, help='module scripts directory')
-    args = parser.parse_args()
-    cfg_file = args.cfg_file
-    bin_dir = args.bin_dir
-    output_file = 'pipeline.out'
-
-    pipeline = Pipeline(cfg_file, bin_dir)
-    input_file = sys.stdin
-    out = pipeline.run(input_file, output_file)

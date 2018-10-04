@@ -21,24 +21,28 @@ module=$(basename ${github_sfx})
 
 
 # clone and package / install module ------------
-# set up module dir
-wdir=$resourcesdir/$module
-mkdir -p $wdir
 
 cd $scratch
 echo "cloning https://github.com/${github_sfx}.git"
 git clone https://github.com/${github_sfx}.git
-echo "checking out commit $commit_nb"
 cd $module
 git checkout $commit_nb
-mvn clean package
+
+echo "install to project repo"
+wget http://ixa2.si.ehu.es/~jibalari/jvntextpro-2.0.jar
+mv jvntextpro-2.0.jar lib
+git clone https://github.com/carchrae/install-to-project-repo
+cp install-to-project-repo/install-to-project-repo.py .
+python install-to-project-repo.py
+
+echo "building ixa-heideltime..."
+mvn -U clean install
 mv target/*.jar $javadir
+
+echo "copying resources..." 
+wdir=$resourcesdir/$module
+mkdir -p $wdir
+mv lib/jvntextpro-2.0.jar $wdir
 mv lib/alpino-to-treetagger.csv $wdir
-echo "getting Heideltime props..." 
 git clone https://github.com/HeidelTime/heideltime.git
 cp heideltime/conf/config.props $wdir
-
-echo "getting jvntextpro..."
-wget http://ixa2.si.ehu.es/~jibalari/jvntextpro-2.0.jar
-mv jvntextpro-2.0.jar $wdir
-

@@ -1,103 +1,103 @@
 - name: ixa_tok
   input: 
   output: 
-  - Token
+  - text
   cmd: ixa-tok
 - name: alpino
   input:
-  - Token
+  - text
   output: 
-  - Term
-  - Dep
-  - Const
+  - terms
+  - deps
+  - constituents
   cmd: alpino
 - name: ixa_nerc
   input:
-  - Token
-  - Term
+  - text
+  - terms
   output: 
-  - Entity
+  - entities
   cmd: ixa-nerc
 - name: ixa_time
   input:
-  - Token
-  - Term
+  - text
+  - terms
   output: 
-  - TimeExp
+  - timeExpressions
   cmd: time
 - name: svm_wsd
   input:
-  - Token
-  - Term
+  - text
+  - terms
   output: 
-  - Term
+  - terms
   cmd: svm-wsd
 - name: sonar_srl
   input:
-  - Term
-  - Const
-  - Dep
+  - terms
+  - constituents
+  - deps
   output: 
-  - SRL
+  - srl
   cmd: srl
 - name: pm_tagger
   input:
-  - Term
+  - terms
   output: 
-  - Term
+  - terms
   cmd: pm-tag
 - name: nom_event
   input:
-  - Token
-  - Term
+  - text
+  - terms
   output: 
-  - SRL
+  - srl
   cmd: nom-ev
 - name: nom_pred
   input:
-  - Term
-  - Dep
-  - SRL
+  - terms
+  - deps
+  - srl
   output: 
-  - SRL
+  - srl
   cmd: np-srl
   after: 
   - nom_event
 - name: f_net
   input:
-  - Term
-  - SRL
+  - terms
+  - srl
   output: 
-  - SRL
+  - srl
   cmd: fnet
   after: 
   - pm_tagger
   - sonar_srl
 - name: coref
   input:
-  - SRL
+  - srl
   output: 
-  - Coref
+  - coreferences
   cmd: coref
   after: 
   - sonar_srl
   - nom_pred
 - name: opin
   input:
-  - Token
-  - Term
-  - Const
-  - Dep
-  - Entity
+  - text
+  - terms
+  - constituents
+  - deps
+  - entities
   output: 
-  - Opin
+  - opinions
   cmd: opin
 - name: fact
   input:
-  - Term
-  - Opin
-  - Coref
+  - terms
+  - opinions
+  - coreferences
   output: 
-  - Fact
+  - factualities
   cmd: fact
 

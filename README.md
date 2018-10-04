@@ -58,22 +58,23 @@ The pipeline expects a yaml configuration file specifying which modules constitu
 - cmd: name of the shell script for running the module 
 
 
-The pipeline wrapper assembles the modules into a valid pipeline based on input/output layers and on module precedence (specified through 'after'); module precedence is useful for modules that must run in order while operating on the same layer. An example configuration file for the whole pipeline is provided in *./tests/data/example/pipeline.yml*.
+The pipeline wrapper assembles the modules into a valid pipeline based on input/output layers and on module precedence (specified through 'after'); module precedence is useful for modules that must run in order while operating on the same layer. An example configuration file for the whole pipeline is provided in *./example/pipeline.yml*. You can specify a path to another config file with the *-c* option.
 
-The pipeline assembled by the wrapper runs on 'stdin' input. The tokenization module script provided here currently expects a raw text input, but it can be modified to read a raw NAF input. Execution scripts for the modules are located in *./scripts/bin/*. To run the pipeline from outside the repository's directory, the path to these scripts can be specified with the option *-d*.
+The pipeline assembled by the wrapper runs on 'stdin' input. The tokenization module script provided here currently expects a raw text input, but it can be modified to read a raw NAF input. Execution scripts for the modules are located in *./scripts/bin/*. This path can be modified to another location with the option *-d*. Output NAF files are written to 'stdout'.
 
-The wrapper reads the 'stderr' stream produced by each module. Upon an error message, the wrapper rebuilds and runs a pipeline with the remaining modules. The wrapper produces the following files (in the directory from which it is called):
+The wrapper reads the 'stderr' stream produced by each module. Upon an error message, the wrapper rebuilds and runs a pipeline with the remaining modules. A log file records the 'stderr' stream of each module and an execution summary indicating: the scheduled modules (in order); which modules were completed; which failed; which could not run because of failing dependencies. The log file is written to *pipeline.log*, in the directory from which the script is called. Another file path can be provided through option *-l*.
 
-- *pipeline.out*: the NAF file produced by the pipeline;
-- *cfg_out.yml*: the output configuration file copies the input configuration file and adds the execution 'status' of each module (this can be 'completed', 'failed' or 'not_run');
-- *pipeline.log*: the log file provides the 'stderr' stream produced by each module, and prints out an execution summary with the scheduled pipeline, the executed pipeline and the failing or remaining modules.
+The wrapper takes a number of options that allow to control pipeline flow:
+- o -- goal_layers: the pipeline will only run the modules needed to produce the specified layers
+- m -- goal_modules: the pipeline will only run the modules needed to produce the specified modules
+- i -- input_layers: these layers are assumed present in the NAF input file; accordingly, modules that produce these layers are removed from the pipeline; 
 
+Specification of goal modules and input layers can be combined: this is handy if one needs to run only part of the modules that can operate on a layer. Suppose for instance that the 'terms' layer was created, but that some modules modifying it fail and need to be rerun; one can specify 'terms' as input layer, and, e.g., 'vua_wsd,pm_tagger' as goal modules. To proceed further than the 'terms' layer afterwards, one will nee to specify 'terms' as input layer again, without goal modules. 
 
-The output configuration file and output NAF can be given again as input to the wrapper; this is useful if some module failed and can be fixed. The wrapper then builds a pipeline based on module status: previously 'failed' or 'not_run' modules are scheduled for execution, while the 'completed' modules are checked for validation (the layers in the NAF input are read from the 'completed' modules rather than from the NAF file itself). 
-
-#### Usage
-The wrapper produces output files in the directory from which it is called, e.g. 'workdir'. Assuming this directory contains an input configuration file 'cfg.yml' and an input file 'text.txt':
+#### Bash script
+The *./run-pipeline.sh* allows to run the pipeline with the same options as the python wrapper. 
+Running the following command will load a base configuration file, run the full pipeline on *input.txt*, and write a log file *pipeline.log* to your working directory.
 ```
-cat text.txt | python <path-to-repo>/wrapper/pipeline.py -c cfg.yml -d <path-to-repo>/scripts/bin/ 
+cat input.txt | <path-to-repo>/run-pipeline.sh > output.naf
 ```
 

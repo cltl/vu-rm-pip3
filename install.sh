@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
-export modulesdir=$workdir/modules
+export modulesdir=$workdir/components
 export resourcesdir=$modulesdir/resources
 export javadir=$modulesdir/java
 export pythondir=$modulesdir/python

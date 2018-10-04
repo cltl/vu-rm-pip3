@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NAF xml:lang="nl" version="v1.naf">
+  <nafHeader>
+    <linguisticProcessors layer="text">
+      <lp name="ixa-pipe-tok-nl" beginTimestamp="2018-09-26T11:06:32+0200" endTimestamp="2018-09-26T11:06:33+0200" version="1.8.5-22046489b892163a5d42a388d09019c481f2ca58" hostname="kyoto.vu.nl" />
+    </linguisticProcessors>
+    <linguisticProcessors layer="terms">
+      <lp name="Morphosyntactic parser based on Alpino" timestamp="2018-09-26T11:06:36CEST" beginTimestamp="2018-09-26T11:06:36CEST" endTimestamp="2018-09-26T11:06:36CEST" version="0.3_2017-03-18" hostname="kyoto" />
+    </linguisticProcessors>
+    <linguisticProcessors layer="constituents">
+      <lp name="Morphosyntactic parser based on Alpino" timestamp="2018-09-26T11:06:36CEST" beginTimestamp="2018-09-26T11:06:36CEST" endTimestamp="2018-09-26T11:06:36CEST" version="0.3_2017-03-18" hostname="kyoto" />
+    </linguisticProcessors>
+    <linguisticProcessors layer="deps">
+      <lp name="Morphosyntactic parser based on Alpino" timestamp="2018-09-26T11:06:36CEST" beginTimestamp="2018-09-26T11:06:36CEST" endTimestamp="2018-09-26T11:06:36CEST" version="0.3_2017-03-18" hostname="kyoto" />
+    </linguisticProcessors>
+    <linguisticProcessors layer="entities">
+      <lp name="ixa-pipe-nerc-nl-6-class-clusters-sonar" beginTimestamp="2018-09-26T11:06:38+0200" endTimestamp="2018-09-26T11:06:46+0200" version="1.6.1-1cdc3c3924b49b3d86fc2243b40becb7818120fb" hostname="kyoto.vu.nl" />
+    </linguisticProcessors>
+  </nafHeader>
+  <text>
+    <wf id="w1" offset="0" length="11" sent="1" para="1">Allerzielen</wf>
+  </text>
+  <terms>
+    <!--Allerzielen-->
+    <term id="t_0" type="open" lemma="Aller_ziel" pos="noun" morphofeat="N(soort,mv,basis)">
+      <span>
+        <target id="w1" />
+      </span>
+    </term>
+  </terms>
+  <entities>
+    <entity id="e1" type="MISC">
+      <references>
+        <!--Allerzielen-->
+        <span>
+          <target id="t_0" />
+        </span>
+      </references>
+    </entity>
+  </entities>
+  <constituency>
+    <tree>
+      <!--Non-terminals-->
+      <nt id="nter0" label="top" />
+      <nt id="nter1" label="noun" />
+      <!--Terminals-->
+      <!--Allerzielen-->
+      <t id="ter0">
+        <span>
+          <target id="t_0" />
+        </span>
+      </t>
+      <!--Tree edges-->
+      <edge id="tre0" from="nter1" to="nter0" />
+      <edge id="tre1" from="ter0" to="nter1" />
+    </tree>
+  </constituency>
+</NAF>
