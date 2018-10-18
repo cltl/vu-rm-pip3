@@ -1,94 +1,94 @@
-- name: ixa_tok
+- name: ixa-pipe-tok
   input: 
   output: 
   - text
-  cmd: ixa-tok
-- name: alpino
+  cmd: ixa-pipe-tok.sh
+- name: vua-alpino
   input:
   - text
   output: 
   - terms
   - deps
   - constituents
-  cmd: alpino
-- name: ixa_nerc
+  cmd: vua-alpino.sh
+- name: ixa-pipe-nerc
   input:
   - text
   - terms
   output: 
   - entities
-  cmd: ixa-nerc
-- name: ixa_time
+  cmd: ixa-pipe-nerc.sh
+- name: vua-heideltime
   input:
   - text
   - terms
   output: 
   - timeExpressions
-  cmd: time
-- name: vua_wsd
+  cmd: vua-heideltime.sh
+- name: vua-wsd
   input:
   - text
   - terms
   output: 
   - terms
-  cmd: svm-wsd
-- name: vua_srl
+  cmd: vua-wsd.sh
+- name: vua-srl
   input:
   - terms
   - constituents
   - deps
   output: 
   - srl
-  cmd: srl
-- name: pm_tagger
+  cmd: vua-srl.sh
+- name: vua-ontotagging
   input:
   - terms
   output: 
   - terms
-  cmd: pm-tag
+  cmd: vua-ontotagging.sh
   after: 
-  - vua_wsd
-- name: nom_event
+  - vua-wsd
+- name: vua-nominal-event-detection
   input:
   - text
   - terms
   output: 
   - srl
-  cmd: nom-ev
+  cmd: vua-nominal-event-detection.sh
   after: 
-  - vua_wsd
-  - pm_tagger
-- name: nom_pred
+  - vua-wsd
+  - vua-ontotagging
+- name: vua-srl-dutch-nominal-events
   input:
   - terms
   - deps
   - srl
   output: 
   - srl
-  cmd: np-srl
+  cmd: vua-srl-dutch-nominal-events.sh
   after: 
-  - nom_event
-- name: f_net
+  - vua-nominal-event-detection
+- name: vua-framenet-classifier
   input:
   - terms
   - srl
   output: 
   - srl
-  cmd: fnet
+  cmd: vua-framenet-classifier.sh
   after: 
-  - pm_tagger
-  - vua_wsd
-  - vua_srl
-- name: coref
+  - vua-ontotagging
+  - vua-wsd
+  - vua-srl
+- name: vua-eventcoreference
   input:
   - srl
   output: 
   - coreferences
-  cmd: coref
+  cmd: vua-eventcoreference
   after: 
-  - vua_srl
-  - nom_pred
-- name: opin
+  - vua-srl
+  - vua-srl-dutch-nominal-events
+- name: opinion-miner
   input:
   - text
   - terms
@@ -97,12 +97,12 @@
   - entities
   output: 
   - opinions
-  cmd: opin
-- name: fact
+  cmd: opinion-miner.sh
+- name: multilingual-factuality
   input:
   - terms
   - opinions
   - coreferences
   output: 
   - factualities
-  cmd: fact
+  cmd: multilingual-factuality.sh

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: fnet 
+# component: vua-framenet-classifier
 #----------------------------------------------------
 
   

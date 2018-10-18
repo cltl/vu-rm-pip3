@@ -1,11 +1,9 @@
 #!/bin/bash
 #
-# Module calls: opin
+# component: multilingual-factuality
 #----------------------------------------------------
 
-
+  
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 modulesdir=$workdir/components/python
-cd $modulesdir/opinion_miner_deluxePP
-python tag_file.py -polarity -d hotel
-cd $workdir
+python $modulesdir/multilingual_factuality/feature_extractor/rule_based_factuality.py

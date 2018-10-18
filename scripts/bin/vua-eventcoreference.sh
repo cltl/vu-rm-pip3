@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: coref
+# component: vua-eventcoreference
 #----------------------------------------------------
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)

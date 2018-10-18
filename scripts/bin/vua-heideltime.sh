@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: time
+# component: vua-heideltime
 #----------------------------------------------------
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)

@@ -9,6 +9,7 @@ export resourcesdir=$modulesdir/resources
 export javadir=$modulesdir/java
 export pythondir=$modulesdir/python
 export scriptdir=$workdir/scripts/install
+export utildir=$workdir/scripts/util
 export envvars=${workdir}/.newsreader
 for dir in $pythondir $resourcesdir $javadir
 do
@@ -35,7 +36,8 @@ function install-ixa-pipes {
 function install-wsd {
   echo "Installing the WSD module ..."
   $scriptdir/install-from-git.sh cltl/svm_wsd 0300439 install_naf.sh
-  echo "Finished installing WSD ..."
+  echo "Finished installing WSD, porting code to python 3"
+  $utildir/wsd_to-python3.sh -m $modulesdir
 }
 
 function install-heideltime {
@@ -59,7 +61,8 @@ function install-vua-resources {
 function install-srl {
   echo "Installing SRL (Sonar)..."
   $scriptdir/get-from-git.sh newsreader/vua-srl-nl 675d22d $pythondir
-  echo "Finished installing srl module."
+  echo "Finished installing srl module, porting code to python 3"
+  $utildir/srl_to-python3.sh -m $modulesdir
 }
 
 function install-dutch-nominal-events {
@@ -77,7 +80,8 @@ function install-multi-factuality {
 function install-opinmin {
   echo "Installing opinion miner..."
   $scriptdir/install-from-git.sh rubenIzquierdo/opinion_miner_deluxePP 40a714c $scriptdir/opin-install.sh
-  echo "Finished installing opinion miner."
+  echo "Finished installing opinion miner, porting code to python 3"
+  $utildir/opin_to-python3.sh -m $modulesdir
 }
 
 function install-evcoref {
@@ -86,16 +90,16 @@ function install-evcoref {
   echo "Finished installing event coreference module."
 }
 
-install-mor
-install-ixa-pipes
-install-wsd
-install-heideltime
-install-onto
-install-vua-resources
-install-srl
-install-dutch-nominal-events
-install-multi-factuality
+#install-mor
+#install-ixa-pipes
+#install-wsd
+#install-heideltime
+#install-onto
+#install-vua-resources
+#install-srl
+#install-dutch-nominal-events
+#install-multi-factuality
 install-opinmin
-install-evcoref
+#install-evcoref
 
 echo "Finished."

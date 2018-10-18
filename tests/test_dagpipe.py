@@ -82,4 +82,9 @@ def test_cycle():
     with pytest.raises(ValueError) as e:
         p.topological_sort()
        
-       
+def test_rescheduling():       
+    p = pipeline.Pipeline(modules)
+    schedule = p.topological_sort()
+    assert schedule[1].node.id == 'alpino'
+    rescheduled = pipeline.reschedule([schedule[0]], schedule[2:])
+    assert len(rescheduled) == 0

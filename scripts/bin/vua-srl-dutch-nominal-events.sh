@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: np-srl 
+# component: vua-srl-dutch-nominal-events
 #----------------------------------------------------
   
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)

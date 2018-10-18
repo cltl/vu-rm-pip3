@@ -1,9 +1,11 @@
 #!/bin/bash
 #
-# Module calls: svm-wsd
+# component: opinion-miner
 #----------------------------------------------------
+
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 modulesdir=$workdir/components/python
-python $modulesdir/svm_wsd/dsc_wsd_tagger.py --naf -ref odwnSY
->&2 echo "fake error"
+cd $modulesdir/opinion_miner_deluxePP
+python tag_file.py -polarity -d news
+cd $workdir

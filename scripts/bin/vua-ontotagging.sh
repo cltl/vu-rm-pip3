@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: pm-tag
+# component: vua-ontotagging
 #----------------------------------------------------
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)

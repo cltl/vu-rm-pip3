@@ -3,8 +3,6 @@
 # modified version of the install_me.sh script of the opinion-miner module
 # adds password for the models 
 
-#Install the KafNafParserPy
-git clone https://github.com/cltl/KafNafParserPy
 
 #Install CRF++
 cd crf_lib
@@ -29,21 +27,21 @@ rm svm_light.tar.gz
 cd ..
 
 
-
 ##Download the models
 echo Downloading the trained models
-wget --user=cltl --password='.cltl.' kyoto.let.vu.nl/~izquierdo/models_opinion_miner_deluxePP.tgz
-tar xvzf models_opinion_miner_deluxePP.tgz
-rm models_opinion_miner_deluxePP.tgz
-
+mkdir models
+cd models
+wget http://kyoto.let.vu.nl/~izquierdo/public/models_opinion_miner_deluxePP/hotel/models_hotel_nl.tgz
+wget http://kyoto.let.vu.nl/~izquierdo/public/models_opinion_miner_deluxePP/news/models_news_nl.tgz
+wget http://kyoto.let.vu.nl/~izquierdo/public/models_opinion_miner_deluxePP/model_nl_hotel_news.tgz
+tar xvzf models_hotel_nl.tgz
+tar xvzf models_news_nl.tgz
+tar xvzf model_nl_hotel_news.tgz
+mv model_nl_hotel_news models_hotelnews_nl
+cd ..
 
 wget http://kyoto.let.vu.nl/~izquierdo/public/polarity_models.tgz
 tar xvzf polarity_models.tgz
 rm polarity_models.tgz
 
-for lang in de en es fr it
-do
-  rm -rf models/models*${lang}*
-done
-echo All Done
-
+echo "All done"

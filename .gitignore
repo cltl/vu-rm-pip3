@@ -2,4 +2,4 @@
 **/.cache
 **/.pytest_cache
 /components
-/tests/data/ref
+*.pyc

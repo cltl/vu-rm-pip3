@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: nom-ev 
+# component: vua-nominal-event-detection
 #----------------------------------------------------
   
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)

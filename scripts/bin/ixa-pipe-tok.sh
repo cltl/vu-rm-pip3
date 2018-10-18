@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: tok
+# component: ixa-pipe-tok
 #----------------------------------------------------
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 

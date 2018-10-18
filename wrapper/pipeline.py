@@ -78,8 +78,7 @@ def run(scheduled, input_file, bindir):
             failed.append(m)
             logger.error("module " + m.node.id + " returned an error")
             logger.info('\n-- Rebuilding pipeline with remaining modules...')
-            #print('run {}'.format([m.node.id for m in modules]))
-            rescheduled = reschedule(completed, modules)
+            modules = reschedule(completed, modules)
             logger.info('pipeline can continue running with these modules: {}'.format([m.node.id for m in modules]))
         else:
             completed.append(m)
@@ -224,11 +223,8 @@ class Pipeline:
         to_filter = set(self.graph.find_keys(lambda v: any(x in v.node.out for x in layers))) 
         # ... excepted modules in 'with_modules'
         for m in goal_modules:
-            to_filter.remove(m)
-        # ... and their dependencies
-            for d in self.graph.on_path_from(m):
-                if d in to_filter:
-                    to_filter.remove(d)
+            if m in to_filter:
+                to_filter.remove(m)
 
         # remove input layers and reconnect their direct children to root
         for k in to_filter:

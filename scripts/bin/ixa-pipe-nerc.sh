@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: nerc
+# component: ixa-pipe-nerc
 #----------------------------------------------------
 
  

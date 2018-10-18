@@ -10,13 +10,6 @@
   - terms
   - deps
   - constituents
-  cmd: vua-alpino.sh
-- name: vua-wsd
-  input:
-  - text
-  - terms
-  output: 
-  - terms
   cmd: fake-error.sh
 - name: ixa-pipe-nerc
   input:

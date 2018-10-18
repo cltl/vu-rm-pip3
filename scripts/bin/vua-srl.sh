@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Module calls: srl 
+# component: vua-srl
 #----------------------------------------------------
 
 set -e
