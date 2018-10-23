@@ -49,7 +49,7 @@ The pipeline normally expects a raw input file, and at least one component opera
 
 #### Combined filtering
 On can combine input filtering with either goal-component or goal-layer filtering.
- One can however not combine goal-layer with goal-component filtering, for instance to select all components outputting some layer and only part of the components outputting another layer; one needs to provide all goal components and use goal-component filtering in that case (see the [usage](docs/usage.md) page for examples).
+ One can however not combine goal-layer with goal-component filtering, for instance to select all components outputting some layer and only part of the components outputting another layer; one needs to provide all goal components and use goal-component filtering in that case (see the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page for examples).
 
 
 ## Topological sorting and pipeline execution
@@ -65,4 +65,4 @@ Errors are detected by searching for keywords in the `stderr` stream of each com
 This process is repeated as often as a component fails and an alternative component schedule can be produced.
 
 ## Further reading
-Input and output files are described on the [interface](docs/interface.md); the [usage](docs/usage.md) lists arguments to the pipeline and provides advanced usage examples.
+Input and output files are described on the [interface](https://github.com/cltl/vu-rm-pip3/blob/master/docs/interface.md); the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) lists arguments to the pipeline and provides advanced usage examples.

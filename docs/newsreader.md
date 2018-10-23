@@ -54,6 +54,6 @@ multilingual-factuality | terms, coreferences, opinions    |     | factualities
 
 These dependencies result in the following execution graph:
 
-![Pipeline graph](docs/pipe-graph.png?raw=true)
+![Pipeline graph](https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png?raw=true)
 
-The pipeline [wrapper](docs/operation.md) instantiates this graph as a directed acyclic graph, allowing for its filtering, execution and rescheduling.
+The pipeline [wrapper](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md) instantiates this graph as a directed acyclic graph, allowing for its filtering, execution and rescheduling.

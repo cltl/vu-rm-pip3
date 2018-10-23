@@ -4,7 +4,7 @@ Executing the pipeline requires two types of input files:
 - a yaml configuration file, declaring the pipeline components and their dependencies; 
 - individual shell scripts, for the execution of each pipeline component. 
 
-The configuration file defines a maximal pipeline with all available components; components can be filtered out by specifying input layers, goal layers or goal modules, as explained in the [operation](docs/operation.md) and [usage](docs/usage.md) pages. 
+The configuration file defines a maximal pipeline with all available components; components can be filtered out by specifying input layers, goal layers or goal modules, as explained in the [operation](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md) and [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) pages. 
 
 The pipeline writes the result NAF file to `stdout`. Besides, the `stderr` stream of each component and an execution summary are logged, as described [below](#logging).
 
@@ -46,5 +46,5 @@ A log file is used to record the following information:
 
 
 ## Next
-Alternative paths to the input/output files can be provided to the pipeline as described on the [usage](docs/usage.md) page.
+Alternative paths to the input/output files can be provided to the pipeline as described on the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page.
 
