@@ -7,6 +7,7 @@ usage() {
   exit 1
 }
 
+clean=0
 while getopts ":c" opt; do
   case "$opt" in
     c)
@@ -26,7 +27,7 @@ export scriptdir=$workdir/scripts/install
 export utildir=$workdir/scripts/util
 export envvars=${workdir}/.newsreader
 
-if [ "$c" -eq 1 ] && [ -d $modulesdir ]; then
+if [ "$clean" -eq 1 ] && [ -d $modulesdir ]; then
   rm -rf $modulesdir
 fi
 

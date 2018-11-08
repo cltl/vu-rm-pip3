@@ -19,7 +19,6 @@ commit_nb=$2
 
 module=$(basename ${github_sfx})
 
-scriptdir=$workdir/scripts/util
 
 # clone and package / install module ------------
 
@@ -37,7 +36,7 @@ cp install-to-project-repo/install-to-project-repo.py .
 python install-to-project-repo.py
 
 echo "building ixa-heideltime..."
-$scriptdir/fix-surefire-plugin.sh pom.xml
+$utildir/fix-surefire-plugin.sh pom.xml
 mvn -U clean install
 mv target/*.jar $javadir
 
