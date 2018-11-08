@@ -1,14 +1,10 @@
-# Welcome to the VU-RM-PIP3 Wiki
+The VU Reading Machine VU-RM-PIP3 builds on the Dutch NewsReader pipeline for syntactic and semantic document analysis.   
 
-The VU-RM-PIP3 pipeline builds on the Dutch NewsReader pipeline for syntactic and semantic document analysis, improving it with a graph-based wrapper for increased functionality.   
-
-## What is NewsReader?
 The NewsReader pipelines were developed as part of the [Newsreader project](http://www.newsreader-project.eu/), for advanced syntactic and semantic analysis of documents in Dutch, English, Italian and Spanish. These pipelines annotate documents following the [NAF annotation scheme](https://github.com/newsreader/NAF), which provides layers of annotations at the token, sentence and inter-document level.  
 
 The NewsReader pipeline we use here is a version of the [Dutch NewsReader pipeline](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md). This pipeline consists of a number of components that are responsible for creating or enriching the various NAF layers (see below for a graphical representation). 
 
-## The VU-RM-PIP3 pipeline
-The VU-RM-PIP3 pipeline addresses the following needs:
+VU-RM-PIP3 addresses the following needs:
 
 - functionality: a python 3 wrapper allows for control of pipeline configuration and scheduling;
 - robustness: errors in components are detected and used to reschedule the pipeline components, allowing for maximum processing of the input;
@@ -79,5 +75,5 @@ docker run -v $(pwd)/example/:/work/ vu-rm-pip3 -m OPINIONS /work/test.txt > tes
 - [pipeline interface](https://github.com/cltl/vu-rm-pip3/blob/master/docs/interface.md): input and output files
 - [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md): pipeline argument and advanced usage examples
 
-![Pipeline graph](https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png)
+<img src=https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png width="600" align="middle">
 
