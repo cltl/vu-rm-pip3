@@ -84,7 +84,7 @@
   - srl
   output: 
   - coreferences
-  cmd: vua-eventcoreference
+  cmd: vua-eventcoreference.sh
   after: 
   - vua-srl
   - vua-srl-dutch-nominal-events

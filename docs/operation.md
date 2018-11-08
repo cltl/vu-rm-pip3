@@ -3,7 +3,7 @@ The NewsReader pipeline can advantageously be represented as a directed acyclic 
 
 The pipeline is created from a list of component specifications, as explained next. Given a directed graph, it is straightforward to subset part of the pipeline graph by [filtering input layers, goal layers or goal components](#component-filtering). Finally, [topological sorting](#topological-sorting-and-pipeline-execution) of the graph provides a list of components in order of execution.
 
-If errors are detected in the execution of components, the component execution list is modified to allow for maximum processing of the input, as explained [below](#error-handling).
+If errors are detected in the execution of components, the component execution list is modified to allow for maximum processing of the input, as explained [below](#error-handling-and-rescheduling).
 
 ## Pipeline configuration and creation
 The pipeline graph is created from a list of components, where each component provides the following information:

@@ -15,7 +15,7 @@ The VU-RM-PIP3 pipeline addresses the following needs:
 - clarity: the error output of components are logged, together with a report of completed/failed components.
 
 
-## Installation and usage
+## Installation and usage for Linux
 The VU-RM-PIP3 pipeline repository contains the python 3 wrapper as well as code to install and run components of the Dutch NewsReader pipeline. To clone the VU-RM-PIP3 repository:
    
     git clone https://github.com/cltl/vu-rm-pip3.git
@@ -32,6 +32,30 @@ The script `run-pipeline.sh` allows to run the pipeline on a raw text document t
 
 The script additionally produces a log file `pipeline.log` in the directory from which it is called. 
 You will find more information on running the pipeline on the [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page.
+
+## Installation on Windows using WSL
+
+The VU Reading Machine can be run on Windows using the Windows Subsystem for Linux (see [Microsoft reference](https://docs.microsoft.com/en-us/windows/wsl/install-win10)).
+
+First, clone the Git repository, making sure to download the Shell files with Unix-style newlines (see [StackExchange](https://stackoverflow.com/questions/10418975/how-to-change-line-ending-settings)) using the following command.
+
+    'git config --global core.autocrlf false'
+
+Additionally, make sure the path of the repo does not contain any spaces (see [StackExchange](https://stackoverflow.com/questions/5163642/how-to-pass-directory-path-that-have-space-to-windows-shell)). For example, renames any directories using underscores.
+
+Open the WSL Bash terminal and install [Timbl](https://languagemachines.github.io/timbl/). Also install Java8 and Maven3 on WSL via the Bash terminal (the Windows versions of Java and Maven will not work). 
+Additionally, install 'unzip', 'libxss1', 'libxft2' and 'libtk8.5' (see [Alpino documentation](https://danieldk.eu/Posts/2017-01-10-Alpino-Windows.html)).
+
+Possibly, both version 2 and version 3 of Python may be installed on the Linux system, and two versions of Pip. This can be checked using 'python --version'. Python3 is needed as the default Python version. This requires the creation of a new symbolic link (see see [AskUbuntu](https://askubuntu.com/questions/603949/python-2-7-is-still-default-though-alias-python-python3-4-is-set)).
+
+Finally, install all Python requirements using 'pip install -r ./env/requirements.txt' and, additionally, install 2To3 using 'pip install 2to3'.
+
+The pipeline may now be tested using the following command.
+
+    ./run-pipeline.sh < example/test.txt > output.naf
+
+However, there can still be problems related to 'setitimer' in Alpino. This can be avoided (though not solved) by removing '-t 0.2' from 'scripts/bin/vua-alpino.sh'.
+
 
 ## Further reading
 - [installation and execution requirements](https://github.com/cltl/vu-rm-pip3/blob/master/docs/requirements.md)

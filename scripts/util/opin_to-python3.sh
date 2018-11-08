@@ -95,6 +95,10 @@ back_to2() {
   done
 }
 
+de_accelerate() {
+  perl -0777 -i -pe "s/try:\n *import .*ickle as pickler\nexcept:\n *import.*/import _pickle as pickler/" $1
+}
+
 fix_opin() {
   call_py23 $dy4
   echo "module-specific fixes"
@@ -105,6 +109,7 @@ fix_opin() {
   fix_decode $py4b
   fix_none_comp $py4b
   back_to2 $dy4
+  de_accelerate $py4a $py4d
 }
 
 fix_opin

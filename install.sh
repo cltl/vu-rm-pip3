@@ -2,6 +2,20 @@
 set -eo pipefail
 IFS=$'\n\t'
 
+usage() {
+  echo "Usage: $0 [ -c ]" 1>&2
+  exit 1
+}
+
+while getopts ":c" opt; do
+  case "$opt" in
+    c)
+      clean=1 ;;
+    *)
+      usage ;;
+  esac
+done
+shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 export modulesdir=$workdir/components
@@ -11,6 +25,11 @@ export pythondir=$modulesdir/python
 export scriptdir=$workdir/scripts/install
 export utildir=$workdir/scripts/util
 export envvars=${workdir}/.newsreader
+
+if [ "$c" -eq 1 ] && [ -d $modulesdir ]; then
+  rm -rf $modulesdir
+fi
+
 for dir in $pythondir $resourcesdir $javadir
 do
   [[ ! -d $dir ]] && mkdir -p $dir
@@ -21,6 +40,10 @@ touch $envvars
 function install-mor {
   echo "Installing the parser ..."
   $scriptdir/get-tar.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.19-21235-sicstus.tar.gz $resourcesdir
+  for d in Treebank TreebankTools Tokenization Generation
+  do
+    rm -rf $resourcesdir/Alpino/$d
+  done
   echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
   source $envvars
   $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 6f789bd $pythondir 
@@ -37,7 +60,7 @@ function install-wsd {
   echo "Installing the WSD module ..."
   $scriptdir/install-from-git.sh cltl/svm_wsd 0300439 install_naf.sh
   echo "Finished installing WSD, porting code to python 3"
-  $utildir/wsd_to-python3.sh -m $modulesdir
+  $utildir/wsd_to-python3.sh -m $pythondir
 }
 
 function install-heideltime {
@@ -62,7 +85,7 @@ function install-srl {
   echo "Installing SRL (Sonar)..."
   $scriptdir/get-from-git.sh newsreader/vua-srl-nl 675d22d $pythondir
   echo "Finished installing srl module, porting code to python 3"
-  $utildir/srl_to-python3.sh -m $modulesdir
+  $utildir/srl_to-python3.sh -m $pythondir
 }
 
 function install-dutch-nominal-events {
@@ -81,7 +104,7 @@ function install-opinmin {
   echo "Installing opinion miner..."
   $scriptdir/install-from-git.sh rubenIzquierdo/opinion_miner_deluxePP 40a714c $scriptdir/opin-install.sh
   echo "Finished installing opinion miner, porting code to python 3"
-  $utildir/opin_to-python3.sh -m $modulesdir
+  $utildir/opin_to-python3.sh -m $pythondir
 }
 
 function install-evcoref {
@@ -90,16 +113,16 @@ function install-evcoref {
   echo "Finished installing event coreference module."
 }
 
-#install-mor
-#install-ixa-pipes
-#install-wsd
-#install-heideltime
-#install-onto
-#install-vua-resources
-#install-srl
-#install-dutch-nominal-events
-#install-multi-factuality
+install-mor
+install-ixa-pipes
+install-wsd
+install-heideltime
+install-onto
+install-vua-resources
+install-srl
+install-dutch-nominal-events
+install-multi-factuality
 install-opinmin
-#install-evcoref
+install-evcoref
 
 echo "Finished."
