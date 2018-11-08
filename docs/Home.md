@@ -56,6 +56,21 @@ The pipeline may now be tested using the following command.
 
 However, there can still be problems related to 'setitimer' in Alpino. This can be avoided (though not solved) by removing '-t 0.2' from 'scripts/bin/vua-alpino.sh'.
 
+## Docker
+You can build a Docker image with:
+```
+docker build -t vu-rm-pip3 .
+```
+Or pull this image from Docker Hub:
+```
+docker pull arnoult/vu-rm-pip3
+```
+
+The image takes a raw text file (UTF-8) as argument, and accepts an optional argument '-m', which can be set to `ALL` (default), or `OPINIONS`: the full pipeline is run in `ALL` mode, and only the modules needed for the `opinions` layer in `OPINIONS` mode. The output file is redirected to `stdout`, and the log file to `stderr`. To run the image on the example file `./example/test.txt` with the `OPINIONS` mode, run:
+```
+docker run -v $(pwd)/example/:/work/ vu-rm-pip3 -m OPINIONS /work/test.txt > test.out 2> test.log
+```  
+
 
 ## Further reading
 - [installation and execution requirements](https://github.com/cltl/vu-rm-pip3/blob/master/docs/requirements.md)

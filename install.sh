@@ -110,7 +110,7 @@ function install-opinmin {
 
 function install-evcoref {
   echo "Installing event coreference module..."
-  $scriptdir/get-exec-jar-from-distrib.sh https://github.com/cltl/EventCoreference/archive/v3.1.1.tar.gz
+  $scriptdir/install-eventcoreference.sh https://github.com/cltl/EventCoreference/archive/v3.1.1.tar.gz
   echo "Finished installing event coreference module."
 }
 
