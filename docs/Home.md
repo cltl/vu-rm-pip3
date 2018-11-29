@@ -1,8 +1,7 @@
 The VU Reading Machine VU-RM-PIP3 builds on the Dutch NewsReader pipeline for syntactic and semantic document analysis.   
 
 The NewsReader pipelines were developed as part of the [Newsreader project](http://www.newsreader-project.eu/), for advanced syntactic and semantic analysis of documents in Dutch, English, Italian and Spanish. These pipelines annotate documents following the [NAF annotation scheme](https://github.com/newsreader/NAF), which provides layers of annotations at the token, sentence and inter-document level.  
-
-The NewsReader pipeline we use here is a version of the [Dutch NewsReader pipeline](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md). This pipeline consists of a number of components that are responsible for creating or enriching the various NAF layers (see below for a graphical representation). 
+The pipeline we use here is a version of the [Dutch NewsReader pipeline](http://kyoto.let.vu.nl/newsreader_deliverables/NWR-D4-2-3.pdf), which defines specific components for creating or enriching the various NAF layers (see below for a graphical representation). 
 
 VU-RM-PIP3 addresses the following needs:
 
@@ -62,9 +61,16 @@ Or pull this image from Docker Hub:
 docker pull arnoult/vu-rm-pip3
 ```
 
-The image takes a raw text file (UTF-8) as argument, and accepts an optional argument '-m', which can be set to `ALL` (default), or `OPINIONS`: the full pipeline is run in `ALL` mode, and only the modules needed for the `opinions` layer in `OPINIONS` mode. The output file is redirected to `stdout`, and the log file to `stderr`. To run the image on the example file `./example/test.txt` with the `OPINIONS` mode, run:
+The image takes a raw text file (UTF-8) as argument, and accepts the following optional arguments:
+
+- operation mode `-m`: can be set to `all` (default, runs the full pipeline); `opinions` (runs the pipeline up to the `opinion` layer); `srl` (runs the pipeline up to the `srl` layer);
+- nominal events switch `-n`: per default (`-n` is False) all the components for the `srl` are run; with the nominal-events switch set to True, nominal-event detection and labelling components are *excluded*, and only the SRL components related to verbal predicates are run;
+- alpino time out `-t`: defines the maximal per-sentence time budget for the Alpino parser (default is None);
+- opinion-miner model data `-d`: defines the model data used by the opinion miner (default is 'news').
+
+The output file is redirected to `stdout`, and the log file to `stderr`. To run the image on the example file `./example/test.txt` with the `opinions` mode, run:
 ```
-docker run -v $(pwd)/example/:/work/ vu-rm-pip3 -m OPINIONS /work/test.txt > test.out 2> test.log
+docker run -v $(pwd)/example/:/work/ vu-rm-pip3 -m opinions /work/test.txt > test.out 2> test.log
 ```  
 
 

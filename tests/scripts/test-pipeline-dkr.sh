@@ -21,7 +21,7 @@ usage() {
 mode="all"
 
 # 0 -> no time limit
-alpino_time_out=""
+alpino_time_out=0
 
 # choice is between
 opinion_data="news"
@@ -52,34 +52,35 @@ shift $((OPTIND - 1))
 
 # checking option compatibility
 if [ "$mode" = "opinions" ] && [ "$srl_opt" -eq 1 ]; then
-  >&2 echo "WARNING: srl option \'n\' has no effect in opinion mode"
+  echo "WARNING: srl option \'n\' has no effect in opinion mode"
 fi
 if [ "$mode" = "srl" ] && [ "$opinion_opt" -eq 1 ]; then  
-  >&2 echo "WARNING: opinion option \'o\' has no effect in srl mode"
+  echo "WARNING: opinion option \'o\' has no effect in srl mode"
 fi
 
 # optional arguments to pipeline run script
 optstring=""
 if [ "$mode" = "opinions" ]; then
-  optstring="$optstring-o opinions "
+  optstring="$optstring -o opinions"
 elif [ "$mode" = "srl" ]; then
   if [ "$nominal_events" -eq 0 ]; then
-    optstring="$optstring-m vua-framenet-classifier "
+    optstring="$optstring -m vua-framenet-classifier"
   else
-    optstring="$optstring-o srl "
+    optstring="$optstring -o srl"
   fi
 fi
 
 substr=""
-if [ -n "$alpino_time_out" ]; then
-  substr="${substr}vua-alpino:-t:${alpino_time_out};"
+if [ "$alpino_time_out" -ne 0 ]; then
+  substr="${substr}vua-alpino:-t ${alpino_time_out};"
 fi
-if [ "$mode" != "srl" ] && [ "$opinion_data" != "news" ] ; then
-  substr="${substr}opinion-miner:-d:${opinion_data};"
+if [ "$mode" != "srl" ]; then
+  substr="${substr}opinion-miner:-d ${opinion_data};"
 fi  
 if [ -n "$substr" ]; then
-  optstring="${optstring}-s ${substr%%;}" 
+  optstring="${optstring} -s \"${substr%%;}\"" 
 fi
+
 
 cat $1 | bash ./run-pipeline.sh $optstring
 >&2 cat pipeline.log

@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY . /vu-rm
 RUN pip install -r ./env/requirements.txt
-RUN bash ./install.sh && ls -l 
+RUN bash ./install.sh 
 
 ENV ALPINO_HOME=/vu-rm/components/resources/Alpino
 ENV PATH=$PATH:/vu-rm/components/resources/Alpino/bin

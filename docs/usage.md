@@ -15,6 +15,12 @@ The pipeline wrapper uses a configuration file (provided in the repository under
 
 ### Execution scripts
 The pipeline wrapper relies on individual shell scripts for the execution of its components. Scripts for the components of the Dutch NewsReader pipeline are located by default under `./scripts/bin/`. The wrapper allows to define a different location through the `-d` option.
+The arguments of some components can be set from the execution script through the `-s` option. This currently concerns the following elements:
+
+- vua-alpino wrapper around Alpino: time-out `-t`
+- model data for the opinion miner: data `-d`
+
+The argument of `-s` is parsed to extract the component IDs and the relevant arguments. This is used to modify the component script calls produced by the configuration file.
 
 ### Log file
 By default, a log file is written to `pipeline.log`, in the directory from which `run-pipeline.sh` is called. A different file path can be specified through the `-l` option.
@@ -37,6 +43,7 @@ option | description | format
 -i | input layers | *comma-separated naf layers string* 
 -o | goal layers | *comma-separated naf layers string* 
 -m | goal components | *comma-separated components string* 
+-s | component arguments | *semicolumn-separated triplets component-id:option:value*
 
 ### Examples
 #### Specifying custom paths to files
@@ -75,8 +82,11 @@ The output file `data/test1.wsd` contains *text*, *constituents*, *deps* and *te
                        > data/test1.coref
 
 
-#### Note on filtering options
 Note that the `-i` options filters out components that output the given layers, without checking layer dependencies; here, giving 'text' as input layer filters out `ixa-pipe-tok`, and 'terms' filters out `vua-alpino`, `vua-wsd` and `vua-ontotagging` (but the latter is included again in the first call by the `-m` option).
 
 In contrast, one only needs to specify final goal layers: with *coreferences* as goal layers, all components leading to that layer will be run, including the *srl* components.
 
+#### Specifying component arguments
+The following call sets the Alpino time out to 0.2 min per sentence, and the opinion miner's model to 'hotel':
+
+    ./vu-rm-pip3/run-pipeline.sh -s 'vua-alpino:-t:0.2;opinion-miner:-d:hotel' < data/test.txt > data/test.out

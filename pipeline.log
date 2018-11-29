@@ -1,0 +1,25 @@
+calling pipeline with non-default component arguments {}
+Loading modules from config...
+-- Running ixa-pipe-tok
+CLI options: Namespace(offsets=true, kafversion=v1.naf, normalize=default, hardParagraph=no, inputkaf=false, untokenizable=no, lang=nl, outputFormat=naf, notok=false)
+ixa-pipe-tok tokenized 4 tokens at 1326.87 tokens per second.
+-- Running vua-alpino
+[2018-11-29 16:06:29,704 root         INFO ] Calling Alpino with 1 sentences
+hdrug: process 15757 on host kyoto (datime(2018,11,29,16,6,30))
+[Dag van de Doden]
+Q#1|Dag van de Doden|1|1|0.5689626910300002
+[2018-11-29 16:06:31,077 root         INFO ] Calling Alpino for dependencies
+hdrug: process 15803 on host kyoto (datime(2018,11,29,16,6,32))
+[2018-11-29 16:06:32,164 root         INFO ] Creating the term layer...
+[2018-11-29 16:06:32,165 root         INFO ] Creating the constituency layer...
+-- Running vua-wsd
+-- Running vua-ontotagging
+-- Running vua-nominal-event-detection
+-- Running vua-srl
+-- Running vua-framenet-classifier
+
+-- Finished running pipeline
+- scheduled: ['ixa-pipe-tok', 'vua-alpino', 'vua-wsd', 'vua-ontotagging', 'vua-nominal-event-detection', 'vua-srl', 'vua-framenet-classifier']
+- completed: ['ixa-pipe-tok', 'vua-alpino', 'vua-wsd', 'vua-ontotagging', 'vua-nominal-event-detection', 'vua-srl', 'vua-framenet-classifier']
+- failed: []
+- not run: []

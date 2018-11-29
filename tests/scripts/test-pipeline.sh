@@ -5,6 +5,7 @@
 # it is called.
 # -----------------------------------------------
 wrapper_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+
 # you can copy this config file and adapt it as you wish: 
 #cfg=$wrapper_dir/example/pipeline.yml 
 log=$(pwd)/pipeline.log
@@ -37,24 +38,23 @@ shift $((OPTIND - 1))
 
 args="-l $log "
 if [ ! -z $cfg ]; then
-  args="$args-c $cfg "
+  args="$args -c $cfg"
 fi
 if [ ! -z $bindir ]; then
-  args="$args-d $bindir "
+  args="$args -d $bindir"
 fi
 if [ ! -z $in_layers ]; then
-  args="$args-i $in_layers "
+  args="$args -i $in_layers"
 fi
 if [ ! -z $out_layers ]; then
-  args="$args-o $out_layers "
+  args="$args -o $out_layers"
 fi
 if [ ! -z $with_modules ]; then
-  args="$args-m $with_modules "
+  args="$args -m $with_modules"
 fi
 if [ ! -z $substr ]; then
-  args="$args-s $substr "
+  args="$args -s $substr"
 fi
 
->&2 echo "calling pipeline wrapper with args: $args"
 cd $wrapper_dir
 python -m wrapper $args

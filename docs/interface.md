@@ -25,21 +25,14 @@ For example, the predicate-matrix tagger is identified as 'vua-ontotagging', it 
 ## Execution scripts
 The pipeline defines a common location for the executable scripts of its components. The name of that directory is prepended to the shell-script name of each component (defined through the 'cmd' spec in the configuration file) for execution. 
 
-Each executable script defines where a given component is installed, as well as all arguments for the execution of that component. For example, the tokenizer component is set to input text files; letting it input raw NAF files instead requires modifying the executable script directly (to uncomment the 'inputkaf' option).
-
-```shell
-#!/bin/bash
-# component: ixa-pipe-tok
-#----------------------------------------------------
-workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-jarfile=$workdir/components/java/ixa-pipe-tok-1.8.5-exec.jar
-java -Xmx1000m -jar $jarfile tok -l nl #--inputkaf
-```
+Each executable script defines where a given component is installed, as well as most arguments for the execution of that component. 
+Current exceptions are the time-out for the Alpino wrapper, and the model data for the opinion miner. When arguments to these components are modified (`-s` option in the execution script), they are appended to the 'cmd' spec of the relevant component. For other cases, one can modify a component shell script to set arguments externally, and let the pipeline execution script set this argument through `-s`. 
 
 
 ## Logging
 A log file is used to record the following information:
 
+- whether components were called with non-default arguments;
 - the `stderr` stream of each executed module;
 - identified errors in the execution of a module if any, and the rescheduled pipeline;
 - a summary upon completion, listing the scheduled modules, as well as the completed, failed and non-executed modules. 

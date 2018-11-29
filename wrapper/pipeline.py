@@ -1,6 +1,6 @@
 from wrapper import dag
-#import wrapper.dag.Graph
 import yaml 
+import shlex
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -9,10 +9,6 @@ from subprocess import SubprocessError, Popen, PIPE
 import tempfile
 import logging
 logger = logging.getLogger(__name__)
-#logging.basicConfig(format='%(message)s',
-#                filename='pipeline.log',
-#                filemode='w',
-#                level=logging.INFO)
 
 
 def build_pipeline(modules):
@@ -29,6 +25,7 @@ def build_pipeline(modules):
                 graph.add_edge(m.id, m2.id)
     return graph
 
+
 def find_error(stderr_iterator):
     found_error = False
     for line in stderr_iterator:
@@ -39,6 +36,7 @@ def find_error(stderr_iterator):
         else:
             logger.info(line)
     return found_error
+
 
 """
 filters remaining modules (in executable order) that can be executed 
@@ -52,6 +50,7 @@ def reschedule(completed, remaining):
             visited.append(m.node.id)
             to_run.append(m)
     return to_run    
+
 
 """
 runs a pipeline from an ordered list of module vertices 
@@ -72,7 +71,9 @@ def run(scheduled, input_file, bindir):
 
         out = tempfile.TemporaryFile()
         infile.seek(0) 
-        p = Popen([bindir + m.node.cmd], stdin=infile, stdout=out, stderr=PIPE)
+        margs = shlex.split(m.node.cmd)
+        margs[0] = bindir + margs[0]
+        p = Popen(margs, stdin=infile, stdout=out, stderr=PIPE)
         module_failure = find_error(iter(p.stderr.readline, b''))
         if module_failure:
             failed.append(m)
@@ -89,6 +90,7 @@ def run(scheduled, input_file, bindir):
     infile.close()
     return update_status(scheduled, completed, failed, not_run)
     
+
 def update_status(scheduled, completed, failed, not_run):
     status = {}
     for m in completed:
@@ -104,13 +106,34 @@ def update_status(scheduled, completed, failed, not_run):
     logger.info('- not run: {}'.format([m.node.id for m in not_run]))
     return status
 
-def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/'):
+
+def load_modules(yml_cfg, subargs):
+    logger.info('Loading modules from config...')
     with open(yml_cfg, 'r') as f:
-        modules = yaml.load(f)
+        module_dicts = yaml.load(f)
+    modules = [Module(m) for m in module_dicts]
+    if subargs:
+        logger.info('The following module scripts will be called with non-default options:')
+        for m in modules:
+            if m.id in subargs.keys():
+                logger.info('{}: {}'.format(m.cmd, subargs[m.id]))
+                m.cmd = '{} {}'.format(m.cmd, subargs[m.id])
+    return modules
+
+
+def create_modules(module_dicts):
+    modules = [Module(m) for m in module_dicts]
+    return modules
+
+
+def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/', subargs={}):
+    modules = load_modules(yml_cfg, subargs)
     return Pipeline(modules, in_layers, goal_layers, goal_modules, bindir)
+
 
 def createRoot():
     return Module({'name': 'root', 'output': 'raw', 'cmd': 'none'})
+
 
 """
 Defines a module with input and output layers, and a name pointing to a shell script for running that module
@@ -181,9 +204,8 @@ class Module:
 
 
 class Pipeline:
-    def __init__(self, module_dicts, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/'):
+    def __init__(self, modules, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/'):
         self.bindir = bindir
-        modules = [Module(m) for m in module_dicts]
         self.graph = build_pipeline(modules)
         if goal_layers:
             self.filter_layers(goal_layers)
@@ -236,7 +258,6 @@ class Pipeline:
         for k in self.graph.get_keys():
             if k != 'root' and not self.graph.get_vertex(k).parents:
                 self.graph.add_edge('root', k)
-
 
     def execute(self, infile):
         summary = run(self.topological_sort(), infile, self.bindir)

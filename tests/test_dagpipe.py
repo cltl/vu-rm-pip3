@@ -17,22 +17,22 @@ cyclic_modules = [cycle_tok, alpino, opin, nom_pred, nerc, nom_ev, coref, srl]
 unconnected_modules = [tok, alpino, coref]
 
 def test_pipeline_creation():
-    ms = [pipeline.Module(m) for m in modules]
+    ms = pipeline.create_modules(modules)
     pipe_graph = pipeline.build_pipeline(ms)
     assert len(pipe_graph.get_keys()) == len(modules) + 1 # with root
 
-    p = pipeline.Pipeline(modules)
+    p = pipeline.Pipeline(pipeline.create_modules(modules))
     assert p.nb_modules() == len(modules)
     assert p.graph.get_vertex('tok').children[0].node.id == 'alpino'
 
 def test_topological_sort():
-    p = pipeline.Pipeline([tok])
+    p = pipeline.Pipeline(pipeline.create_modules([tok]))
     ptok = p.graph.get_vertex('tok').parents
     assert ptok[0].node.id == 'root'
     schedule = p.topological_sort()
     assert len(schedule) == 1
 
-    p = pipeline.Pipeline([tok, alpino])
+    p = pipeline.Pipeline(pipeline.create_modules([tok, alpino]))
     ctok = p.graph.get_vertex('tok').children
     assert ctok[0].node.id == 'alpino'
     palp = p.graph.get_vertex('alpino').parents
@@ -40,11 +40,11 @@ def test_topological_sort():
     schedule = p.topological_sort()
     assert len(schedule) == 2
 
-    p = pipeline.Pipeline(modules)
+    p = pipeline.Pipeline(pipeline.create_modules(modules))
     assert p.nb_modules() == len(modules) 
 
 def test_filter_graph_by_modules():
-    p = pipeline.Pipeline([tok, alpino])
+    p = pipeline.Pipeline(pipeline.create_modules([tok, alpino]))
     path = p.graph.on_path_to('tok')
     assert len(path) == 2
     assert 'alpino' not in path
@@ -54,36 +54,36 @@ def test_filter_graph_by_modules():
     assert 'alpino' not in p.graph.get_keys()
     assert 'tok' in p.graph.get_keys()
 
-    p = pipeline.Pipeline(modules)
+    p = pipeline.Pipeline(pipeline.create_modules(modules))
     p.filter_goals(['opin', 'coref'])
     assert p.nb_modules() == 8
 
 def test_filter_graph_by_layers():
-    p = pipeline.Pipeline(modules)
+    p = pipeline.Pipeline(pipeline.create_modules(modules))
     p.filter_layers(['srl'])
     assert p.nb_modules() == 5
-    p = pipeline.Pipeline(modules, goal_layers=['srl'])
+    p = pipeline.Pipeline(pipeline.create_modules(modules), goal_layers=['srl'])
     assert p.nb_modules() == 5
 
 def test_filter_input_layers():
-    p = pipeline.Pipeline(modules, in_layers=['text','terms','deps','constituents','srl'])
+    p = pipeline.Pipeline(pipeline.create_modules(modules), in_layers=['text','terms','deps','constituents','srl'])
     assert p.nb_modules() == 3
     assert 'opin' in p.graph.get_keys()
     assert 'nerc' in p.graph.get_keys()
     assert 'coref' in p.graph.get_keys()
 
 def test_unconnected_vertices():
-    p = pipeline.Pipeline(unconnected_modules) 
+    p = pipeline.Pipeline(pipeline.create_modules(unconnected_modules))
     with pytest.raises(ValueError) as e:
         p.topological_sort()
    
 def test_cycle():
-    p = pipeline.Pipeline(cyclic_modules) 
+    p = pipeline.Pipeline(pipeline.create_modules(cyclic_modules))
     with pytest.raises(ValueError) as e:
         p.topological_sort()
        
 def test_rescheduling():       
-    p = pipeline.Pipeline(modules)
+    p = pipeline.Pipeline(pipeline.create_modules(modules))
     schedule = p.topological_sort()
     assert schedule[1].node.id == 'alpino'
     rescheduled = pipeline.reschedule([schedule[0]], schedule[2:])
