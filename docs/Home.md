@@ -58,7 +58,7 @@ docker build -t vu-rm-pip3 .
 ```
 Or pull this image from Docker Hub:
 ```
-docker pull arnoult/vu-rm-pip3
+docker pull vucltl/vu-rm-pip3
 ```
 
 The image takes a raw text file (UTF-8) as argument, and accepts the following optional arguments:
@@ -80,6 +80,13 @@ docker run -v $(pwd)/example/:/work/ vu-rm-pip3 -m opinions /work/test.txt > tes
 - [the pipeline wrapper](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md): pipeline configuration, filtering, execution and error handling 
 - [pipeline interface](https://github.com/cltl/vu-rm-pip3/blob/master/docs/interface.md): input and output files
 - [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md): pipeline argument and advanced usage examples
+
+
+## Contact
+
+Please submit issues to the [issue tracker](https://github.com/cltl/vu-rm-pip3/issues).
+Questions can be addressed to Sophie Arnoult: sophie.arnoult@posteo.net
+
 
 <img src=https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png width="600" align="middle">
 
