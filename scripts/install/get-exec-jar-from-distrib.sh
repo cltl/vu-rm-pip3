@@ -4,13 +4,13 @@ set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 github_sfx commit_nb mvn_cmd jar_sfx" 1>&2
+  echo "Usage: $0 distrib_url target_dir" 1>&2
   exit 1
 }
 
-#if [ $# -ne 1 ]; then
-#  usage
-#fi
+if [ $# -ne 2 ]; then
+  usage
+fi
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
 finish() {
@@ -19,9 +19,8 @@ finish() {
 trap finish EXIT
 
 #------------------------------------------------
-export workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 distrib=$1
-module=$2
+target_dir=$2
 
 name=$(basename ${distrib})
 version=${name%%.tar.gz}
@@ -34,4 +33,4 @@ wget $distrib
 tar -zxvf $name
 cd *$vid
 mvn clean package
-mv target/*jar-with-dependencies* $javadir
+mv target/*jar-with-dependencies* $target_dir

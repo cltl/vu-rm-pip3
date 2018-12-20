@@ -4,13 +4,13 @@ set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 github_sfx commit_nb mvn_cmd jar_sfx" 1>&2
+  echo "Usage: $0 github_sfx commit_nb target_dir util_dir" 1>&2
   exit 1
 }
 
-#if [ $# -ne 1 ]; then
-#  usage
-#fi
+if [ $# -ne 4 ]; then
+  usage
+fi
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
 finish() {
@@ -19,21 +19,20 @@ finish() {
 trap finish EXIT
 
 #------------------------------------------------
-export workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 github_sfx=$1
 commit_nb=$2
-#mvn_cmd=$3
-#jar_sfx=$4  # the version number or the full name of the jar
+target_dir=$3
+util_dir=$4
 
 module=$(basename ${github_sfx})
-
 
 # clone and package / install module ------------
 cd $scratch
 git clone https://github.com/${github_sfx}.git
 cd $module
 git checkout $commit_nb
+$util_dir/fix-surefire-plugin.sh pom.xml
 mvn clean package
-mv target/*.jar $javadir
+mv target/*.jar $target_dir
 
 

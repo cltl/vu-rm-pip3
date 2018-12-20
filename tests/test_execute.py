@@ -12,8 +12,8 @@ fail_alpino_cfg='tests/data/fail-alpino.yml'
 runs pipeline from intermediary output and config
 """
 def test_finish_incomplete_pipeline():
-    goal_layers = ['opinions','entities']
-    p = pipeline.create_pipeline(cfg, in_layers=['text','terms','deps','constituents'], goal_layers=goal_layers)
+    goal_layers = ['opinions','timeExpressions']
+    p = pipeline.create_pipeline(cfg, in_layers=['opinions','timeExpressions'], goal_layers=goal_layers)
     print(p.graph)
     scheduled = p.topological_sort()
     assert len(scheduled) == 2
@@ -53,7 +53,7 @@ def test_rescheduling_after_alpino_failure():
  
 def test_intermediary_module():
     goal_layers = ['terms']
-    p = pipeline.create_pipeline(cfg, in_layers=['text','terms','constituents'], goal_layers=goal_layers, goal_modules = ['vua-ontotagging'])
+    p = pipeline.create_pipeline(cfg, in_layers=['terms'], goal_layers=goal_layers, excepted_modules = ['vua-alpino','vua-ontotagging'])
 
     scheduled = p.topological_sort()
     assert len(scheduled) == 1

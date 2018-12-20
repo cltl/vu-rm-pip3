@@ -80,6 +80,11 @@ class Graph:
     def get_vertices(self):
         return self.graph.values()
 
+    def get_vertices_acting_on(self, layers, excepted):
+        vertices = self.find_keys(lambda v: any(x in v.node.out for x in layers))
+        vertices = [ v for v in vertices if self.graph[v].node.id not in excepted ]
+        return set(vertices)
+
     def topological_sort_loop(self, n, stack, visited, waiting):
         if any(p.node.id not in visited for p in self.graph[n].parents):
             waiting.add(n)
@@ -132,7 +137,13 @@ class Graph:
         on_path = set()
         self.on_path_from_loop(frm, on_path)
         return on_path
-       
+      
+    def remove_keys(self, matching):
+        keys = [k for k in self.graph.keys()]
+        for k in keys:
+            if matching(k):
+                self.remove_key(k)
+ 
     def find_keys(self, matching):
         return [k for k, v in self.graph.items() if matching(v)]
 

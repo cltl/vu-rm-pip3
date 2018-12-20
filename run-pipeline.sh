@@ -58,3 +58,4 @@ fi
 >&2 echo "calling pipeline wrapper with args: $args"
 cd $wrapper_dir
 python -m wrapper $args
+

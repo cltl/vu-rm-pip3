@@ -4,13 +4,13 @@ set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 github_sfx commit_nb mvn_cmd jar_sfx" 1>&2
+  echo "Usage: $0 distrib_url target_dir util_dir" 1>&2
   exit 1
 }
 
-#if [ $# -ne 1 ]; then
-#  usage
-#fi
+if [ $# -ne 3 ]; then
+  usage
+fi
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
 finish() {
@@ -19,9 +19,9 @@ finish() {
 trap finish EXIT
 
 #------------------------------------------------
-export workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 distrib=$1
-module=$2
+target_dir=$2
+util_dir=$3
 
 name=$(basename ${distrib})
 version=${name%%.tar.gz}
@@ -33,6 +33,6 @@ cd $scratch
 wget $distrib
 tar -zxvf $name
 cd *$vid
-$workdir/scripts/util/fix-surefire-plugin.sh pom.xml
+$util_dir/fix-surefire-plugin.sh pom.xml
 mvn clean package
-mv target/*jar-with-dependencies* $javadir
+mv target/*jar-with-dependencies* $target_dir

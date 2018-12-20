@@ -3,8 +3,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-if [ $# -ne 2 ]; then
-  echo "USAGE: $0 github_sfx commit_nb"
+if [ $# -ne 5 ]; then
+  echo "USAGE: $0 github_sfx commit_nb target_dir util_dir resources_dir 1>&2 "
 fi
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
@@ -16,7 +16,9 @@ trap finish EXIT
 #------------------------------------------------
 github_sfx=$1
 commit_nb=$2
-
+target_dir=$3
+util_dir=$4
+resources_dir=$5
 module=$(basename ${github_sfx})
 
 
@@ -36,12 +38,12 @@ cp install-to-project-repo/install-to-project-repo.py .
 python install-to-project-repo.py
 
 echo "building ixa-heideltime..."
-$utildir/fix-surefire-plugin.sh pom.xml
+$util_dir/fix-surefire-plugin.sh pom.xml
 mvn -U clean install
-mv target/*.jar $javadir
+mv target/*.jar $target_dir
 
 echo "copying resources..." 
-wdir=$resourcesdir/$module
+wdir=$resources_dir/$module
 mkdir -p $wdir
 mv lib/jvntextpro-2.0.jar $wdir
 mv lib/alpino-to-treetagger.csv $wdir

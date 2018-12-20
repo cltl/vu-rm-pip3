@@ -1,7 +1,7 @@
 # Pipeline operation
 The NewsReader pipeline can advantageously be represented as a directed acyclic graph, where vertices correspond to components, and edges to components dependencies.
 
-The pipeline is created from a list of component specifications, as explained next. Given a directed graph, it is straightforward to subset part of the pipeline graph by [filtering input layers, goal layers or goal components](#component-filtering). Finally, [topological sorting](#topological-sorting-and-pipeline-execution) of the graph provides a list of components in order of execution.
+The pipeline is created from a list of component specifications, as explained next. Given a directed graph, it is straightforward to subset part of the pipeline graph by [filtering from input layers or to goal layers](#component-filtering). Finally, [topological sorting](#topological-sorting-and-pipeline-execution) of the graph provides a list of components in order of execution.
 
 If errors are detected in the execution of components, the component execution list is modified to allow for maximum processing of the input, as explained [below](#error-handling-and-rescheduling).
 
@@ -24,6 +24,8 @@ For each distinct component pair `(m_1, m_2)`, we add an edge from their respect
 
 Vertices with no incoming edges are connected to a root vertex.
 
+Input and output layers are regarded as the prime source of information for building the graph, and the prerequired components as a mean to specify dependencies between components that operate on a same NAF layer.
+
 #### Overspecifying component dependencies
 The graph may contain redundant edges as a result of overspecified dependencies in the configuration components list (redundancies between the preceding components and input/output layer specifications, or between input layers and layers obtainable by transitivity). 
 While it would be possible to reduce the graph (transitive reduction), the pipeline is not affected by such redundancies.
@@ -36,20 +38,17 @@ The graph should be acyclic. Cyclic dependencies are detected when [sorting](#to
 
 ## Component filtering
 The components configuration list allows to specify a maximal pipeline.
-The graph created from this list can be refined to include only specific goal layers or components, or input layers.
+The graph created from this list can be refined to include only specific goal layers or input layers. It is also possible to exclude components that act on, i.e., produce or modify give input or goal layers.
 
 #### Filtering by goal layers
-Given a list of goal layers, the graph is filtered to keep only the components (vertices) that allow to produce these layers (keeping vertices on the path between root and these components). All components with a goal layer are kept, including components that only modify that layer.
-
-#### Filtering by goal components
-Given a list of goal components, the graph is filtered to keep these components, and the components they depend on (keeping vertices on the path between root and goal components).
+Given a list of goal layers, the graph is filtered to keep only the components (vertices) that allow to produce these layers (keeping vertices on the path between root and these components). By default, all components with a goal layer are kept, including components that only modify that layer. The list of components can be reduced with an exclusion filter.
 
 #### Filtering by input layers
-The pipeline normally expects a raw input file, and at least one component operating on an empty (or null) input layer list. One can however filter the graph with a list of input layers. In that case, vertices that produce these layers are filtered out, keeping only components that input these layers and their children vertices. Vertices with no incoming edges after this filtering are reconnected to the root vertex. The resulting pipeline is intended to operate on a NAF file that contains these input layers.
+The pipeline normally expects a raw input file, and at least one component operating on an empty (or null) input layer list. One can however filter the graph with a list of input layers. In that case, vertices that produce these layers are kept together with their children vertices. Other vertices are filtered out. Vertices with no incoming edges after this filtering are reconnected to the root vertex. The resulting pipeline is intended to operate on a NAF file that contains these input layers.
+As with goal-layer filtering, all components acting on the input layers are kept, except otherwise specified by an exclusion filter.
 
 #### Combined filtering
-On can combine input filtering with either goal-component or goal-layer filtering.
- One can however not combine goal-layer with goal-component filtering, for instance to select all components outputting some layer and only part of the components outputting another layer; one needs to provide all goal components and use goal-component filtering in that case (see the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page for examples).
+On can combine input-layer filtering with goal-layer filtering. In that case, input-layer filtering is performed first. Components to exclude from the input or goal layers are to specified together: only components relevant to a given input/goal layer are taken into account during the corresponding filtering stage.
 
 
 ## Topological sorting and pipeline execution

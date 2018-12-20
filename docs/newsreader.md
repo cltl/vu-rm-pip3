@@ -21,12 +21,13 @@ Our version of the Dutch NewsReader pipeline uses the following components:
 - tokenizing: [ixa-pipe-tok](https://github.com/ixa-ehu/ixa-pipe-tok)
 - POS tagging, lemmatization and parsing: [vua-alpino](https://github.com/cltl/morphosyntactic\_parser\_nl)
 - named entity recognition: [ixa-pipe-nerc](https://github.com/ixa-ehu/ixa-pipe-nerc/blob/master/README.md)
+- named entity disambiguation: [ixa-pipe-ned](https://github.com/ixa-ehu/ixa-pipe-ned/blob/master/README.md)
 - word sense disambiguation: [vua-wsd](https://github.com/cltl/svm\_wsd)
 - time/date standardisation: [vua-heideltime](https://github.com/ixa-ehu/ixa-heideltime)
 - predicate-matrix tagging: [vua-ontotagging](https://github.com/cltl/OntoTagger)
 - semantic role labelling: [vua-srl](https://github.com/newsreader/vua-srl-nl)
 - factuality: [multilingual\_factuality](https://github.com/cltl/multilingual\_factuality)
-- opinion mining: [opinion\_miner\_deluxePP](https://github.com/cltl/opinion\_miner\_deluxe)
+- opinion mining: [opinion\_miner\_deluxePP](https://github.com/rubenIzquierdo/opinion_miner_deluxePP)
 - event coreference: [EventCoreference](https://github.com/cltl/EventCoreference)
 - nominal event detection: [vua-nominal-event-detection](https://github.com/cltl/OntoTagger)
 - nominal event srl labelling:  [vua-srl-dutch-nominal-events](https://github.com/newsreader/vua-srl-dutch-nominal-events)
@@ -41,6 +42,7 @@ component | input layers | *required components* | output layers
 ixa-pipe-tok | raw      | | text   
 vua-alpino | text       | | terms, deps, constituents 
 ixa-pipe-nerc | text, terms |     | entities      
+ixa-pipe-ned | entities |     | entities      
 vua-heideltime | text, terms |   | timeExpressions 
 vua-wsd | text, terms  |  | terms 
 vua-ontotagging | terms | *+vua-wsd*         | terms 

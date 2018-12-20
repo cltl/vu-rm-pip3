@@ -4,11 +4,11 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 github_sfx commit_nb install_script" 1>&2
+  echo "Usage: $0 github_sfx commit_nb install_script target_dir" 1>&2
   exit 1
 }
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 4 ]; then
   usage
 fi
 
@@ -17,11 +17,12 @@ fi
 github_sfx=$1
 commit_nb=$2
 install_script=$3
+target_dir=$4
 module=$(basename ${github_sfx})
 
 
 # clone and package / install module ------------
-cd $pythondir
+cd $target_dir
 git clone https://github.com/${github_sfx}.git
 cd $module
 git checkout $commit_nb

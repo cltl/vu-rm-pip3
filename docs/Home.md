@@ -63,7 +63,7 @@ docker pull vucltl/vu-rm-pip3
 
 The image takes a raw text file (UTF-8) as argument, and accepts the following optional arguments:
 
-- operation mode `-m`: can be set to `all` (default, runs the full pipeline); `opinions` (runs the pipeline up to the `opinion` layer); `srl` (runs the pipeline up to the `srl` layer);
+- operation mode `-m`: can be set to `all` (default, runs the full pipeline); `opinions` (runs the pipeline up to the `opinion` layer); `srl` (runs the pipeline up to the `srl` layer); `entities` (runs the pipeline up to the `entities` layer, including named entity linking);
 - nominal events switch `-n`: per default (`-n` is False) all the components for the `srl` are run; with the nominal-events switch set to True, nominal-event detection and labelling components are *excluded*, and only the SRL components related to verbal predicates are run;
 - alpino time out `-t`: defines the maximal per-sentence time budget for the Alpino parser (default is None);
 - opinion-miner model data `-d`: defines the model data used by the opinion miner (default is 'news').

@@ -19,27 +19,25 @@ done
 shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
-export modulesdir=$workdir/components
-export resourcesdir=$modulesdir/resources
-export javadir=$modulesdir/java
-export pythondir=$modulesdir/python
-export scriptdir=$workdir/scripts/install
-export utildir=$workdir/scripts/util
-export envvars=${workdir}/.newsreader
+modulesdir=$workdir/components
+javadir=$modulesdir/java
+resourcesdir=$modulesdir/resources
+pythondir=$modulesdir/python
+scriptdir=$workdir/scripts/install
+utildir=$workdir/scripts/util
+envvars=$workdir/.newsreader
 
 if [ "$clean" -eq 1 ] && [ -d $modulesdir ]; then
   rm -rf $modulesdir
 fi
 
-for dir in $pythondir $resourcesdir $javadir
+for dir in $pythondir $javadir $resourcesdir
 do
   [[ ! -d $dir ]] && mkdir -p $dir
 done
-touch $envvars
-
 
 function install-mor {
-  echo "Installing the parser ..."
+  echo "Installing the Alpino parser and wrapper ..."
   $scriptdir/get-tar.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.19-21235-sicstus.tar.gz $resourcesdir
   for d in Treebank TreebankTools Tokenization Generation
   do
@@ -48,38 +46,54 @@ function install-mor {
   echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
   source $envvars
   $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 6f789bd $pythondir 
-  echo "Finished installing the parser."
+  echo "Finished installing the Alpino wrapper."
 }
 
 function install-ixa-pipes {
-  echo "Installing the ixa pipes (tok/nerc) ..."
-  $scriptdir/get-ixa-pipes.sh
-  echo "Finished installing the ixa pipes (tok/nerc)."
+  echo "Installing the ixa-nerc models ..."
+  $scriptdir/get-ixa-pipes.sh $javadir $resourcesdir
+  echo "Finished installing the ixa-nerc models."
 }
 
-function install-wsd {
-  echo "Installing the WSD module ..."
-  $scriptdir/install-from-git.sh cltl/svm_wsd 0300439 install_naf.sh
-  echo "Finished installing WSD, porting code to python 3"
-  $utildir/wsd_to-python3.sh -m $pythondir
-}
-
-function install-heideltime {
-  echo "Installing time normalization ..."
-  $scriptdir/install-heideltime.sh ixa-ehu/ixa-heideltime 2229a00
-  echo "Finished installing time normalization."
-}
-
-function install-onto {
-  echo "Installing OntoTagger..."
-  $scriptdir/get-exec-jar-from-distrib.sh https://github.com/cltl/OntoTagger/archive/v3.1.1.tar.gz
-  echo "Finished installing OntoTagger."
+function install-ned {
+  echo "Installing NED and dbpedia resources ..."
+  wdir=$resourcesdir/spotlight
+  mkdir $wdir
+  cd $wdir
+  wget http://sourceforge.net/projects/dbpedia-spotlight/files/2016-04/nl/model/nl.tar.gz
+  tar -zxvf nl.tar.gz
+  wget http://ixa2.si.ehu.es/ixa-pipes/models/wikipedia-db.tar.gz
+  tar -xzvf wikipedia-db.tar.gz
+  rm *tar.gz
+  wget https://sourceforge.net/projects/dbpedia-spotlight/files/spotlight/dbpedia-spotlight-0.7.1.jar
+  mvn install:install-file -Dfile=dbpedia-spotlight-0.7.1.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true 
+  $scriptdir/install-ned.sh ixa-ehu/ixa-pipe-ned 062a983 $javadir $utildir
+  echo "Finished installing NED module."
 }
 
 function install-vua-resources {
   echo "Installing vua resources..." 
   $scriptdir/get-from-git.sh cltl/vua-resources e730ce6 $resourcesdir
   echo "Finished installing vua resources."
+}
+
+function install-wsd {
+  echo "Installing the WSD module ..."
+  $scriptdir/install-from-git.sh cltl/svm_wsd 0300439 $scriptdir/install-wsd.sh $pythondir
+  echo "Finished installing WSD, porting code to python 3"
+  $utildir/wsd_to-python3.sh -m $pythondir
+}
+
+function install-heideltime {
+  echo "Installing time normalization ..."
+  $scriptdir/install-heideltime.sh ixa-ehu/ixa-heideltime 2229a00 $javadir $utildir $resourcesdir
+  echo "Finished installing time normalization."
+}
+
+function install-onto {
+  echo "Installing OntoTagger..."
+  $scriptdir/get-exec-jar-from-distrib.sh https://github.com/cltl/OntoTagger/archive/v3.1.1.tar.gz $javadir
+  echo "Finished installing OntoTagger."
 }
 
 function install-srl {
@@ -103,23 +117,24 @@ function install-multi-factuality {
 
 function install-opinmin {
   echo "Installing opinion miner..."
-  $scriptdir/install-from-git.sh rubenIzquierdo/opinion_miner_deluxePP 40a714c $scriptdir/opin-install.sh
+  $scriptdir/install-from-git.sh rubenIzquierdo/opinion_miner_deluxePP 40a714c $scriptdir/opin-install.sh $pythondir
   echo "Finished installing opinion miner, porting code to python 3"
   $utildir/opin_to-python3.sh -m $pythondir
 }
 
 function install-evcoref {
   echo "Installing event coreference module..."
-  $scriptdir/install-eventcoreference.sh https://github.com/cltl/EventCoreference/archive/v3.1.1.tar.gz
+  $scriptdir/install-eventcoreference.sh https://github.com/cltl/EventCoreference/archive/v3.1.1.tar.gz $javadir $utildir
   echo "Finished installing event coreference module."
 }
 
 install-mor
 install-ixa-pipes
+install-ned
+install-vua-resources
 install-wsd
 install-heideltime
 install-onto
-install-vua-resources
 install-srl
 install-dutch-nominal-events
 install-multi-factuality

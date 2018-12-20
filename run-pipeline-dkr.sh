@@ -11,7 +11,7 @@
 
 
 usage() {
-  echo "Usage: $0 [ -m <all|opinions|srL> ] [ -t ALPINO_TIME_OUT ] [ -o OPINION_DATA <news|hotel|hotelnews> ] [ -n NO_SRL_NOMINAL_EVENTS ] input.txt" 1>&2
+  echo "Usage: $0 [ -m <all|entities|opinions|srl> ] [ -t ALPINO_TIME_OUT ] [ -o OPINION_DATA <news|hotel|hotelnews> ] [ -n NO_SRL_NOMINAL_EVENTS ] input.txt" 1>&2
   exit 1
 }
 
@@ -57,17 +57,26 @@ fi
 if [ "$mode" = "srl" ] && [ "$opinion_opt" -eq 1 ]; then  
   >&2 echo "WARNING: opinion option \'o\' has no effect in srl mode"
 fi
+if [ "$mode" = "entities" ] && [ "$opinion_opt" -eq 1 ]; then  
+  >&2 echo "WARNING: opinion option \'o\' has no effect in entities mode"
+fi
+if [ "$mode" = "entities" ] && [ "$srl_opt" -eq 1 ]; then  
+  >&2 echo "WARNING: srl option \'n\' has no effect in entities mode"
+fi
 
 # optional arguments to pipeline run script
 optstring=""
 if [ "$mode" = "opinions" ]; then
   optstring="$optstring-o opinions "
+elif [ "$mode" = "entities" ]; then
+  optstring="$optstring-o entities "
 elif [ "$mode" = "srl" ]; then
+  optstring="$optstring-o srl "
   if [ "$nominal_events" -eq 0 ]; then
-    optstring="$optstring-m vua-framenet-classifier "
-  else
-    optstring="$optstring-o srl "
+    optstring="$optstring-e vua-nominal-event-detection,vua-srl-dutch-nominal-events "
   fi
+elif [ "$mode" = "all" ] && [ "$nominal_events" -eq 0 ]; then
+  optstring="$optstring-c ./example/pipeline-no-nominal-events.yml "
 fi
 
 substr=""
@@ -83,3 +92,8 @@ fi
 
 cat $1 | bash ./run-pipeline.sh $optstring
 >&2 cat pipeline.log
+
+# closing connection to spotlight server 
+if lsof -Pi :2060 ; then
+  kill $(lsof -Pi :2060 -t)
+fi

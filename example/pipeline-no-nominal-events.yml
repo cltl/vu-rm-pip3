@@ -1,3 +1,4 @@
+# This configuration file excludes nominal-event detection and labelling components
 - name: ixa-pipe-tok
   input: 
   output: 
@@ -54,24 +55,6 @@
   cmd: vua-ontotagging.sh
   after: 
   - vua-wsd
-- name: vua-nominal-event-detection
-  input:
-  - text
-  - terms
-  output: 
-  - srl
-  cmd: vua-nominal-event-detection.sh
-  after: 
-  - vua-ontotagging
-- name: vua-srl-dutch-nominal-events
-  input:
-  - terms
-  - deps
-  output: 
-  - srl
-  cmd: vua-srl-dutch-nominal-events.sh
-  after: 
-  - vua-nominal-event-detection
 - name: vua-framenet-classifier
   input:
   - terms

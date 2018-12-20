@@ -43,30 +43,15 @@ def test_topological_sort():
     p = pipeline.Pipeline(pipeline.create_modules(modules))
     assert p.nb_modules() == len(modules) 
 
-def test_filter_graph_by_modules():
-    p = pipeline.Pipeline(pipeline.create_modules([tok, alpino]))
-    path = p.graph.on_path_to('tok')
-    assert len(path) == 2
-    assert 'alpino' not in path
-
-    p.filter_goals(['tok'])
-    assert p.nb_modules() == 1
-    assert 'alpino' not in p.graph.get_keys()
-    assert 'tok' in p.graph.get_keys()
-
-    p = pipeline.Pipeline(pipeline.create_modules(modules))
-    p.filter_goals(['opin', 'coref'])
-    assert p.nb_modules() == 8
-
 def test_filter_graph_by_layers():
     p = pipeline.Pipeline(pipeline.create_modules(modules))
-    p.filter_layers(['srl'])
+    p.filter_until(['srl'], [])
     assert p.nb_modules() == 5
     p = pipeline.Pipeline(pipeline.create_modules(modules), goal_layers=['srl'])
     assert p.nb_modules() == 5
 
 def test_filter_input_layers():
-    p = pipeline.Pipeline(pipeline.create_modules(modules), in_layers=['text','terms','deps','constituents','srl'])
+    p = pipeline.Pipeline(pipeline.create_modules(modules), in_layers=['entities','coreferences'])
     assert p.nb_modules() == 3
     assert 'opin' in p.graph.get_keys()
     assert 'nerc' in p.graph.get_keys()

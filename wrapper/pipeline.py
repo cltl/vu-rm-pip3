@@ -126,9 +126,9 @@ def create_modules(module_dicts):
     return modules
 
 
-def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/', subargs={}):
+def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], excepted_modules=[], bindir='./scripts/bin/', subargs={}):
     modules = load_modules(yml_cfg, subargs)
-    return Pipeline(modules, in_layers, goal_layers, goal_modules, bindir)
+    return Pipeline(modules, in_layers, goal_layers, excepted_modules, bindir)
 
 
 def createRoot():
@@ -204,19 +204,13 @@ class Module:
 
 
 class Pipeline:
-    def __init__(self, modules, in_layers=[], goal_layers=[], goal_modules=[], bindir='./scripts/bin/'):
+    def __init__(self, modules, in_layers=[], goal_layers=[], excepted_modules=[], bindir='./scripts/bin/'):
         self.bindir = bindir
         self.graph = build_pipeline(modules)
-        if goal_layers:
-            self.filter_layers(goal_layers)
-        if goal_modules:
-            try:
-                self.filter_goals(goal_modules)
-            except KeyError:
-                logger.error('Error while filtering modules; verify that they are within your goal layers')
-                raise KeyError
         if in_layers:
-            self.filter_input_layers(in_layers, goal_modules)
+            self.filter_from(in_layers, excepted_modules)
+        if goal_layers:
+            self.filter_until(goal_layers, excepted_modules)
 
     def nb_modules(self):
         return len(self.graph.items()) - 1
@@ -226,38 +220,73 @@ class Pipeline:
         stack.pop(0) # pops root
         return stack
 
-    def filter_goals(self, goals):
+    """
+    only keeps given goal vertices and their prerequisites
+    """
+    def filter_vertices_on_path_to(self, goals):
         path = set()
         for g in goals:
             path.update(self.graph.on_path_to(g)) 
-        to_filter = [k for k in self.graph.get_keys() if k not in path]
-        for k in to_filter:
+        not_on_path = [k for k in self.graph.get_keys() if k not in path and k != 'root']
+        
+        for k in not_on_path:
             self.graph.remove_key(k)
+        # updates children list, removing edges to filtered children
         for v in self.graph.get_vertices():
-            v.children = [c for c in v.children if c.node.id not in to_filter] 
+            v.children = [c for c in v.children if c.node.id in path] 
 
-    def filter_layers(self, layers):
-        goals = set(self.graph.find_keys(lambda v: any(x in v.node.out for x in layers))) 
-        self.filter_goals(goals) 
+
+    """
+    only keeps nodes that output the given layers, excepted those specified by
+    'excepted'
+    """
+    def filter_until(self, layers, excepted):
+        acting = self.graph.get_vertices_acting_on(layers, excepted) 
+        print('acting: {}'.format(acting))
+      #  if acting:
+        self.filter_vertices_on_path_to(acting)
+       # print('filter until: {}'.format(str(self.graph)))
+
+    """
+    keeps vertices that input the given layers (with 'excepted' as exceptions), 
+    and their children vertices.
+    All necessary input layers must be specified in case of multiple dependencies,
+    as vertices with missing parents are filtered out.
+    """ 
+    def filter_from(self, layers, excepted):
+        starting_vertices = self.graph.get_vertices_acting_on(layers, excepted)
+        on_path_from = set()
+        for v in starting_vertices:
+            on_path_from.update(self.graph.on_path_from(v))
+       # print("path: {}".format(on_path_from))
+        prerequisites = set()
+        for v in on_path_from:
+           # print('parents: {}'.format(self.graph.get_vertex(v).parents ))
+            prerequisites.update(set([p.node.id for p in self.graph.get_vertex(v).parents if p.node.id not in on_path_from]))
+       # print('pre: {}'.format(prerequisites))      
  
-    def filter_input_layers(self, layers, goal_modules):
-        # filter modules producing 'layers'
-        to_filter = set(self.graph.find_keys(lambda v: any(x in v.node.out for x in layers))) 
-        # ... excepted modules in 'with_modules'
-        for m in goal_modules:
-            if m in to_filter:
-                to_filter.remove(m)
+        accounted_for = set()
+        for v in starting_vertices:
+            accounted_for.update(self.graph.on_path_to(v))
+        accounted_for.update(on_path_from)
 
-        # remove input layers and reconnect their direct children to root
-        for k in to_filter:
-            self.graph.remove_key(k)
-        # remove edges from filtered parents 
-        for v in self.graph.get_vertices():    
-            v.parents = [p for p in v.parents if p.node.id not in to_filter]
-        self.graph.get_vertex('root').children = [] 
-        for k in self.graph.get_keys():
-            if k != 'root' and not self.graph.get_vertex(k).parents:
-                self.graph.add_edge('root', k)
+        def parents_accounted_for(v):
+            return all(p.node.id in accounted_for for p in self.graph.get_vertex(v).parents) 
+
+        on_path_from = [ v for v in on_path_from if parents_accounted_for(v) ] 
+        self.graph.remove_keys(lambda v: v not in on_path_from) 
+       
+        # connects leading vertices to root 
+        self.graph.add_vertex('root', createRoot())
+        for v in starting_vertices:
+            if any(p not in starting_vertices for p in self.graph.get_vertex(v).parents):
+                self.graph.add_edge('root', v)
+
+        # remove parent edges from prerequisite modules
+        for v in self.graph.get_vertices():
+            v.parents = [p for p in v.parents if p.node.id not in prerequisites]
+
+       # print('filter from: {}'.format(str(self.graph)))
 
     def execute(self, infile):
         summary = run(self.topological_sort(), infile, self.bindir)

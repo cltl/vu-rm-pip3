@@ -13,11 +13,12 @@ RUN apt-get update && apt-get install -y \
     maven \
     unzip \
     timbl \
-    gawk
+    gawk \
+    lsof
 
 COPY . /vu-rm
 RUN pip install -r ./env/requirements.txt
-RUN bash ./install.sh 
+RUN bash ./install.sh -c 
 
 ENV ALPINO_HOME=/vu-rm/components/resources/Alpino
 ENV PATH=$PATH:/vu-rm/components/resources/Alpino/bin

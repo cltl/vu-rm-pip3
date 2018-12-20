@@ -2,6 +2,7 @@
 #
 # fixes a compatibility issue between maven's surefire plugin
 # and docker (for heideltime and event-coreference modules)
+# author: Sophie Arnoult
 # date: 08/11/2018
 #----------------------------------------------------
 
