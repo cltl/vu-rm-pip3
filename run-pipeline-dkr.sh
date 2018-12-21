@@ -17,7 +17,8 @@ usage() {
 
 # mode 'all' runs the full pipeline; 
 # mode 'opinions' runs: tokenizer, alpino parser, NERC and Opinions modules
-# mode 'srl' runs modules needed for SRL layer
+# mode 'entities' runs: tokenizer, alpino parser, NERC and NED modules
+# mode 'srl' runs: tokenizer, alpino parser, WSD, ontotagging, SRL, FrameNet labelling, and (if not specified otherwise) nominal-predicate SRL modules
 mode="all"
 
 # 0 -> no time limit
@@ -94,6 +95,6 @@ cat $1 | bash ./run-pipeline.sh $optstring
 >&2 cat pipeline.log
 
 # closing connection to spotlight server 
-if lsof -Pi :2060 ; then
+if lsof -Pi :2060 >/dev/null ; then
   kill $(lsof -Pi :2060 -t)
 fi
