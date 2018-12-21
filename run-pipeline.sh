@@ -9,11 +9,11 @@ wrapper_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 #cfg=$wrapper_dir/example/pipeline.yml 
 log=$(pwd)/pipeline.log
 usage() {
-  echo "Usage: $0 [ -c CFG ] [ -d BIN_DIR ] [ -l LOGFILE ] [ -i IN_LAYERS ] [ -o GOAL_LAYERS ] [ -m GOAL_MODULES ] [ -s MODULE_OPTS ]" 1>&2
+  echo "Usage: $0 [ -c CFG ] [ -d BIN_DIR ] [ -l LOGFILE ] [ -i IN_LAYERS ] [ -o GOAL_LAYERS ] [ -e EXCEPTED_MODULES ] [ -s MODULE_OPTS ]" 1>&2
   exit 1
 }
 
-while getopts ":c:d:l:i:o:m:s:" opt; do
+while getopts ":c:d:l:i:o:e:s:" opt; do
   case "$opt" in
     c)
       cfg=$OPTARG ;;
@@ -25,8 +25,8 @@ while getopts ":c:d:l:i:o:m:s:" opt; do
       in_layers=$OPTARG ;;
     o)
       out_layers=$OPTARG ;;
-    m)
-      with_modules=$OPTARG ;;
+    e)
+      excepted_modules=$OPTARG ;;
     s)
       substr=$OPTARG ;;
     *)
@@ -48,8 +48,8 @@ fi
 if [ ! -z $out_layers ]; then
   args="$args-o $out_layers "
 fi
-if [ ! -z $with_modules ]; then
-  args="$args-m $with_modules "
+if [ ! -z $excepted_modules ]; then
+  args="$args-e $excepted_modules "
 fi
 if [ ! -z $substr ]; then
   args="$args-s $substr "

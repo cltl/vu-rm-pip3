@@ -242,28 +242,20 @@ class Pipeline:
     """
     def filter_until(self, layers, excepted):
         acting = self.graph.get_vertices_acting_on(layers, excepted) 
-        print('acting: {}'.format(acting))
-      #  if acting:
         self.filter_vertices_on_path_to(acting)
-       # print('filter until: {}'.format(str(self.graph)))
 
     """
-    keeps vertices that input the given layers (with 'excepted' as exceptions), 
+    keeps vertices that act on the given layers (with 'excepted' as exceptions), 
     and their children vertices.
-    All necessary input layers must be specified in case of multiple dependencies,
-    as vertices with missing parents are filtered out.
     """ 
     def filter_from(self, layers, excepted):
         starting_vertices = self.graph.get_vertices_acting_on(layers, excepted)
         on_path_from = set()
         for v in starting_vertices:
             on_path_from.update(self.graph.on_path_from(v))
-       # print("path: {}".format(on_path_from))
         prerequisites = set()
         for v in on_path_from:
-           # print('parents: {}'.format(self.graph.get_vertex(v).parents ))
             prerequisites.update(set([p.node.id for p in self.graph.get_vertex(v).parents if p.node.id not in on_path_from]))
-       # print('pre: {}'.format(prerequisites))      
  
         accounted_for = set()
         for v in starting_vertices:
@@ -286,7 +278,6 @@ class Pipeline:
         for v in self.graph.get_vertices():
             v.parents = [p for p in v.parents if p.node.id not in prerequisites]
 
-       # print('filter from: {}'.format(str(self.graph)))
 
     def execute(self, infile):
         summary = run(self.topological_sort(), infile, self.bindir)
