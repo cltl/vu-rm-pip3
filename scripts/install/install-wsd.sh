@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 ############################################################
@@ -14,6 +14,25 @@
 #   - removing installation of KafNafParserPy
 #   - using publicly available models
 #############################################################
+
+usage() {
+  echo "Usage: $0 github_sfx commit_nb targetdir" 1>&2
+  exit 1
+}
+
+if [ $# -ne 3 ]; then
+  usage
+fi
+
+#------------------------------------------------
+scriptdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+github_sfx=$1
+commit_nb=$2
+targetdir=$3
+module=$(basename ${github_sfx})
+
+$scriptdir/get-from-git.sh $github_sfx $commit_nb $targetdir
+cd $targetdir/$module
 
 
 echo 'Downloading and installing LIBSVM from https://github.com/cjlin1/libsvm'
@@ -32,7 +51,7 @@ echo LIBSVM installed correctly lib/libsvm
 cd ../../..
 
 echo 'Downloading models...(could take a while)'
-wget --user=cltl --password='.cltl.' kyoto.let.vu.nl/~izquierdo/models_wsd_svm_dsc.tgz 2> /dev/null
+wget kyoto.let.vu.nl/~izquierdo/public/models_wsd_svm_dsc.tgz 2> /dev/null
 echo 'Unzipping models...'
 tar xzf models_wsd_svm_dsc.tgz
 rm models*tgz

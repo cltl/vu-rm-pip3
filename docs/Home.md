@@ -11,9 +11,11 @@ VU-RM-PIP3 addresses the following needs:
 
 
 ## Installation and requirements
-See [installation and requirements] for installing the VU Reading Machine on Linux or Windows.
+See [installation and requirements](https://github.com/cltl/vu-rm-pip3/blob/master/docs/installation.md) for installing the VU Reading Machine on Linux or Windows.
 
-## Docker
+## Running the pipeline
+You can run the pipeline using Docker or a shell script (see [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md)).
+
 You can build a Docker image with:
 ```
 docker build -t vu-rm-pip3 .

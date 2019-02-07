@@ -45,7 +45,7 @@ function install-mor {
   done
   echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
   source $envvars
-  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 6f789bd $pythondir 
+  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 82ed6f9 $pythondir 
   echo "Finished installing the Alpino wrapper."
 }
 
@@ -79,14 +79,13 @@ function install-vua-resources {
 
 function install-wsd {
   echo "Installing the WSD module ..."
-  $scriptdir/install-from-git.sh cltl/svm_wsd 0300439 $scriptdir/install-wsd.sh $pythondir
-  echo "Finished installing WSD, porting code to python 3"
-  $utildir/wsd_to-python3.sh -m $pythondir
+  $scriptdir/install-wsd.sh cltl/svm_wsd 8bb5319 $pythondir
+  echo "Finished installing WSD"
 }
 
 function install-heideltime {
   echo "Installing time normalization ..."
-  $scriptdir/install-heideltime.sh ixa-ehu/ixa-heideltime 2229a00 $javadir $utildir $resourcesdir
+  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper 484ed80 $javadir $resourcesdir
   echo "Finished installing time normalization."
 }
 
@@ -98,9 +97,8 @@ function install-onto {
 
 function install-srl {
   echo "Installing SRL (Sonar)..."
-  $scriptdir/get-from-git.sh newsreader/vua-srl-nl 675d22d $pythondir
-  echo "Finished installing srl module, porting code to python 3"
-  $utildir/srl_to-python3.sh -m $pythondir
+  $scriptdir/get-from-git.sh sarnoult/vua-srl-nl 72ad676 $pythondir
+  echo "Finished installing srl module"
 }
 
 function install-dutch-nominal-events {
@@ -117,9 +115,8 @@ function install-multi-factuality {
 
 function install-opinmin {
   echo "Installing opinion miner..."
-  $scriptdir/install-from-git.sh rubenIzquierdo/opinion_miner_deluxePP 40a714c $scriptdir/opin-install.sh $pythondir
-  echo "Finished installing opinion miner, porting code to python 3"
-  $utildir/opin_to-python3.sh -m $pythondir
+  $scriptdir/install-opinion-miner.sh rubenIzquierdo/opinion_miner_deluxePP 3d99e85 $pythondir
+  echo "Finished installing opinion miner"
 }
 
 function install-evcoref {

@@ -18,5 +18,5 @@ INPUTFILE=$scratch/inputfile
 FEATUREVECTOR=$scratch/csvfile
 TIMBLOUTPUTFILE=$scratch/timblpredictions
 tee $INPUTFILE | python $mod/nafAlpinoToSRLFeatures.py > $FEATUREVECTOR
-timbl -mO:I1,2,3,4 -i $mod/25Feb2015_e-mags_mags_press_newspapers.wgt -t $FEATUREVECTOR -o $TIMBLOUTPUTFILE &>/dev/null 
+timbl -mO:I1,2,3,4 -i $mod/25Feb2015_e-mags_mags_press_newspapers.wgt -t $FEATUREVECTOR -o $TIMBLOUTPUTFILE &>/dev/null & wait
 python $mod/timblToAlpinoNAF.py $INPUTFILE $TIMBLOUTPUTFILE

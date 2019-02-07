@@ -32,6 +32,7 @@ By default, the wrapper executes all the components listed in the configuration 
 - goal layers (`-o`): the wrapper will execute all components up to and including those that output these layers, and filter out downstream components;
 - excluded components (`-m`): (in combination with given input/output layers): excludes components acting on the given input/output layers.
 
+Layers and components are documented [here](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md).
 
 The pipeline wrapper arguments are summarized in the following table:
 

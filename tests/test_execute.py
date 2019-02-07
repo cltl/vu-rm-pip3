@@ -12,8 +12,8 @@ fail_alpino_cfg='tests/data/fail-alpino.yml'
 runs pipeline from intermediary output and config
 """
 def test_finish_incomplete_pipeline():
-    goal_layers = ['opinions','timeExpressions']
-    p = pipeline.create_pipeline(cfg, in_layers=['opinions','timeExpressions'], goal_layers=goal_layers)
+    goal_layers = ['opinions','timex']
+    p = pipeline.create_pipeline(cfg, in_layers=['opinions','timex'], goal_layers=goal_layers)
     print(p.graph)
     scheduled = p.topological_sort()
     assert len(scheduled) == 2

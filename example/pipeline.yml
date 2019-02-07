@@ -24,13 +24,13 @@
   output: 
   - entities
   cmd: ixa-pipe-ned.sh
-- name: vua-heideltime
+- name: vuheideltimewrapper
   input:
   - text
   - terms
   output: 
-  - timeExpressions
-  cmd: vua-heideltime.sh
+  - timex
+  cmd: vuheideltimewrapper.sh
 - name: vua-wsd
   input:
   - text
