@@ -7,6 +7,7 @@ except ImportError:
     from yaml import Loader, Dumper
 from subprocess import SubprocessError, Popen, PIPE
 import tempfile
+import os
 import logging
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,15 @@ def find_error(stderr_iterator):
         else:
             logger.info(line)
     return found_error
+
+
+def test_silent_failure(out):
+    out.seek(0, os.SEEK_END) 
+    if out.tell(): 
+        out.seek(0) 
+        return False
+    else:
+        return True 
 
 
 """
@@ -75,9 +85,10 @@ def run(scheduled, input_file, bindir):
         margs[0] = bindir + margs[0]
         p = Popen(margs, stdin=infile, stdout=out, stderr=PIPE)
         module_failure = find_error(iter(p.stderr.readline, b''))
-        if module_failure:
+        silent_failure = test_silent_failure(out)
+        if module_failure or silent_failure:
             failed.append(m)
-            logger.error("module " + m.node.id + " returned an error")
+            logger.error("module " + m.node.id + " failed")
             logger.info('\n-- Rebuilding pipeline with remaining modules...')
             modules = reschedule(completed, modules)
             logger.info('pipeline can continue running with these modules: {}'.format([m.node.id for m in modules]))

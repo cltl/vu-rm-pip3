@@ -32,9 +32,9 @@ The image takes a raw text file (UTF-8) as argument, and accepts the following o
 - alpino time out `-t`: defines the maximal per-sentence time budget for the Alpino parser (default is None);
 - opinion-miner model data `-d`: defines the model data used by the opinion miner (default is 'news').
 
-The output file is redirected to `stdout`, and the log file to `stderr`. To run the image on the example file `./example/test.txt` with the `opinions` mode, run:
+The output file is redirected to `stdout`, and the log file to `stderr`. To run the image on the example file `./tests/data/test.txt` with the `opinions` mode, run:
 ```
-docker run -v $(pwd)/example/:/work/ vu-rm-pip3 -m opinions /work/test.txt > test.out 2> test.log
+docker run -v $(pwd)/tests/data/:/work/ vu-rm-pip3 -m opinions /work/test.txt > test.out 2> test.log
 ```  
 
 

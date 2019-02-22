@@ -60,6 +60,7 @@ Upon normal termination, sorting returns a stack of ordered vertices, which can 
 If an error is detected during the execution of a component, the remaining components are filtered to keep those that do not depend on the failing one. Pipeline execution then proceeds with the filtered components (on the same input file as to the failing component), allowing for maximal processing of the input.
 
 Errors are detected by searching for keywords in the `stderr` stream of each component; we are considering the following keywords: 'error', 'Error', 'Exception' and ' fault'.
+Component failures leading to an empty stdout stream are also detected, and handled in the same way.
 
 This process is repeated as often as a component fails and an alternative component schedule can be produced.
 

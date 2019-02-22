@@ -3,6 +3,8 @@
 # modified version of the install_me.sh script of the opinion-miner module
 # uses publicly available models 
 
+set -e
+
 usage() {
   echo "Usage: $0 github_sfx commit_nb targetdir" 1>&2
   exit 1

@@ -18,6 +18,7 @@ github_sfx=$1
 commit_nb=$2
 target_dir=$3
 resources_dir=$4
+util_dir=$5
 module=$(basename ${github_sfx})
 
 
@@ -30,6 +31,7 @@ cd $module
 git checkout $commit_nb
 
 echo "building vuheideltimewrapper..."
+$util_dir/fix-surefire-plugin.sh pom.xml
 mvn clean install
 mv target/*with-dependencies.jar $target_dir
 

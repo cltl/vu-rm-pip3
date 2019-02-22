@@ -2,10 +2,11 @@ import wrapper.pipeline as pipeline
 import wrapper.dag as dag
 
 single_word='tests/data/single_word.txt'
-cfg='example/pipeline.yml'
+cfg='cfg/pipeline.yml'
 part1_out='tests/data/pipe_part1.txt'
 fail_cfg='tests/data/fail.yml'
 fail_alpino_cfg='tests/data/fail-alpino.yml'
+fail_empty_cfg='tests/data/empty-out.yml'
 
 
 """
@@ -73,4 +74,13 @@ def test_pipeline_with_modified_module_args():
     completed = [v for v in summary.values() if v == 'completed']
     assert len(completed) == 2
 
+
+def test_pipeline_detects_empty_output():
+    goal_layers = ['deps']
+    p = pipeline.create_pipeline(fail_empty_cfg, goal_layers=goal_layers)
+    assert p.nb_modules() == 2
+    with open(single_word, 'r') as f:
+        summary = p.execute(f)
+    not_run = [v for v in summary.values() if v == 'not_run']
+    assert len(not_run) == 1
 

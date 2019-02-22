@@ -24,6 +24,8 @@ if [ $# -ne 3 ]; then
   usage
 fi
 
+set -e
+
 #------------------------------------------------
 scriptdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 github_sfx=$1

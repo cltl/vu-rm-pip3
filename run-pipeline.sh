@@ -6,7 +6,7 @@
 # -----------------------------------------------
 wrapper_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 # you can copy this config file and adapt it as you wish: 
-#cfg=$wrapper_dir/example/pipeline.yml 
+#cfg=$wrapper_dir/cfg/pipeline.yml 
 log=$(pwd)/pipeline.log
 usage() {
   echo "Usage: $0 [ -c CFG ] [ -d BIN_DIR ] [ -l LOGFILE ] [ -i IN_LAYERS ] [ -o GOAL_LAYERS ] [ -e EXCEPTED_MODULES ] [ -s MODULE_OPTS ]" 1>&2

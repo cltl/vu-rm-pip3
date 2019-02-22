@@ -11,7 +11,7 @@ The script additionally produces a log file `pipeline.log` in the directory from
 This section describes arguments to the python pipeline wrapper. 
 
 ### Configuration file
-The pipeline wrapper uses a configuration file (provided in the repository under `./example/pipeline.yml`) to define the pipeline components, their dependencies, and the name of their execution script. A different configuration file may be specified through the `-c` option.
+The pipeline wrapper uses a configuration file (provided in the repository under `./cfg/pipeline.yml`) to define the pipeline components, their dependencies, and the name of their execution script. A different configuration file may be specified through the `-c` option.
 
 ### Execution scripts
 The pipeline wrapper relies on individual shell scripts for the execution of its components. Scripts for the components of the Dutch NewsReader pipeline are located by default under `./scripts/bin/`. The wrapper allows to define a different location through the `-d` option.

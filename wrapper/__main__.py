@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='VU Reading Machine pipeline')
-parser.add_argument('-c', '--cfg_file', dest='cfg_file', default='./example/pipeline.yml', type=str, help='config file')
+parser.add_argument('-c', '--cfg_file', dest='cfg_file', default='./cfg/pipeline.yml', type=str, help='config file')
 parser.add_argument('-d', '--bin_dir', dest='bin_dir', default='./scripts/bin/', type=str, help='module scripts directory')
 parser.add_argument('-i', '--in_layers', dest='in_layers_str', type=str, help='input layers and their prerequisite modules are filtered out (comma-separated list string)')
 parser.add_argument('-o', '--out_layers', dest='out_layers_str', type=str, help='only runs the modules needed to produce the given output layers (comma-separated list string)')

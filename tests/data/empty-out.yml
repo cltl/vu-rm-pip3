@@ -1,0 +1,13 @@
+- name: ixa-pipe-tok
+  input:
+  output:
+  - text
+  cmd: empty-output.sh
+- name: vua-alpino
+  input:
+  - text
+  output:
+  - terms
+  - deps
+  - constituents
+  cmd: vua-alpino.sh

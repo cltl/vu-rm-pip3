@@ -63,6 +63,6 @@ Finally, install all Python requirements using 'pip install -r ./env/requirement
 
 The pipeline may now be tested using the following command.
 
-    ./run-pipeline.sh < example/test.txt > output.naf
+    ./run-pipeline.sh < tests/data/test.txt > output.naf
 
 However, there can still be problems related to 'setitimer' in Alpino. This can be avoided (though not solved) by removing '-t 0.2' from 'scripts/bin/vua-alpino.sh'.

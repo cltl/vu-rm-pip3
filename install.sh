@@ -38,14 +38,10 @@ done
 
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
-  $scriptdir/get-tar.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.19-21235-sicstus.tar.gz $resourcesdir
-  for d in Treebank TreebankTools Tokenization Generation
-  do
-    rm -rf $resourcesdir/Alpino/$d
-  done
+  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.19-21235-sicstus.tar.gz $resourcesdir/Alpino
   echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
   source $envvars
-  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 82ed6f9 $pythondir 
+  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 85b7603 $pythondir 
   echo "Finished installing the Alpino wrapper."
 }
 
@@ -73,7 +69,7 @@ function install-ned {
 
 function install-vua-resources {
   echo "Installing vua resources..." 
-  $scriptdir/get-from-git.sh cltl/vua-resources e730ce6 $resourcesdir
+  $scriptdir/get-vua-resources.sh cltl/vua-resources e730ce6 $resourcesdir/vua-resources
   echo "Finished installing vua resources."
 }
 
@@ -85,7 +81,7 @@ function install-wsd {
 
 function install-heideltime {
   echo "Installing time normalization ..."
-  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper 484ed80 $javadir $resourcesdir
+  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper 484ed80 $javadir $resourcesdir $utildir
   echo "Finished installing time normalization."
 }
 

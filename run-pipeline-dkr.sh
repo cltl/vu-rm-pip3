@@ -77,7 +77,7 @@ elif [ "$mode" = "srl" ]; then
     optstring="$optstring-e vua-nominal-event-detection,vua-srl-dutch-nominal-events "
   fi
 elif [ "$mode" = "all" ] && [ "$nominal_events" -eq 0 ]; then
-  optstring="$optstring-c ./example/pipeline-no-nominal-events.yml "
+  optstring="$optstring-c ./cfg/pipeline-no-nominal-events.yml "
 fi
 
 substr=""

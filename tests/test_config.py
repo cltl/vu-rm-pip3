@@ -3,7 +3,7 @@ import wrapper.dag as dag
 import pytest
 
 single_word='tests/data/single_word.txt'
-cfg='example/pipeline.yml'
+cfg='cfg/pipeline.yml'
 
 
 def test_pipeline_creation():
