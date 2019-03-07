@@ -4,7 +4,7 @@
 # This script produces output files in the directory from which 
 # it is called.
 # -----------------------------------------------
-wrapper_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+wrapper_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd .. && pwd)
 # you can copy this config file and adapt it as you wish: 
 #cfg=$wrapper_dir/cfg/pipeline.yml 
 log=$(pwd)/pipeline.log

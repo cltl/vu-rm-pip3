@@ -9,11 +9,11 @@ The VU Reading Machine can be run on Linux and Windows using WSL; for Mac, you w
 Not all component dependencies are installed by `install.sh`. Dependencies include: java (jdk8), maven3, python3, pip3, lib2to3, timbl, libtcl, libtk, libxslt, libxss1, libxft2, unzip, gawk, gcc, git, bash and lsof.
 
 ### Python components and environment
-The pipeline is written for python 3, and was tested with python 3.5 and 3.6. The wrapper is not compatible with python 2. The python pipeline components are ported to python 3 by `install.sh` when relevant. Required python packages for the pipeline are recorded under `env/requirements.txt`.
+The pipeline is written for python 3, and was tested with python 3.5 and 3.6. The wrapper is not compatible with python 2. Required python packages for the pipeline are recorded under `./requirements.txt`.
 
 Within the python environment of your choice, do:
 ```
-pip install -r ./env/requirements.txt
+pip install -r ./requirements.txt
 ```
 
 ### Java components 
@@ -33,13 +33,11 @@ The VU-RM-PIP3 pipeline repository contains the python 3 wrapper as well as code
 
 Run the script `install.sh` to install the components of the Dutch NewsReader pipeline: 
 
-    ./install.sh
-
-The [requirements](https://github.com/cltl/vu-rm-pip3/blob/master/docs/requirements.md) lists requirements for installation and execution of the pipeline.
+    ./scripts/install.sh
 
 The script `run-pipeline.sh` allows to run the pipeline on a raw text document to produce a fully annotated NAF document:
     
-    ./run-pipeline.sh < input.txt > output.naf
+    ./scripts/run-pipeline.sh < input.txt > output.naf
 
 The script additionally produces a log file `pipeline.log` in the directory from which it is called. 
 See the [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page for more information on running the pipeline.
@@ -52,17 +50,17 @@ First, clone the Git repository, making sure to download the Shell files with Un
 
     'git config --global core.autocrlf false'
 
-Additionally, make sure the path of the repo does not contain any spaces (see [StackExchange](https://stackoverflow.com/questions/5163642/how-to-pass-directory-path-that-have-space-to-windows-shell)). For example, renames any directories using underscores.
+Additionally, make sure the path of the repo does not contain any spaces (see [StackExchange](https://stackoverflow.com/questions/5163642/how-to-pass-directory-path-that-have-space-to-windows-shell)). For example, rename any directories using underscores.
 
 Open the WSL Bash terminal and install [Timbl](https://languagemachines.github.io/timbl/). Also install Java8 and Maven3 on WSL via the Bash terminal (the Windows versions of Java and Maven will not work). 
 Additionally, install 'unzip', 'libxss1', 'libxft2' and 'libtk8.5' (see [Alpino documentation](https://danieldk.eu/Posts/2017-01-10-Alpino-Windows.html)).
 
 Possibly, both version 2 and version 3 of Python may be installed on the Linux system, and two versions of Pip. This can be checked using 'python --version'. Python3 is needed as the default Python version. This requires the creation of a new symbolic link (see see [AskUbuntu](https://askubuntu.com/questions/603949/python-2-7-is-still-default-though-alias-python-python3-4-is-set)).
 
-Finally, install all Python requirements using 'pip install -r ./env/requirements.txt' and, additionally, install 2To3 using 'pip install 2to3'.
+Finally, install all Python requirements using 'pip install -r ./requirements.txt' and, additionally, install 2To3 using 'pip install 2to3'.
 
 The pipeline may now be tested using the following command.
 
-    ./run-pipeline.sh < tests/data/test.txt > output.naf
+    ./scripts/run-pipeline.sh < tests/data/test.txt > output.naf
 
-However, there can still be problems related to 'setitimer' in Alpino. This can be avoided (though not solved) by removing '-t 0.2' from 'scripts/bin/vua-alpino.sh'.
+However, there can still be problems related to 'setitimer' in Alpino. This can be avoided (though not solved) as long as one does *not* set a time limit for the Alpino parser (that is the default for the pipeline). 

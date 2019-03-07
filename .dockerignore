@@ -1,5 +1,6 @@
-.git*
-.newsreader
-components
+.git
+*.md
+lib
 docs
 tests
+.newsreader

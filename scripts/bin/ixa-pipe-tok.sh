@@ -4,6 +4,6 @@
 #----------------------------------------------------
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 
-jarfile=$workdir/components/java/ixa-pipe-tok-1.8.5-exec.jar
-java -Xmx1000m -jar $jarfile tok -l nl #--inputkaf 
+jarfile=$workdir/lib/java/ixa-pipe-tok-1.8.5-exec.jar
+java -Xmx1000m -jar $jarfile tok -l nl 
   

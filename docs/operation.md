@@ -65,4 +65,4 @@ Component failures leading to an empty stdout stream are also detected, and hand
 This process is repeated as often as a component fails and an alternative component schedule can be produced.
 
 ## Further reading
-Input and output files are described on the [interface](https://github.com/cltl/vu-rm-pip3/blob/master/docs/interface.md); the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) lists arguments to the pipeline and provides advanced usage examples.
+See the [configuration](https://github.com/cltl/vu-rm-pip3/blob/master/docs/configuration.md) for more information on configuring the pipeline; the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) lists arguments to the pipeline and provides advanced usage examples.

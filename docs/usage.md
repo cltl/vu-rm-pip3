@@ -3,9 +3,9 @@
 ## Basic Usage
 The script `run-pipeline.sh` allows to run the pipeline on a raw text document to produce a fully annotated NAF document:
 
-    ./run-pipeline.sh < input.txt > output.naf
+    ./scripts/run-pipeline.sh < input.txt > output.naf
 
-The script additionally produces a log file `pipeline.log` in the directory from which it is called. Internally, the script calls the python module `wrapper/pipeline` with standard arguments from the repository's directory. The script is set to accept the python wrapper arguments as command-line arguments.
+The script additionally produces a log file `pipeline.log` in the directory from which it is called. Internally, the script calls the python module `wrapper` with standard arguments from the repository's directory. The script is set to accept the python wrapper arguments as command-line arguments.
 
 ## Advanced usage
 This section describes arguments to the python pipeline wrapper. 
@@ -30,7 +30,7 @@ By default, the wrapper executes all the components listed in the configuration 
 
 - input layers (`-i`): the wrapper executes all components from the ones acting on, i.e., creating or modifying the input layers; 
 - goal layers (`-o`): the wrapper will execute all components up to and including those that output these layers, and filter out downstream components;
-- excluded components (`-m`): (in combination with given input/output layers): excludes components acting on the given input/output layers.
+- excluded components (`-e`): (in combination with given input/output layers): excludes components acting on the given input/output layers.
 
 Layers and components are documented [here](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md).
 
@@ -51,20 +51,20 @@ option | description | format
 Suppose that you adopted the following structure for your project, and are working from `/home/jdoe`, with the alternative location `custom/bin` for the components shell scripts, and an alternative configuration file `custom/pipeline.yml`.
 ```
 /home/jdoe/
-|   vu-rm-pip3
+|___vu-rm-pip3
 |___custom
 |   |___bin
-|       pipeline.yml
+|   |___ pipeline.yml
 |___data
-        test.txt
+    |___ test.txt
 ```
 
 To call the pipeline on `data/test.txt` from `/home/jdoe` and output a log file `test.log` under `data/`, run:
 
-    ./vu-rm-pip3/run-pipeline.sh -c /home/jdoe/custom/pipeline.yml \
-                                 -d /home/jdoe/custom/bin/ \
-                                 -l /home/jdoe/data/test.log \
-                                 < data/test.txt > data/test.naf
+    ./vu-rm-pip3/scripts/run-pipeline.sh -c /home/jdoe/custom/pipeline.yml \
+                                         -d /home/jdoe/custom/bin/ \
+                                         -l /home/jdoe/data/test.log \
+                                         < data/test.txt > data/test.naf
 
 
 #### Filtering the pipeline
@@ -72,13 +72,13 @@ Suppose now that you would like to produce two intermediary files: one resulting
 
 To run all components up to the `vua-wsd` component, do
 
-    ./vu-rm-pip3/run-pipeline.sh -o terms -e vua-ontotagging < data/test.txt > data/test.wsd
+    ./vu-rm-pip3/scripts/run-pipeline.sh -o terms -e vua-ontotagging < data/test.txt > data/test.wsd
 
 This will run the components `ixa-pipe-tok`, `vua-alpino`, and `vua-wsd`, while excluding the `vua-ontotagging`, which modifies the *terms* layer.
 
 The output file `data/test.wsd` contains *text*, *constituents*, *deps* and *terms* layers, but we need to run `vua-ontotagging` to complete the *terms* layer before we can produce the *srl* and *coreference* layers. We can do this as follows:
 
-    ./vu-rm-pip3/run-pipeline.sh -i terms -e vua-alpino,vua-wsd -o srl,coreference \
+    ./vu-rm-pip3/scripts/run-pipeline.sh -i terms -e vua-alpino,vua-wsd -o srl,coreference \
                       < data/test.wsd > data/test.coref
 
 
@@ -91,4 +91,4 @@ The `-e` option can be used for filtering both *input* and *output* layers. Note
 #### Specifying component arguments
 The following call sets the Alpino time out to 0.2 min per sentence, and the opinion miner's model to 'hotel':
 
-    ./vu-rm-pip3/run-pipeline.sh -s 'vua-alpino:-t:0.2;opinion-miner:-d:hotel' < data/test.txt > data/test.out
+    ./vu-rm-pip3/scripts/run-pipeline.sh -s 'vua-alpino:-t:0.2;opinion-miner:-d:hotel' < data/test.txt > data/test.out

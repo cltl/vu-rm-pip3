@@ -19,7 +19,7 @@ done
 shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/components/python
+modulesdir=$workdir/lib/python
 source $workdir/.newsreader
 cd $modulesdir/morphosyntactic_parser_nl
 

@@ -12,7 +12,7 @@ finish() {
 trap finish EXIT
   
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/components/python
+modulesdir=$workdir/lib/python
 mod=$modulesdir/vua-srl-nl
 INPUTFILE=$scratch/inputfile
 FEATUREVECTOR=$scratch/csvfile

@@ -1,19 +1,22 @@
-# Interface
-Executing the pipeline requires two types of input files: 
+# Configuration
+Executing the pipeline requires two types of files: 
 
 - a yaml configuration file, declaring the pipeline components and their dependencies; 
-- individual shell scripts, for the execution of each pipeline component. 
+- individual executable scripts, for the execution of each pipeline component. 
 
 The configuration file defines a maximal pipeline with all available components; components can be filtered out by specifying input layers, goal layers or goal modules, as explained in the [operation](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md) and [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) pages. 
 
-The pipeline writes the result NAF file to `stdout`. Besides, the `stderr` stream of each component and an execution summary are logged, as described [below](#logging).
+The default configuration file for the Dutch NewsReader pipeline is provided under `.cfg/pipeline.yml`, and execution scripts are provided in `./scripts/bin`, which is also the default location for such scripts. A different configuration file, and different scripts location can be specified as explained in the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page.
+
+The pipeline reads input text documents from `stdin` and writes the result NAF files to `stdout`. Besides, the `stderr` stream of each component and an execution summary are logged, as described [below](#logging).
 
 
-## Configuration
+## Configuration file
 The components used to create the pipeline are listed in a yaml configuration file. Each component specification defines a name, a shell-script name ('cmd'), output layers, and optionally, input layers and prerequisite modules ('after').
 For example, the predicate-matrix tagger is identified as 'vua-ontotagging', it inputs and outputs a *terms* NAF layer, runs with the shell script 'vua-ontotagging.sh', and it runs after the 'vua-wsd' component.
 ```
 - name: vua-ontotagging
+  input:
   - terms
   output:
   - terms
@@ -37,7 +40,5 @@ A log file is used to record the following information:
 - identified errors in the execution of a module if any, and the rescheduled pipeline;
 - a summary upon completion, listing the scheduled modules, as well as the completed, failed and non-executed modules. 
 
-
-## Next
-Alternative paths to the input/output files can be provided to the pipeline as described on the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page.
+The log file is written by default to `./pipeline.log`, but a different path can be specified as explained in the [usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) page.
 

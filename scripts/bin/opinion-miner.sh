@@ -19,7 +19,7 @@ done
 shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/components/python
+modulesdir=$workdir/lib/python
 cd $modulesdir/opinion_miner_deluxePP
 python tag_file.py -polarity -d $model_data
 cd $workdir

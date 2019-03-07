@@ -59,6 +59,7 @@ tar xvzf models_hotel_nl.tgz
 tar xvzf models_news_nl.tgz
 tar xvzf model_nl_hotel_news.tgz
 mv model_nl_hotel_news models_hotelnews_nl
+rm *tgz
 cd ..
 
 wget http://kyoto.let.vu.nl/~izquierdo/public/polarity_models.tgz

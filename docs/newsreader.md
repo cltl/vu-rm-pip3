@@ -23,7 +23,7 @@ Our version of the Dutch NewsReader pipeline uses the following components:
 - named entity recognition: [ixa-pipe-nerc](https://github.com/ixa-ehu/ixa-pipe-nerc/blob/master/README.md)
 - named entity disambiguation: [ixa-pipe-ned](https://github.com/ixa-ehu/ixa-pipe-ned/blob/master/README.md)
 - word sense disambiguation: [vua-wsd](https://github.com/cltl/svm\_wsd)
-- time/date standardisation: [vua-heideltime](https://github.com/ixa-ehu/ixa-heideltime)
+- time/date standardisation: [vuheideltimewrapper](https://github.com/cltl/vuheideltimewrapper)
 - predicate-matrix tagging: [vua-ontotagging](https://github.com/cltl/OntoTagger)
 - semantic role labelling: [vua-srl](https://github.com/newsreader/vua-srl-nl)
 - factuality: [multilingual\_factuality](https://github.com/cltl/multilingual\_factuality)
@@ -43,7 +43,7 @@ ixa-pipe-tok | raw      | | text
 vua-alpino | text       | | terms, deps, constituents 
 ixa-pipe-nerc | text, terms |     | entities      
 ixa-pipe-ned | entities |     | entities      
-vua-heideltime | text, terms |   | timeExpressions 
+vuheideltimewrapper | text, terms |   | timeExpressions 
 vua-wsd | text, terms  |  | terms 
 vua-ontotagging | terms | *+vua-wsd*         | terms 
 vua-srl |       terms, deps, constituents | | srl         
@@ -56,6 +56,6 @@ multilingual-factuality | terms, coreferences, opinions    |     | factualities
 
 These dependencies result in the following execution graph:
 
-<img src=https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png width="600" align="middle">
+<img src=https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png width="400" align="middle">
 
 The pipeline [wrapper](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md) instantiates this graph as a directed acyclic graph, allowing for its filtering, execution and rescheduling.

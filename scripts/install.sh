@@ -18,17 +18,17 @@ while getopts ":c" opt; do
 done
 shift $((OPTIND - 1))
 
-workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
-modulesdir=$workdir/components
-javadir=$modulesdir/java
-resourcesdir=$modulesdir/resources
-pythondir=$modulesdir/python
+workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd .. && pwd)
+libdir=$workdir/lib
+javadir=$libdir/java
+resourcesdir=$libdir/resources
+pythondir=$libdir/python
 scriptdir=$workdir/scripts/install
 utildir=$workdir/scripts/util
 envvars=$workdir/.newsreader
 
-if [ "$clean" -eq 1 ] && [ -d $modulesdir ]; then
-  rm -rf $modulesdir
+if [ "$clean" -eq 1 ] && [ -d $libdir ]; then
+  rm -rf $libdir
 fi
 
 for dir in $pythondir $javadir $resourcesdir
@@ -38,7 +38,7 @@ done
 
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
-  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.19-21235-sicstus.tar.gz $resourcesdir/Alpino
+  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.23-21514-sicstus.tar.gz $resourcesdir/Alpino
   echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
   source $envvars
   $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 85b7603 $pythondir 

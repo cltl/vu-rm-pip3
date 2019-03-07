@@ -5,13 +5,13 @@
 #     (full or partial pipeline)
 #   - sets a few pipeline component options  
 #     (alpino time out, opinion models) 
-#   - calls the base pipeline script with the right arguments
+#   - also allows to call the base pipeline script with its arguments
 #  
 #--------------------------------------------------------
 
 
 usage() {
-  echo "Usage: $0 [ -m <all|entities|opinions|srl> ] [ -t ALPINO_TIME_OUT ] [ -o OPINION_DATA <news|hotel|hotelnews> ] [ -n NO_SRL_NOMINAL_EVENTS ] input.txt" 1>&2
+  echo "Usage: $0 [ -m <all|entities|opinions|srl> ] [ -t ALPINO_TIME_OUT ] [ -o OPINION_DATA <news|hotel|hotelnews> ] [ -n NO_SRL_NOMINAL_EVENTS ] [ -w WRAPPER_ARGS ] input.txt" 1>&2
   exit 1
 }
 
@@ -30,21 +30,32 @@ opinion_data="news"
 # 1 -> SRL for verbal and nominal predicates; 0 -> nominal predicates only
 nominal_events=1
 
+# wrapper args. This allows to run the pipeline with all its arguments
+# Note that this will rewrite all other arguments
+wrapper_args=""
+
 opinion_opt=0
 srl_opt=0
+other_opt=0
 
-while getopts ":m:t:o:n" opt; do
+while getopts ":m:t:o:w:n" opt; do
   case "$opt" in
     m)
-      mode=$OPTARG ;;
+      mode=$OPTARG 
+      other_opt=1 ;;
     t)
-      alpino_time_out=$OPTARG ;;
+      alpino_time_out=$OPTARG 
+      other_opt=1 ;;
     o)
       opinion_data=$OPTARG 
-      opinion_opt=1 ;;
+      opinion_opt=1 
+      other_opt=1 ;;
     n)
       nominal_events=0 
-      srl_opt=1 ;;
+      srl_opt=1 
+      other_opt=1 ;;
+    w)
+      wrapper_args=$OPTARG ;;
     *)
       usage ;;
   esac
@@ -63,6 +74,9 @@ if [ "$mode" = "entities" ] && [ "$opinion_opt" -eq 1 ]; then
 fi
 if [ "$mode" = "entities" ] && [ "$srl_opt" -eq 1 ]; then  
   >&2 echo "WARNING: srl option \'n\' has no effect in entities mode"
+fi
+if [ -n $wrapper_args ] && [ "$other_opt" -eq 1 ]; then
+  >&2 echo "WARNING: mode and other arguments will be overwritten by the argument to \'w\'"
 fi
 
 # optional arguments to pipeline run script
@@ -91,7 +105,12 @@ if [ -n "$substr" ]; then
   optstring="${optstring}-s ${substr%%;}" 
 fi
 
-cat $1 | bash ./run-pipeline.sh $optstring
+# calls wrapper with a ready-made optstring
+if [ -n "$wrapper_args" ]; then
+  optstring=$wrapper_args
+fi
+
+cat $1 | bash ./scripts/run-pipeline.sh $optstring
 >&2 cat pipeline.log
 
 # closing connection to spotlight server 

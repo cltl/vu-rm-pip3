@@ -26,8 +26,3 @@ do
   fi
 done
 
-
-#  for d in Treebank TreebankTools Tokenization Generation
-#  do
-#    rm -rf $resourcesdir/Alpino/$d
-#  done
