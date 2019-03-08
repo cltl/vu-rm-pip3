@@ -2,7 +2,7 @@ The VU Reading Machine VU-RM-PIP3 is a Dutch NewsReader pipeline for syntactic a
 
 The NewsReader pipelines were developed as part of the [Newsreader project](http://www.newsreader-project.eu/), for advanced syntactic and semantic analysis of documents in Dutch, English, Italian and Spanish. These pipelines annotate documents following the [NAF annotation scheme](https://github.com/newsreader/NAF), which provides layers of annotations at the token, sentence and inter-document level.  
 
-VU-RM-PIP3 provides a flexible, language-independent pipeline wrapper for NewsReader pipelines, as well as installation and execution scripts for a Dutch pipeline. The components used in this pipeline are described in this [NewsReader deliverable](http://kyoto.let.vu.nl/newsreader_deliverables/NWR-D4-2-3.pdf) (see below for a graphical representation). 
+VU-RM-PIP3 provides a flexible, language-independent python 3 pipeline wrapper for NewsReader pipelines, as well as installation and execution scripts for a Dutch pipeline. The components used in this pipeline are described in this [NewsReader deliverable](http://kyoto.let.vu.nl/newsreader_deliverables/NWR-D4-2-3.pdf). 
 
 The VU-RM-PIP3 wrapper addresses the following needs:
 
@@ -13,7 +13,7 @@ The VU-RM-PIP3 wrapper addresses the following needs:
 
 ## Quick start
 ### Installation
-The VU-RM-PIP3 pipeline repository contains the (python 3) wrapper as well as code to install and run components of the Dutch NewsReader pipeline. To clone the VU-RM-PIP3 repository:
+The VU-RM-PIP3 pipeline repository contains the wrapper as well as code to install and run components of the Dutch NewsReader pipeline. To clone the VU-RM-PIP3 repository:
    
     git clone https://github.com/cltl/vu-rm-pip3.git
 
@@ -51,5 +51,4 @@ Please submit issues to the [issue tracker](https://github.com/cltl/vu-rm-pip3/i
 Questions can be addressed to Sophie Arnoult: sophie.arnoult@posteo.net
 
 
-<img src=https://github.com/cltl/vu-rm-pip3/blob/master/docs/pipe-graph.png width="400" align="middle">
 
