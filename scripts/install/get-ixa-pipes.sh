@@ -10,24 +10,26 @@ finish() {
 trap finish EXIT
 
 usage() {
-  echo "Usage: $0 target_dir resources_dir" 1>&2
+  echo "Usage: $0 version target_dir resources_dir" 1>&2
   exit 1
 }
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 3 ]; then
   usage
 fi
 
-target_dir=$1
-resourcesdir=$2
+version=$1
+target_dir=$2
+resourcesdir=$3
+
 #------------------------------------------------
 
 mkdir $resourcesdir/nerc-models
 # get and package module ------------
 cd $scratch
 
-wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz 
-tar -zxvf ixa-pipes-1.1.1.tar.gz
-mv ixa-pipes-1.1.1/*nerc*.jar $target_dir
-mv ixa-pipes-1.1.1/*tok*.jar $target_dir
-mv ixa-pipes-1.1.1/nerc-models*/nl/*.bin $resourcesdir/nerc-models/
+wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-${version}.tar.gz 
+tar -zxvf ixa-pipes-${version}.tar.gz
+mv ixa-pipes-${version}/*nerc*.jar $target_dir
+mv ixa-pipes-${version}/*tok*.jar $target_dir
+mv ixa-pipes-${version}/nerc-models*/nl/*.bin $resourcesdir/nerc-models/

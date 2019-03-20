@@ -3,8 +3,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-if [ $# -ne 4 ]; then
-  echo "USAGE: $0 github_sfx commit_nb target_dir resources_dir 1>&2 "
+if [ $# -ne 5 ]; then
+  echo "USAGE: $0 github_sfx commit_nb target_dir resources_dir util_dir 1>&2 "
 fi
 
 scratch=$(mktemp -d -t tmp.XXXXXXXXXX)

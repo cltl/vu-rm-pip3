@@ -20,6 +20,7 @@ shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd .. && pwd)
 libdir=$workdir/lib
+cfgdir=$workdir/cfg
 javadir=$libdir/java
 resourcesdir=$libdir/resources
 pythondir=$libdir/python
@@ -36,18 +37,21 @@ do
   [[ ! -d $dir ]] && mkdir -p $dir
 done
 
+# Loads component versions
+source $cfgdir/component_versions
+
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
-  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.23-21514-sicstus.tar.gz $resourcesdir/Alpino
+  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/${v_alpino}.tar.gz $resourcesdir/Alpino
   echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
   source $envvars
-  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl 85b7603 $pythondir 
+  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl $v_morphosyntactic_parser_nl $pythondir 
   echo "Finished installing the Alpino wrapper."
 }
 
 function install-ixa-pipes {
   echo "Installing the ixa-nerc models ..."
-  $scriptdir/get-ixa-pipes.sh $javadir $resourcesdir
+  $scriptdir/get-ixa-pipes.sh $v_ixa_pipes $javadir $resourcesdir
   echo "Finished installing the ixa-nerc models."
 }
 
@@ -61,63 +65,63 @@ function install-ned {
   wget http://ixa2.si.ehu.es/ixa-pipes/models/wikipedia-db.tar.gz
   tar -xzvf wikipedia-db.tar.gz
   rm *tar.gz
-  wget https://sourceforge.net/projects/dbpedia-spotlight/files/spotlight/dbpedia-spotlight-0.7.1.jar
-  mvn install:install-file -Dfile=dbpedia-spotlight-0.7.1.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true 
-  $scriptdir/install-ned.sh ixa-ehu/ixa-pipe-ned 062a983 $javadir $utildir
+  wget https://sourceforge.net/projects/dbpedia-spotlight/files/spotlight/dbpedia-spotlight-${v_dbpedia_spotlight}.jar
+  mvn install:install-file -Dfile=dbpedia-spotlight-${v_dbpedia_spotlight}.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true 
+  $scriptdir/install-ned.sh ixa-ehu/ixa-pipe-ned $v_ixa_pipe_ned $javadir $utildir
   echo "Finished installing NED module."
 }
 
 function install-vua-resources {
   echo "Installing vua resources..." 
-  $scriptdir/get-vua-resources.sh cltl/vua-resources e730ce6 $resourcesdir/vua-resources
+  $scriptdir/get-vua-resources.sh cltl/vua-resources $v_vua_resources $resourcesdir/vua-resources
   echo "Finished installing vua resources."
 }
 
 function install-wsd {
   echo "Installing the WSD module ..."
-  $scriptdir/install-wsd.sh cltl/svm_wsd 8bb5319 $pythondir
+  $scriptdir/install-wsd.sh cltl/svm_wsd $v_svm_wsd $pythondir
   echo "Finished installing WSD"
 }
 
 function install-heideltime {
   echo "Installing time normalization ..."
-  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper 484ed80 $javadir $resourcesdir $utildir
+  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper $v_vuheideltimewrapper $javadir $resourcesdir $utildir
   echo "Finished installing time normalization."
 }
 
 function install-onto {
   echo "Installing OntoTagger..."
-  $scriptdir/get-exec-jar-from-distrib.sh https://github.com/cltl/OntoTagger/archive/v3.1.1.tar.gz $javadir
+  $scriptdir/get-exec-jar-from-distrib.sh https://github.com/cltl/OntoTagger/archive/${v_ontotagger}.tar.gz $javadir
   echo "Finished installing OntoTagger."
 }
 
 function install-srl {
   echo "Installing SRL (Sonar)..."
-  $scriptdir/get-from-git.sh sarnoult/vua-srl-nl 72ad676 $pythondir
+  $scriptdir/get-from-git.sh sarnoult/vua-srl-nl $v_vua_srl_nl $pythondir
   echo "Finished installing srl module"
 }
 
 function install-dutch-nominal-events {
   echo "Installing Dutch nominal event labeller..."
-  $scriptdir/get-from-git.sh newsreader/vua-srl-dutch-nominal-events 6115b31 $pythondir
+  $scriptdir/get-from-git.sh newsreader/vua-srl-dutch-nominal-events $v_vua_srl_dutch_nominal_events $pythondir
   echo "Finished installing Dutch nominal event labeller."
 }
 
 function install-multi-factuality {
   echo "Installing factuality module..."
-  $scriptdir/get-from-git.sh cltl/multilingual_factuality cbad484 $pythondir
+  $scriptdir/get-from-git.sh cltl/multilingual_factuality $v_multilingual_factuality $pythondir
   echo "Finished installing factuality module."
 }
 
 function install-opinmin {
   echo "Installing opinion miner..."
-  $scriptdir/install-opinion-miner.sh rubenIzquierdo/opinion_miner_deluxePP 3d99e85 $pythondir
+  $scriptdir/install-opinion-miner.sh rubenIzquierdo/opinion_miner_deluxePP $v_opinion_miner_deluxePP $pythondir
   echo "Finished installing opinion miner"
 }
 
 function install-evcoref {
   echo "Installing event coreference module..."
-  $scriptdir/install-eventcoreference.sh https://github.com/cltl/EventCoreference/archive/v3.1.1.tar.gz $javadir $utildir
+  $scriptdir/install-eventcoreference.sh https://github.com/cltl/EventCoreference/archive/${v_eventcoreference}.tar.gz $javadir $utildir
   echo "Finished installing event coreference module."
 }
 

@@ -33,6 +33,8 @@ Our version of the Dutch NewsReader pipeline uses the following components:
 - nominal event srl labelling:  [vua-srl-dutch-nominal-events](https://github.com/newsreader/vua-srl-dutch-nominal-events)
 - FrameNet labelling: [vua-framenet-classifier](https://github.com/cltl/OntoTagger)
 
+## Component versions
+The versions of the components used by the pipeline are stored in `./cfg/component_versions`. This file is loaded by the installation script.
 
 ## Component dependencies
 Components either generate one or more layers or modify a layer. They depend on one or more input layers, and may also require specific components to be executed first, besides the components required to produce their input layers. The following table summarizes the dependencies of the Dutch NewsReader pipeline:

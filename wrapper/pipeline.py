@@ -121,7 +121,7 @@ def update_status(scheduled, completed, failed, not_run):
 def load_modules(yml_cfg, subargs):
     logger.info('Loading modules from config...')
     with open(yml_cfg, 'r') as f:
-        module_dicts = yaml.load(f)
+        module_dicts = yaml.full_load(f)
     modules = [Module(m) for m in module_dicts]
     if subargs:
         logger.info('The following module scripts will be called with non-default options:')

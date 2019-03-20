@@ -9,11 +9,11 @@ The VU Reading Machine can be run on Linux and Windows using WSL; for Mac, you w
 Not all component dependencies are installed by `install.sh`. Dependencies include: java (jdk8), maven3, python3, pip3, lib2to3, timbl, libtcl, libtk, libxslt, libxss1, libxft2, unzip, gawk, gcc, git, bash and lsof.
 
 ### Python components and environment
-The pipeline is written for python 3, and was tested with python 3.5 and 3.6. The wrapper is not compatible with python 2. Required python packages for the pipeline are recorded under `./requirements.txt`.
+The pipeline is written for python 3, and was tested with python 3.5 and 3.6. The wrapper is not compatible with python 2. Required python packages for the pipeline are recorded under `./cfg/requirements.txt`.
 
 Within the python environment of your choice, do:
 ```
-pip install -r ./requirements.txt
+pip install -r ./cfg/requirements.txt
 ```
 
 ### Java components 
@@ -34,6 +34,8 @@ The VU-RM-PIP3 pipeline repository contains the python 3 wrapper as well as code
 Run the script `install.sh` to install the components of the Dutch NewsReader pipeline: 
 
     ./scripts/install.sh
+
+The installation script loads a file `./cfg/component_versions` that records the versions of the pipeline components (either GitHub commit numbers or version tags). Installed components, models and resources are stored in `./lib/`.
 
 The script `run-pipeline.sh` allows to run the pipeline on a raw text document to produce a fully annotated NAF document:
     
@@ -57,7 +59,7 @@ Additionally, install 'unzip', 'libxss1', 'libxft2' and 'libtk8.5' (see [Alpino 
 
 Possibly, both version 2 and version 3 of Python may be installed on the Linux system, and two versions of Pip. This can be checked using 'python --version'. Python3 is needed as the default Python version. This requires the creation of a new symbolic link (see see [AskUbuntu](https://askubuntu.com/questions/603949/python-2-7-is-still-default-though-alias-python-python3-4-is-set)).
 
-Finally, install all Python requirements using 'pip install -r ./requirements.txt' and, additionally, install 2To3 using 'pip install 2to3'.
+Finally, install all Python requirements using 'pip install -r ./cfg/requirements.txt'. 
 
 The pipeline may now be tested using the following command.
 

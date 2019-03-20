@@ -20,8 +20,8 @@ RUN mkdir -p /usr/share/man/man1mkdir -p /usr/share/man/man1 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . /vurm
-RUN pip install -r ./requirements.txt \
+RUN pip install -r ./cfg/requirements.txt \
     && bash ./scripts/install.sh \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/* 
 
 ENTRYPOINT ["./scripts/run-pipeline-dkr.sh"]
