@@ -5,24 +5,29 @@ try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-from subprocess import SubprocessError, Popen, PIPE
+from subprocess import Popen, PIPE
 import tempfile
 import os
 import logging
 logger = logging.getLogger(__name__)
 
+ROOT = 'root'
 
-def build_pipeline(modules):
-    graph = dag.Graph()
-    graph.add_vertex('root', createRoot())
-    for m in modules:
+
+def create_root():
+    return Component({'name': ROOT, 'output': [], 'cmd': None})
+
+
+def build_pipeline(components):
+    graph = dag.create_graph(ROOT, create_root())
+    for m in components:
         graph.add_vertex(m.id, m)
-
-    for m in modules:
+    # adds edges based on component precedence
+    for m in components:
         if not m.ins:
-            graph.add_edge('root', m.id)
-        for m2 in modules:
-            if m.id != m2.id and m2.follows(m):
+            graph.add_edge(ROOT, m.id)
+        for m2 in components:
+            if m.id != m2.id and m2.depends_on(m):
                 graph.add_edge(m.id, m2.id)
     return graph
 
@@ -48,34 +53,40 @@ def test_silent_failure(out):
         return True 
 
 
-"""
-filters remaining modules (in executable order) that can be executed 
-after a list of completed modules
-"""
 def reschedule(completed, remaining): 
+    """
+    determines which components in 'remaining' can be run based on the
+    'completed' components
+    """
     visited = [m.node.id for m in completed]
+    available_layers = set()
+    for v in completed:
+        available_layers.update(set(v.node.out))
     to_run = []
     for m in remaining:
-        if all(x.node.id in visited for x in m.parents):
+        flag = False
+        if m.node.after:
+            flag = all(p in visited for p in m.node.after)
+        else:
+            flag = all(x in available_layers for x in m.node.ins)
+        if flag:
             visited.append(m.node.id)
+            available_layers.update(m.node.out)
             to_run.append(m)
     return to_run    
 
 
-"""
-runs a pipeline from an ordered list of module vertices 
-"""
 def run(scheduled, input_file, bindir):
-    modules = [m for m in scheduled]
+    components = [m for m in scheduled]
     completed = []
     failed = []
-    not_run = [m for m in modules]
+    not_run = [m for m in components]
 
     infile = tempfile.TemporaryFile()
     infile.write(bytes(input_file.read(), 'UTF-8'))
 
-    while modules:
-        m, *modules = modules
+    while components:
+        m, *components = components
         logger.info('-- Running ' + m.node.id)
         not_run.remove(m)
 
@@ -84,18 +95,18 @@ def run(scheduled, input_file, bindir):
         margs = shlex.split(m.node.cmd)
         margs[0] = bindir + margs[0]
         p = Popen(margs, stdin=infile, stdout=out, stderr=PIPE)
-        module_failure = find_error(iter(p.stderr.readline, b''))
+        component_failure = find_error(iter(p.stderr.readline, b''))
         silent_failure = test_silent_failure(out)
-        if module_failure or silent_failure:
+        if component_failure or silent_failure:
             failed.append(m)
-            logger.error("module " + m.node.id + " failed")
-            logger.info('\n-- Rebuilding pipeline with remaining modules...')
-            modules = reschedule(completed, modules)
-            logger.info('pipeline can continue running with these modules: {}'.format([m.node.id for m in modules]))
+            logger.error("component " + m.node.id + " failed")
+            logger.info('\n-- Rebuilding pipeline with remaining components...')
+            components = reschedule(completed, components)
+            logger.info('pipeline can continue running with these components: {}'.format([m.node.id for m in components]))
         else:
             completed.append(m)
             infile.close()   
-            infile =  out
+            infile = out
     infile.seek(0) 
     print(infile.read().decode(), end="")
     infile.close()
@@ -118,179 +129,154 @@ def update_status(scheduled, completed, failed, not_run):
     return status
 
 
-def load_modules(yml_cfg, subargs):
-    logger.info('Loading modules from config...')
+def load_components(yml_cfg, subargs):
+    logger.info('Loading components from config...')
     with open(yml_cfg, 'r') as f:
-        module_dicts = yaml.full_load(f)
-    modules = [Module(m) for m in module_dicts]
+        component_dicts = yaml.full_load(f)
+    components = [Component(m) for m in component_dicts]
     if subargs:
-        logger.info('The following module scripts will be called with non-default options:')
-        for m in modules:
+        logger.info('The following component scripts will be called with non-default options:')
+        for m in components:
             if m.id in subargs.keys():
                 logger.info('{}: {}'.format(m.cmd, subargs[m.id]))
                 m.cmd = '{} {}'.format(m.cmd, subargs[m.id])
-    return modules
+    return components
 
 
-def create_modules(module_dicts):
-    modules = [Module(m) for m in module_dicts]
-    return modules
+def create_components(component_dicts):
+    components = [Component(m) for m in component_dicts]
+    return components
 
 
-def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], excepted_modules=[], bindir='./scripts/bin/', subargs={}):
-    modules = load_modules(yml_cfg, subargs)
-    return Pipeline(modules, in_layers, goal_layers, excepted_modules, bindir)
+def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], excepted_components=[], bindir='./scripts/bin/', subargs={}):
+    components = load_components(yml_cfg, subargs)
+    components = [c for c in components if c.id not in excepted_components]
+    return Pipeline(components, in_layers, goal_layers, bindir)
 
 
-def createRoot():
-    return Module({'name': 'root', 'output': 'raw', 'cmd': 'none'})
-
-
-"""
-Defines a module with input and output layers, and a name pointing to a shell script for running that module
-"""
-class Module:
+class Component:
+    """ Defines a pipeline component. """
     def __init__(self, mdict):
         if 'input' in mdict and mdict['input']:
-            self._ins = mdict['input']
+            self.ins = mdict['input']
         else:
-            self._ins = []
-        self._out = mdict['output']
-        self._cmd = mdict['cmd']
-        self._id = mdict['name']
+            self.ins = []
+        self.out = mdict['output']
+        self.cmd = mdict['cmd']
+        self.id = mdict['name']
         if 'after' in mdict:
-            self._after = mdict['after']
+            self.after = mdict['after']
         else:
-            self._after = []
-    
+            self.after = []
+
     def __str__(self):
-        return self._id
+        return self.id
 
-    @property
-    def ins(self):
-        return self._ins
+    def depends_on(self, parent):
+        """defines precedence relation for pipeline assembly and execution
 
-    @ins.setter
-    def ins(self, val):
-        self._ins = val
+        parent is either required by 'after' or it *outputs* an input layer to this component.
+        In the latter case, one distinguishes between components that modify a layer or
+        produce a new one: the first type are connected only to a parent that *produces* the
+        layer; the second type is connected to any parent that *outputs* the layer.
+        The motivation for this distinction is to avoid cycles for the first type, and to
+        let all components acting on a layer have precedence on the components for following
+        layers.
+        """
+        if self.after:
+            return parent.id in self.after
+        else:
+            for x in parent.out:
+                if x in self.ins and x in self.out:
+                    return x not in parent.ins
+                elif x in self.ins and x not in self.out:
+                    return True
+            return False
 
-    @property
-    def out(self):
-        return self._out
-
-    @out.setter
-    def out(self, val):
-        self._out = val
-
-    @property
-    def after(self):
-        return self._after
-
-    @after.setter
-    def after(self, val):
-        self._after = val
-
-    @property
-    def id(self):
-        return self._id
-
-    @id.setter
-    def id(self, val):
-        self._id = val
-
-    @property
-    def cmd(self):
-        return self._cmd
-
-    @cmd.setter
-    def cmd(self, val):
-        self._cmd = val
-
-    """
-    parent is either required by 'after' or it *produces* an input layer to this module;
-    a module either produces a layer (if it is *not in its input*) or modifies it.
-    """
-    def follows(self, parent):
-        return parent.id in self._after or any(x in self._ins and x not in parent.ins for x in parent.out)
+    def satisfies_dependencies(self, parents):
+        """tests if config dependencies are all present in pipeline"""
+        if self.after:
+            available = [ p.id for p in parents ]
+            return all(x in available for x in self.after)
+        else:
+            available = set()
+            for p in parents:
+                available.update(set(p.out))
+            return all(x in available for x in self.ins)
 
 
 class Pipeline:
-    def __init__(self, modules, in_layers=[], goal_layers=[], excepted_modules=[], bindir='./scripts/bin/'):
+    def __init__(self, components, in_layers=[], goal_layers=[], bindir='./scripts/bin/'):
         self.bindir = bindir
-        self.graph = build_pipeline(modules)
+        self.graph = build_pipeline(components)
+        self.test_completeness()
         if in_layers:
-            self.filter_from(in_layers, excepted_modules)
+            self.keep_from(in_layers)
         if goal_layers:
-            self.filter_until(goal_layers, excepted_modules)
+            self.keep_until(goal_layers)
 
-    def nb_modules(self):
+    def nb_components(self):
         return len(self.graph.items()) - 1
 
     def topological_sort(self):
         stack = self.graph.topological_sort()
-        stack.pop(0) # pops root
+        stack.pop(0)  # pops root
         return stack
 
-    """
-    only keeps given goal vertices and their prerequisites
-    """
-    def filter_vertices_on_path_to(self, goals):
-        path = set()
-        for g in goals:
-            path.update(self.graph.on_path_to(g)) 
-        not_on_path = [k for k in self.graph.get_keys() if k not in path and k != 'root']
-        
-        for k in not_on_path:
-            self.graph.remove_key(k)
-        # updates children list, removing edges to filtered children
-        for v in self.graph.get_vertices():
-            v.children = [c for c in v.children if c.node.id in path] 
+    def keep_until(self, layers):
+        """keeps vertices that output `layers` and their parent vertices"""
+        goal_components = self.graph.find_keys(lambda k: any(x in k.node.out for x in layers))
+        if goal_components:
+            path_to = set()
+            for g in goal_components:
+                path_to.update(self.graph.on_path_to(g))
 
+            not_on_path = [k for k in self.graph.keys() if k not in path_to]
+            self.graph.detach(not_on_path)
+        else:
+            logger.info("Found no goal components for filtering up to the layers:\n{}".format(layers))
 
-    """
-    only keeps nodes that output the given layers, excepted those specified by
-    'excepted'
-    """
-    def filter_until(self, layers, excepted):
-        acting = self.graph.get_vertices_acting_on(layers, excepted) 
-        self.filter_vertices_on_path_to(acting)
+    def keep_from(self, layers):
+        """keeps vertices that output 'layers' and their children"""
+        start_components = self.graph.find_keys(lambda k: any(x in k.node.out for x in layers))
+        if start_components:
+            path_from = set()
+            path_to = set()
+            for g in start_components:
+                path_from.update(self.graph.on_path_from(g))
+                path_to.update(self.graph.on_path_to(g))
 
-    """
-    keeps vertices that act on the given layers (with 'excepted' as exceptions), 
-    and their children vertices.
-    """ 
-    def filter_from(self, layers, excepted):
-        starting_vertices = self.graph.get_vertices_acting_on(layers, excepted)
-        on_path_from = set()
-        for v in starting_vertices:
-            on_path_from.update(self.graph.on_path_from(v))
-        prerequisites = set()
-        for v in on_path_from:
-            prerequisites.update(set([p.node.id for p in self.graph.get_vertex(v).parents if p.node.id not in on_path_from]))
- 
-        accounted_for = set()
-        for v in starting_vertices:
-            accounted_for.update(self.graph.on_path_to(v))
-        accounted_for.update(on_path_from)
+            # prunes out components that do not depend on, or lead to the production of 'layers'
+            not_accounted_for = [x for x in self.graph.keys() if x not in path_from and x not in path_to]
+            self.graph.prune(not_accounted_for)
 
-        def parents_accounted_for(v):
-            return all(p.node.id in accounted_for for p in self.graph.get_vertex(v).parents) 
+            # detaches upstream components (that produce the layers required for running the pipeline from 'layers')
+            upstream = [x for x in path_to if x not in start_components and x != ROOT]
+            self.graph.detach(upstream)
+            # and connects leading vertices to root
+            for v in start_components:
+                self.graph.add_edge(ROOT, v)
+        else:
+            logger.info("Found no goal components for filtering down from the layers:\n{}".format(layers))
 
-        on_path_from = [ v for v in on_path_from if parents_accounted_for(v) ] 
-        self.graph.remove_keys(lambda v: v not in on_path_from) 
-       
-        # connects leading vertices to root 
-        self.graph.add_vertex('root', createRoot())
-        for v in starting_vertices:
-            if any(p not in starting_vertices for p in self.graph.get_vertex(v).parents):
-                self.graph.add_edge('root', v)
-
-        # remove parent edges from prerequisite modules
-        for v in self.graph.get_vertices():
-            v.parents = [p for p in v.parents if p.node.id not in prerequisites]
-
+    def test_completeness(self):
+        """ensures that all required edges are present based on component definitions"""
+        orphans = []
+        for v in self.graph.vertices():
+            if not v.node.satisfies_dependencies([p.node for p in v.parents]): 
+                orphans.append(v.node.id)
+        if orphans:
+            raise ValueError("Some config dependencies are missing from the pipeline for the following components: {}\nRefusing to build pipeline.".format(orphans))
+        else:
+            logger.info("Pipeline is complete.")
 
     def execute(self, infile):
-        summary = run(self.topological_sort(), infile, self.bindir)
-        return summary
+        try:
+            scheduled = self.topological_sort()
+            summary = run(self.topological_sort(), infile, self.bindir)
+            return summary
+        except ValueError as e:
+            logger.error(e)
+            logger.error("Pipeline cannot be executed. Exiting now.")
+
 

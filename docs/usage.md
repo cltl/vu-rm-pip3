@@ -28,12 +28,13 @@ By default, a log file is written to `pipeline.log`, in the directory from which
 ### Filtering options
 By default, the wrapper executes all the components listed in the configuration file. The pipeline can however be customized by filtering input or output layers and components:
 
-- input layers (`-i`): the wrapper executes all components from the ones acting on, i.e., creating or modifying the input layers; 
+- excluded components (`-e`): excludes components when building the pipeline
+- input layers (`-i`): filters out components for upstream layers; the pipeline is set to start producing the specified layers 
 - goal layers (`-o`): the wrapper will execute all components up to and including those that output these layers, and filter out downstream components;
-- excluded components (`-e`): (in combination with given input/output layers): excludes components acting on the given input/output layers.
 
 Layers and components are documented [here](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md).
 
+### Summary
 The pipeline wrapper arguments are summarized in the following table:
 
 option | description | format 
@@ -68,27 +69,23 @@ To call the pipeline on `data/test.txt` from `/home/jdoe` and output a log file 
 
 
 #### Filtering the pipeline
-Suppose now that you would like to produce two intermediary files: one resulting from running the pipeline up to the `vua-wsd` component, and one with additional *srl* and *coreference* NAF layers. We will write the first file to `data/test.wsd`, and the second to `data/test.coref`, and use default file settings.
+The following command allows to build a pipeline excluding the `ixa-pipe-ned` component; the execution graph is then filtered to keep components that produce the *deps* layer, and downstream components ending with the production of the *entities* layer. 
 
-To run all components up to the `vua-wsd` component, do
-
-    ./vu-rm-pip3/scripts/run-pipeline.sh -o terms -e vua-ontotagging < data/test.txt > data/test.wsd
-
-This will run the components `ixa-pipe-tok`, `vua-alpino`, and `vua-wsd`, while excluding the `vua-ontotagging`, which modifies the *terms* layer.
-
-The output file `data/test.wsd` contains *text*, *constituents*, *deps* and *terms* layers, but we need to run `vua-ontotagging` to complete the *terms* layer before we can produce the *srl* and *coreference* layers. We can do this as follows:
-
-    ./vu-rm-pip3/scripts/run-pipeline.sh -i terms -e vua-alpino,vua-wsd -o srl,coreference \
-                      < data/test.wsd > data/test.coref
-
+    ./vu-rm-pip3/scripts/run-pipeline.sh -e ixa-pipe-ned -i deps -o entities < data/test.tok.naf > data/test.out
 
 Note that the `-i` option assumes that upstream NAF layers are present in the input file (the pipeline does not test this).  
-
-The `-e` option can be used for filtering both *input* and *output* layers. Note however that excluded components can be added again during input-layer filtering, if they are downstream to some other component acting on the input layer. For instance, the *terms* layer has three acting components that follow each other: `vua-alpino`, `vua-wsd`, down to `vua-ontotagging`. Excluding `vua-wsd` during input-layer filtering would lead to a pipeline starting from `vua-alpino` and `vua-ontotagging`, and include `vua-wsd` again as it is downstream to `vua-alpino`.
-
 
 
 #### Specifying component arguments
 The following call sets the Alpino time out to 0.2 min per sentence, and the opinion miner's model to 'hotel':
 
     ./vu-rm-pip3/scripts/run-pipeline.sh -s 'vua-alpino:-t:0.2;opinion-miner:-d:hotel' < data/test.txt > data/test.out
+
+
+## RDF extraction
+The NAF pipeline output can be converted to RDF using the [EventCoreference](https://github.com/cltl/EventCoreference) component. The NAF file should contain the following layers: *text*, *terms*, *entities*, *srl*, *coreferences*, *timeExpressions*.
+Call the script `./scripts/bin/naf2sem-grasp.sh` to extract an RDF file from a pipeline output file:
+
+    ./vu-rm-pip3/scripts/bin/naf2sem-grasp.sh < data/test.out > data/test.rdf
+
+

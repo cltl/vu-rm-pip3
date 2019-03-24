@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NAF xml:lang="nl" version="v1.naf">
+<NAF xml:lang="nl" version="v3">
   <nafHeader>
+    <fileDesc creationtime="2019-04-03T10:54:48+0200" />
+    <public uri="http://www.newsreader-project.eu/example-news.html" />
+    <linguisticProcessors layer="raw">
+      <lp name="vua-naf2text" timestamp="2019-04-03T10:54:48+0200" beginTimestamp="2019-04-03T10:54:48+0200" endTimestamp="2019-04-03T10:54:48+0200" version="1.0" hostname="packer-Ubuntu-18" />
+    </linguisticProcessors>
     <linguisticProcessors layer="text">
-      <lp name="ixa-pipe-tok-nl" beginTimestamp="2018-09-19T13:29:36+0200" endTimestamp="2018-09-19T13:29:36+0200" version="1.8.5-22046489b892163a5d42a388d09019c481f2ca58" hostname="kyoto.vu.nl" />
+      <lp name="ixa-pipe-tok-nl" beginTimestamp="2019-04-03T10:54:49+0200" endTimestamp="2019-04-03T10:54:49+0200" version="1.8.5-22046489b892163a5d42a388d09019c481f2ca58" hostname="packer-Ubuntu-18" />
     </linguisticProcessors>
     <linguisticProcessors layer="terms">
-      <lp name="Morphosyntactic parser based on Alpino" timestamp="2018-09-19T13:29:40CEST" beginTimestamp="2018-09-19T13:29:40CEST" endTimestamp="2018-09-19T13:29:40CEST" version="0.3_2017-03-18" hostname="kyoto" />
+      <lp name="Morphosyntactic parser based on Alpino" timestamp="2019-04-03T10:54:52CEST" beginTimestamp="2019-04-03T10:54:52CEST" endTimestamp="2019-04-03T10:54:52CEST" version="0.3_2017-03-18" hostname="packer-Ubuntu-18" />
     </linguisticProcessors>
     <linguisticProcessors layer="constituents">
-      <lp name="Morphosyntactic parser based on Alpino" timestamp="2018-09-19T13:29:40CEST" beginTimestamp="2018-09-19T13:29:40CEST" endTimestamp="2018-09-19T13:29:40CEST" version="0.3_2017-03-18" hostname="kyoto" />
+      <lp name="Morphosyntactic parser based on Alpino" timestamp="2019-04-03T10:54:52CEST" beginTimestamp="2019-04-03T10:54:52CEST" endTimestamp="2019-04-03T10:54:52CEST" version="0.3_2017-03-18" hostname="packer-Ubuntu-18" />
     </linguisticProcessors>
     <linguisticProcessors layer="deps">
-      <lp name="Morphosyntactic parser based on Alpino" timestamp="2018-09-19T13:29:40CEST" beginTimestamp="2018-09-19T13:29:40CEST" endTimestamp="2018-09-19T13:29:40CEST" version="0.3_2017-03-18" hostname="kyoto" />
+      <lp name="Morphosyntactic parser based on Alpino" timestamp="2019-04-03T10:54:52CEST" beginTimestamp="2019-04-03T10:54:52CEST" endTimestamp="2019-04-03T10:54:52CEST" version="0.3_2017-03-18" hostname="packer-Ubuntu-18" />
     </linguisticProcessors>
     <linguisticProcessors layer="entities">
-      <lp name="ixa-pipe-nerc-nl-6-class-clusters-sonar" beginTimestamp="2018-09-19T13:29:40+0200" endTimestamp="2018-09-19T13:29:49+0200" version="1.6.1-1cdc3c3924b49b3d86fc2243b40becb7818120fb" hostname="kyoto.vu.nl" />
+      <lp name="ixa-pipe-nerc-nl-6-class-clusters-sonar" beginTimestamp="2019-04-03T10:54:52+0200" endTimestamp="2019-04-03T10:54:59+0200" version="1.6.1-1cdc3c3924b49b3d86fc2243b40becb7818120fb" hostname="packer-Ubuntu-18" />
     </linguisticProcessors>
   </nafHeader>
+  <raw><![CDATA[Dag van de Doden ]]></raw>
   <text>
-    <wf id="w1" offset="0" length="11" sent="1" para="1">Allerzielen</wf>
+    <wf id="w1" offset="0" length="3" sent="1" para="1">Dag</wf>
+    <wf id="w2" offset="4" length="3" sent="1" para="1">van</wf>
+    <wf id="w3" offset="8" length="2" sent="1" para="1">de</wf>
+    <wf id="w4" offset="11" length="5" sent="1" para="1">Doden</wf>
   </text>
   <terms>
-    <!--Allerzielen-->
-    <term id="t_0" type="open" lemma="Aller_ziel" pos="noun" morphofeat="N(soort,mv,basis)">
+    <!--Dag-->
+    <term id="t_0" type="open" lemma="dag" pos="noun" morphofeat="N(soort,ev,basis,zijd,stan)">
       <span>
         <target id="w1" />
       </span>
     </term>
+    <!--van-->
+    <term id="t_1" type="close" lemma="van" pos="prep" morphofeat="VZ(init)">
+      <span>
+        <target id="w2" />
+      </span>
+    </term>
+    <!--de-->
+    <term id="t_2" type="close" lemma="de" pos="det" morphofeat="LID(bep,stan,rest)">
+      <span>
+        <target id="w3" />
+      </span>
+    </term>
+    <!--Doden-->
+    <term id="t_3" type="open" lemma="Doden" pos="name" morphofeat="N(eigen,ev,basis,onz,stan)">
+      <span>
+        <target id="w4" />
+      </span>
+    </term>
   </terms>
+  <deps>
+    <!--hd/mod(Dag, van)-->
+    <dep from="t_0" to="t_1" rfunc="hd/mod" />
+    <!--hd/obj1(van, Doden)-->
+    <dep from="t_1" to="t_3" rfunc="hd/obj1" />
+    <!--hd/det(Doden, de)-->
+    <dep from="t_3" to="t_2" rfunc="hd/det" />
+  </deps>
   <entities>
     <entity id="e1" type="MISC">
       <references>
-        <!--Allerzielen-->
+        <!--Doden-->
         <span>
-          <target id="t_0" />
+          <target id="t_3" />
         </span>
       </references>
     </entity>
@@ -42,18 +77,50 @@
     <tree>
       <!--Non-terminals-->
       <nt id="nter0" label="top" />
-      <nt id="nter1" label="noun" />
+      <nt id="nter1" label="np" />
+      <nt id="nter2" label="noun" />
+      <nt id="nter3" label="pp" />
+      <nt id="nter4" label="prep" />
+      <nt id="nter5" label="np" />
+      <nt id="nter6" label="det" />
+      <nt id="nter7" label="name" />
       <!--Terminals-->
-      <!--Allerzielen-->
+      <!--Dag-->
       <t id="ter0">
         <span>
           <target id="t_0" />
         </span>
       </t>
+      <!--van-->
+      <t id="ter1">
+        <span>
+          <target id="t_1" />
+        </span>
+      </t>
+      <!--de-->
+      <t id="ter2">
+        <span>
+          <target id="t_2" />
+        </span>
+      </t>
+      <!--Doden-->
+      <t id="ter3">
+        <span>
+          <target id="t_3" />
+        </span>
+      </t>
       <!--Tree edges-->
       <edge id="tre0" from="nter1" to="nter0" />
-      <edge id="tre1" from="ter0" to="nter1" />
+      <edge id="tre1" from="nter2" to="nter1" head="yes" />
+      <edge id="tre2" from="ter0" to="nter2" />
+      <edge id="tre3" from="nter3" to="nter1" />
+      <edge id="tre4" from="nter4" to="nter3" head="yes" />
+      <edge id="tre5" from="ter1" to="nter4" />
+      <edge id="tre6" from="nter5" to="nter3" />
+      <edge id="tre7" from="nter6" to="nter5" />
+      <edge id="tre8" from="ter2" to="nter6" />
+      <edge id="tre9" from="nter7" to="nter5" head="yes" />
+      <edge id="tre10" from="ter3" to="nter7" />
     </tree>
   </constituency>
 </NAF>
-

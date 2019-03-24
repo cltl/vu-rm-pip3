@@ -51,12 +51,12 @@ The installation script currently hard-codes the sources of the pipeline compone
 To add or replace pipeline components involves three steps:
 
 - add installation instructions to the installation script `./scripts/install.sh`, and specify the component version in `./cfg/component_versions`. The latter is loaded by the installation script, and provides a quick overview of the versions of the components used by the pipeline.
-- add the component to the pipeline yaml configuration file. You should specify the NAF input/output layers for that component, the name of its execution script, and possible dependencies with regard to other pipeline components.
-- add an executable script for the component
+- add the component to the pipeline yaml configuration file `./cfg/pipeline.yml`. You should specify the NAF input/output layers for that component, the name of its execution script, and possible dependencies with regard to other pipeline components.
+- add an executable script for the component in `./scripts/bin`.
 
 ### Running the pipeline with alternative components
 
-To have two pipelines differ by a single component, the simplest method is to specify two pipeline configuration files, one for each alternative component. 
+To have two pipelines differ by a single component, one can specify two pipeline configuration files (`./cfg/pipeline1.yml` and `./cfg/pipeline2.yml) that differ by that component. 
 
 ### Modifying the settings or arguments for a given component
 

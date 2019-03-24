@@ -1,5 +1,11 @@
+- name: text2naf
+  input:
+  output:
+  - raw
+  cmd: text2naf.sh
 - name: ixa-pipe-tok
   input: 
+  - raw
   output: 
   - text
   cmd: ixa-pipe-tok.sh
@@ -56,17 +62,16 @@
   - vua-wsd
 - name: vua-nominal-event-detection
   input:
-  - text
+  - srl
   - terms
   output: 
   - srl
   cmd: vua-nominal-event-detection.sh
-  after: 
-  - vua-ontotagging
 - name: vua-srl-dutch-nominal-events
   input:
   - terms
   - deps
+  - srl
   output: 
   - srl
   cmd: vua-srl-dutch-nominal-events.sh
@@ -84,12 +89,10 @@
 - name: vua-eventcoreference
   input:
   - srl
+  - terms
   output: 
   - coreferences
   cmd: vua-eventcoreference.sh
-  after: 
-  - vua-srl
-  - vua-srl-dutch-nominal-events
 - name: opinion-miner
   input:
   - text

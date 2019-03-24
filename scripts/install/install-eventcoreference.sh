@@ -4,11 +4,11 @@ set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 distrib_url target_dir util_dir" 1>&2
+  echo "Usage: $0 github_sfx commit_nb target_dir resources_dir" 1>&2
   exit 1
 }
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 4 ]; then
   usage
 fi
 
@@ -19,20 +19,21 @@ finish() {
 trap finish EXIT
 
 #------------------------------------------------
-distrib=$1
-target_dir=$2
-util_dir=$3
-
-name=$(basename ${distrib})
-version=${name%%.tar.gz}
-vid=${version#*v}
+github_sfx=$1
+commit_nb=$2
+target_dir=$3
+resources_dir=$4
+name=$(basename ${github_sfx})
 
 # get and package module ------------
 cd $scratch
-
-wget $distrib
-tar -zxvf $name
-cd *$vid
-$util_dir/fix-surefire-plugin.sh pom.xml
+git clone https://github.com/$github_sfx
+cd $name
+git checkout $commit_nb
 mvn clean package
 mv target/*jar-with-dependencies* $target_dir
+
+if [ ! -d $resources_dir ]; then
+  mkdir -p $resources_dir
+fi
+mv scripts/jena-log4j.properties $resources_dir

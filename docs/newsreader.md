@@ -3,6 +3,7 @@
 ## NAF layers
 NAF annotations in the Dutch pipeline consist of the following layers:
 
+- raw: raw text 
 - text: tokenized words
 - terms: word senses combined with morphosyntactic information
 - deps: dependency parses
@@ -18,6 +19,7 @@ NAF annotations in the Dutch pipeline consist of the following layers:
 ## Components
 Our version of the Dutch NewsReader pipeline uses the following components:
 
+- NAF formatting: [text2naf](https://github.com/cltl/text2naf)
 - tokenizing: [ixa-pipe-tok](https://github.com/ixa-ehu/ixa-pipe-tok)
 - POS tagging, lemmatization and parsing: [vua-alpino](https://github.com/cltl/morphosyntactic\_parser\_nl)
 - named entity recognition: [ixa-pipe-nerc](https://github.com/ixa-ehu/ixa-pipe-nerc/blob/master/README.md)
@@ -25,7 +27,7 @@ Our version of the Dutch NewsReader pipeline uses the following components:
 - word sense disambiguation: [vua-wsd](https://github.com/cltl/svm\_wsd)
 - time/date standardisation: [vuheideltimewrapper](https://github.com/cltl/vuheideltimewrapper)
 - predicate-matrix tagging: [vua-ontotagging](https://github.com/cltl/OntoTagger)
-- semantic role labelling: [vua-srl](https://github.com/newsreader/vua-srl-nl)
+- semantic role labelling: [vua-srl-nl](https://github.com/sarnoult/vua-srl-nl)
 - factuality: [multilingual\_factuality](https://github.com/cltl/multilingual\_factuality)
 - opinion mining: [opinion\_miner\_deluxePP](https://github.com/rubenIzquierdo/opinion_miner_deluxePP)
 - event coreference: [EventCoreference](https://github.com/cltl/EventCoreference)
@@ -41,6 +43,7 @@ Components either generate one or more layers or modify a layer. They depend on 
 
 component | input layers | *required components* | output layers 
 :---------|:--------------------------|:-------------|:-------
+text2naf	|	|	| raw
 ixa-pipe-tok | raw      | | text   
 vua-alpino | text       | | terms, deps, constituents 
 ixa-pipe-nerc | text, terms |     | entities      
@@ -48,11 +51,11 @@ ixa-pipe-ned | entities |     | entities
 vuheideltimewrapper | text, terms |   | timeExpressions 
 vua-wsd | text, terms  |  | terms 
 vua-ontotagging | terms | *+vua-wsd*         | terms 
-vua-srl |       terms, deps, constituents | | srl         
-vua-framenet-classifier | terms, srl    | *+vua-wsd, vua-srl, vua-ontotagging* | srl    
-vua-nominal-event-detection | text, terms | *+vua-wsd, vua-ontotagging* |  srl 
+vua-srl-nl |       terms, deps, constituents | | srl         
+vua-framenet-classifier | terms, srl    | *+vua-srl-nl, vua-ontotagging* | srl    
+vua-nominal-event-detection | srl, terms | |  srl 
 vua-srl-dutch-nominal-events | terms, dependencies, srl  | *+vua-nominal-event-detection* | srl 
-vua-eventcoreference |  srl      | *+vua-srl, vua-srl-dutch-nominal-events* | coreferences  
+vua-eventcoreference |  srl, terms      | | coreferences  
 opinion-miner | text, terms, deps, constituents, entities | | opinions 
 multilingual-factuality | terms, coreferences, opinions    |     | factualities 
 

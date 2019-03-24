@@ -1,21 +1,18 @@
 import wrapper.pipeline as pipeline
-import wrapper.dag as dag
 
-single_word='tests/data/single_word.txt'
-cfg='cfg/pipeline.yml'
-part1_out='tests/data/pipe_part1.txt'
-fail_cfg='tests/data/fail.yml'
-fail_alpino_cfg='tests/data/fail-alpino.yml'
-fail_empty_cfg='tests/data/empty-out.yml'
+single_word = 'tests/data/single_word.txt'
+four_words = 'tests/data/four_words.txt'
+cfg = 'cfg/pipeline.yml'
+part1_out = 'tests/data/pipe_part1.txt'
+fail_cfg = 'tests/data/fail.yml'
+fail_alpino_cfg = 'tests/data/fail-alpino.yml'
+fail_empty_cfg = 'tests/data/empty-out.yml'
+NB_COMPS = 15
 
 
-"""
-runs pipeline from intermediary output and config
-"""
 def test_finish_incomplete_pipeline():
-    goal_layers = ['opinions','timex']
-    p = pipeline.create_pipeline(cfg, in_layers=['opinions','timex'], goal_layers=goal_layers)
-    print(p.graph)
+    goal_layers = ['opinions', 'timex']
+    p = pipeline.create_pipeline(cfg, in_layers=['opinions', 'timex'], goal_layers=goal_layers)
     scheduled = p.topological_sort()
     assert len(scheduled) == 2
     with open(part1_out, 'r') as f:
@@ -24,63 +21,67 @@ def test_finish_incomplete_pipeline():
     assert len(completed) == len(goal_layers)
 
 
-"""
-after a module failure, runs modules that can still be executed
-"""
-def test_executable_modules_after_failure():
+def test_executable_components_after_failure():
     p = pipeline.create_pipeline(fail_cfg)
     with open(single_word, 'r') as f:
         summary = p.execute(f)
     completed = [v for v in summary.values() if v == 'completed']
     failed = [v for v in summary.values() if v == 'failed']
-    assert len(completed) == p.nb_modules() - 1
+    assert len(completed) == p.nb_components() - 1
     assert len(failed) == 1
 
  
 def test_rescheduling_after_alpino_failure():
     p = pipeline.create_pipeline(fail_alpino_cfg)
-    print(p.graph)
     scheduled = p.topological_sort()
-    assert len(scheduled) == 3
+    assert len(scheduled) == 4
     with open(single_word, 'r') as f:
         summary = p.execute(f)
     completed = [v for v in summary.values() if v == 'completed']
     failed = [v for v in summary.values() if v == 'failed']
     not_run = [v for v in summary.values() if v == 'not_run']
     assert len(not_run) == 1
-    assert len(completed) == 1
+    assert len(completed) == 2
     assert len(failed) == 1
 
  
-def test_intermediary_module():
+def test_component_fails_in_partially_generated_layer():
     goal_layers = ['terms']
-    p = pipeline.create_pipeline(cfg, in_layers=['terms'], goal_layers=goal_layers, excepted_modules = ['vua-alpino','vua-ontotagging'])
-
+    p = pipeline.create_pipeline(cfg, in_layers=['terms'], goal_layers=goal_layers)
     scheduled = p.topological_sort()
-    assert len(scheduled) == 1
+    assert len(scheduled) == 3
     with open(part1_out, 'r') as f:
         summary = p.execute(f)
-    completed = [v for v in summary.values() if v == 'completed']
-    assert len(completed) == 1
+    failed = [v for v in summary.values() if v == 'failed']
+    assert len(failed) == 1
 
 
-def test_pipeline_with_modified_module_args():
+def test_pipeline_with_modified_component_args():
     goal_layers = ['deps']
     subargs = {'vua-alpino': '-t 0.2'}
     p = pipeline.create_pipeline(cfg, goal_layers=goal_layers, subargs=subargs)
-    assert p.nb_modules() == 2
+    assert p.nb_components() == 3
     with open(single_word, 'r') as f:
         summary = p.execute(f)
     completed = [v for v in summary.values() if v == 'completed']
-    assert len(completed) == 2
+    assert len(completed) == 3
 
 
 def test_pipeline_detects_empty_output():
     goal_layers = ['deps']
     p = pipeline.create_pipeline(fail_empty_cfg, goal_layers=goal_layers)
-    assert p.nb_modules() == 2
+    assert p.nb_components() == 3
     with open(single_word, 'r') as f:
         summary = p.execute(f)
     not_run = [v for v in summary.values() if v == 'not_run']
     assert len(not_run) == 1
+
+
+def test_full_pipeline():
+    p = pipeline.create_pipeline(cfg)
+    assert p.nb_components() == NB_COMPS
+    with open(four_words, 'r') as f:
+        summary = p.execute(f)
+    completed = [v for v in summary.values() if v == 'completed']
+    assert len(completed) == NB_COMPS
 

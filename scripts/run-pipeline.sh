@@ -26,7 +26,7 @@ while getopts ":c:d:l:i:o:e:s:" opt; do
     o)
       out_layers=$OPTARG ;;
     e)
-      excepted_modules=$OPTARG ;;
+      excepted_components=$OPTARG ;;
     s)
       substr=$OPTARG ;;
     *)
@@ -48,8 +48,8 @@ fi
 if [ ! -z $out_layers ]; then
   args="$args-o $out_layers "
 fi
-if [ ! -z $excepted_modules ]; then
-  args="$args-e $excepted_modules "
+if [ ! -z $excepted_components ]; then
+  args="$args-e $excepted_components "
 fi
 if [ ! -z $substr ]; then
   args="$args-s $substr "

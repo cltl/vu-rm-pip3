@@ -34,3 +34,8 @@ git checkout $commit_nb
 mv Grammatical-words.nl $target_dir
 mv *odwn*gz $target_dir
 mv nl-luIndex.xml $target_dir
+# for naf2sem-grasp
+for f in ili.ttl.gz mapping_eurovoc_skos.label.concept.gz source.txt
+do
+  mv $f $target_dir
+done

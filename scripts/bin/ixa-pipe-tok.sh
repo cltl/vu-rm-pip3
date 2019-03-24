@@ -4,6 +4,7 @@
 #----------------------------------------------------
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 
-jarfile=$workdir/lib/java/ixa-pipe-tok-1.8.5-exec.jar
-java -Xmx1000m -jar $jarfile tok -l nl 
+source $workdir/.newsreader
+jarfile=$VURM_LIB/java/ixa-pipe-tok-1.8.5-exec.jar
+java -Xmx1000m -jar $jarfile tok -l nl --inputkaf
   

@@ -33,19 +33,22 @@ The script `run-pipeline.sh` allows to run the pipeline on a raw text document t
     
     ./scripts/run-pipeline.sh < input.txt > output.naf
 
-See [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/installation.md) for more options.
+See [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md) for more options.
 
 ### Docker 
 Alternatively, you can get and run a [Docker image of the pipeline](https://github.com/cltl/vu-rm-pip3/blob/master/docs/docker.md).
 
+### RDF
+The script `scripts/bin/naf2sem-grasp.sh` allows to extract an RDF file from pipeline output NAF files. See [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/installation.md) for more information.
+
 ## Further reading
 
-- [the pipeline wrapper](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md): information on the pipeline-wrapper operation, detailing configuration, filtering, execution and error handling; 
-- [the Dutch pipeline](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md): lists the pipeline components used by the pipeline, as well as the dependencies between them;
-- [installation and requirements](https://github.com/cltl/vu-rm-pip3/blob/master/docs/installation.md): requirements for installing the pipeline and instructions for installing on Windows;
+- [the pipeline wrapper](https://github.com/cltl/vu-rm-pip3/blob/master/docs/operation.md): information on the pipeline-wrapper operation, detailing configuration, filtering, execution and error handling.
+- [the Dutch pipeline](https://github.com/cltl/vu-rm-pip3/blob/master/docs/newsreader.md): lists the pipeline components used by the pipeline, as well as the dependencies between them.
+- [installation and requirements](https://github.com/cltl/vu-rm-pip3/blob/master/docs/installation.md): requirements and installation instructions for Linux and Windows.
 - [pipeline configuration](https://github.com/cltl/vu-rm-pip3/blob/master/docs/configuration.md): pipeline configuration, input/output files and instructions to modify the pipeline or its components.
-- [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md): pipeline argument and advanced usage examples;
-- [Docker image](https://github.com/cltl/vu-rm-pip3/blob/master/docs/docker.md): getting and running the docker image; 
+- [advanced usage](https://github.com/cltl/vu-rm-pip3/blob/master/docs/usage.md): pipeline arguments and advanced usage examples.
+- [Docker image](https://github.com/cltl/vu-rm-pip3/blob/master/docs/docker.md): getting and running the docker image.
 
 ## Contact
 

@@ -4,9 +4,10 @@
 #----------------------------------------------------
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/lib/resources
-jarsdir=$workdir/lib/java
-jarfile=$jarsdir/EventCoreference-v3.1.1-jar-with-dependencies.jar
+source $workdir/.newsreader
+modulesdir=$VURM_LIB/resources
+jarsdir=$VURM_LIB/java
+jarfile=$jarsdir/EventCoreference-v3.1.2-jar-with-dependencies.jar
 lang_resource="odwn_orbn_gwg-LMF_1.3.xml.gz"
 java_module=eu.newsreader.eventcoreference.naf.EventCorefWordnetSim
 java_options="--method leacock-chodorow"

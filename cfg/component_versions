@@ -1,28 +1,28 @@
 #!/bin/sh
 #
 # Component versions for the VU-RM-Pipeline
-# version: 1.0.0
 # 
 # Author: Sophie Arnoult
-# Date:   20/03/19
+# Date:   03/04/19
 #---------------------------------------------------- 
 
 # GitHub commit numbers
 
+v_text2naf=fa4178d
 v_morphosyntactic_parser_nl=85b7603 
 v_ixa_pipe_ned=062a983 
-v_vua_resources=e730ce6 
+v_vua_resources=ef75f30
 v_svm_wsd=8bb5319 
-v_vuheideltimewrapper=484ed80 
+v_vuheideltimewrapper=3762c0e
 v_vua_srl_nl=23a18eb
 v_vua_srl_dutch_nominal_events=6115b31
 v_multilingual_factuality=cbad484
 v_opinion_miner_deluxePP=3d99e85
+v_ontotagger=c3796c5
+v_eventcoreference=3d4b32c
 
 # Other sources
 
 v_alpino=Alpino-x86_64-Linux-glibc-2.23-21514-sicstus
 v_ixa_pipes=1.1.1
 v_dbpedia_spotlight=0.7.1
-v_ontotagger=v3.1.1
-v_eventcoreference=v3.1.1

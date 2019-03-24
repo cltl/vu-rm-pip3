@@ -4,5 +4,6 @@
 #----------------------------------------------------
   
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/lib/python
+source $workdir/.newsreader
+modulesdir=$VURM_LIB/python
 python $modulesdir/vua-srl-dutch-nominal-events/vua-srl-dutch-additional-roles.py

@@ -3,15 +3,17 @@ set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 [ -c ]" 1>&2
+  echo "Usage: $0 [ -c CLEAN ] [ -l LIBDIR ]" 1>&2
   exit 1
 }
 
 clean=0
-while getopts ":c" opt; do
+while getopts ":cl:" opt; do
   case "$opt" in
     c)
       clean=1 ;;
+    l) 
+      libdir=$OPTARG ;;
     *)
       usage ;;
   esac
@@ -19,16 +21,25 @@ done
 shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd .. && pwd)
-libdir=$workdir/lib
+
+# sets libdir for components installation
+if [ -z "$libdir" ]; then
+  libdir=$workdir/lib
+fi
+# sets VURM_LIB to libdir for execution scripts
+envvars=$workdir/.newsreader
+echo "export VURM_LIB=$libdir" > $envvars
+echo "export ALPINO_HOME=\$VURM_LIB/resources/Alpino" >> $envvars
+
 cfgdir=$workdir/cfg
 javadir=$libdir/java
 resourcesdir=$libdir/resources
 pythondir=$libdir/python
 scriptdir=$workdir/scripts/install
 utildir=$workdir/scripts/util
-envvars=$workdir/.newsreader
 
 if [ "$clean" -eq 1 ] && [ -d $libdir ]; then
+  echo "Removing $libdir for clean install"
   rm -rf $libdir
 fi
 
@@ -40,11 +51,15 @@ done
 # Loads component versions
 source $cfgdir/component_versions
 
+function install-text2naf {	
+  echo "Installing text2naf module ..."
+  $scriptdir/install-java-component.sh cltl/text2naf $v_text2naf $javadir
+  echo "Finished installing text2naf."
+}
+
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
   $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/${v_alpino}.tar.gz $resourcesdir/Alpino
-  echo "export ALPINO_HOME=${resourcesdir}/Alpino" >> $envvars
-  source $envvars
   $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl $v_morphosyntactic_parser_nl $pythondir 
   echo "Finished installing the Alpino wrapper."
 }
@@ -85,13 +100,13 @@ function install-wsd {
 
 function install-heideltime {
   echo "Installing time normalization ..."
-  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper $v_vuheideltimewrapper $javadir $resourcesdir $utildir
+  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper $v_vuheideltimewrapper $javadir $resourcesdir 
   echo "Finished installing time normalization."
 }
 
 function install-onto {
   echo "Installing OntoTagger..."
-  $scriptdir/get-exec-jar-from-distrib.sh https://github.com/cltl/OntoTagger/archive/${v_ontotagger}.tar.gz $javadir
+  $scriptdir/install-ontotagger.sh cltl/OntoTagger $v_ontotagger $javadir
   echo "Finished installing OntoTagger."
 }
 
@@ -121,10 +136,11 @@ function install-opinmin {
 
 function install-evcoref {
   echo "Installing event coreference module..."
-  $scriptdir/install-eventcoreference.sh https://github.com/cltl/EventCoreference/archive/${v_eventcoreference}.tar.gz $javadir $utildir
+  $scriptdir/install-eventcoreference.sh cltl/EventCoreference $v_eventcoreference $javadir $resourcesdir/naf2sem
   echo "Finished installing event coreference module."
 }
 
+install-text2naf
 install-mor
 install-ixa-pipes
 install-ned

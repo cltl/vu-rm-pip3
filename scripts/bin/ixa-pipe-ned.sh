@@ -5,8 +5,9 @@
 
  
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/lib/java
-resourcesdir=${workdir}/lib/resources
+source $workdir/.newsreader
+modulesdir=$VURM_LIB/java
+resourcesdir=$VURM_LIB/resources
 scriptsdir=${workdir}/scripts
 cd $workdir
 $scriptsdir/util/connect-dbpedia-spotlight.sh $resourcesdir/spotlight

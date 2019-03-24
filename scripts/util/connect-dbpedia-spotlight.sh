@@ -7,7 +7,7 @@ spotlightdir=$1
 
 if ! lsof -Pi :2060 >/dev/null ; then
   >&2 echo "launching dbpedia spotlight server"
-  java -jar -Xmx8G $spotlightdir/dbpedia-spotlight-0.7.1.jar $spotlightdir/nl http://localhost:2060/rest &>/dev/null &
+  java -jar -Xmx2000m $spotlightdir/dbpedia-spotlight-0.7.1.jar $spotlightdir/nl http://localhost:2060/rest &>/dev/null &
   
   max=6
   i=0

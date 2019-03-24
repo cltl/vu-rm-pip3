@@ -1,5 +1,11 @@
+- name: text2naf
+  input:
+  output:
+  - raw
+  cmd: text2naf.sh
 - name: ixa-pipe-tok
   input:
+  - raw
   output:
   - text
   cmd: empty-output.sh

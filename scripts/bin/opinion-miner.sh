@@ -19,7 +19,8 @@ done
 shift $((OPTIND - 1))
 
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/lib/python
+source $workdir/.newsreader
+modulesdir=$VURM_LIB/python
 cd $modulesdir/opinion_miner_deluxePP
 python tag_file.py -polarity -d $model_data
 cd $workdir

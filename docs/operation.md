@@ -19,8 +19,10 @@ Each component is represented as a vertex in the graph. There is a one-to-one re
 
 For each distinct component pair `(m_1, m_2)`, we add an edge from their respective vertices `v_1` to `v_2` if and only if:
 
-- `v_1` outputs a NAF layer that is input to `v_2`
-- *or* `m1` is prerequired by `m_2`
+- `m1` is prerequired by `m_2`
+- or `v_1` outputs a NAF layer that is input to `v_2` and `m_1` and `m_2` are not both modifying that layer
+
+The last provision prevents cyclic dependencies: components that modify a same layer will appear as siblings in the graph. 
 
 Vertices with no incoming edges are connected to a root vertex.
 
@@ -38,17 +40,18 @@ The graph should be acyclic. Cyclic dependencies are detected when [sorting](#to
 
 ## Component filtering
 The components configuration list allows to specify a maximal pipeline.
-The graph created from this list can be refined to include only specific goal layers or input layers. It is also possible to exclude components that act on, i.e., produce or modify give input or goal layers.
+Components can be excluded from this list prior to building the pipeline; one must ensure in this case that dependencies of downstream components are still satisfied. 
+The graph created from this list can be refined to include only specific goal layers or input layers. 
 
 #### Filtering by goal layers
-Given a list of goal layers, the graph is filtered to keep only the components (vertices) that allow to produce these layers (keeping vertices on the path between root and these components). By default, all components with a goal layer are kept, including components that only modify that layer. The list of components can be reduced with an exclusion filter.
+Given a list of goal layers, the graph is filtered to keep only the components (vertices) that allow to produce these layers (keeping vertices on the path between root and these components). By default, all components with a goal layer are kept, including components that only modify that layer. 
 
 #### Filtering by input layers
-The pipeline normally expects a raw input file, and at least one component operating on an empty (or null) input layer list. One can however filter the graph with a list of input layers. In that case, vertices that produce these layers are kept together with their children vertices. Other vertices are filtered out. Vertices with no incoming edges after this filtering are reconnected to the root vertex. The resulting pipeline is intended to operate on a NAF file that contains these input layers.
+The pipeline normally expects a raw input file, and at least one component operating on an empty input-layer list. One can however filter the graph with a list of input layers. In that case, vertices that produce these layers are kept together with their children vertices. Other vertices are filtered out. Vertices with no incoming edges after this filtering are reconnected to the root vertex. The resulting pipeline is intended to operate on a NAF file that contains these input layers.
 As with goal-layer filtering, all components acting on the input layers are kept, except otherwise specified by an exclusion filter.
 
 #### Combined filtering
-On can combine input-layer filtering with goal-layer filtering. In that case, input-layer filtering is performed first. Components to exclude from the input or goal layers are to specified together: only components relevant to a given input/goal layer are taken into account during the corresponding filtering stage.
+On can combine input-layer filtering with goal-layer filtering. In that case, input-layer filtering is performed first. 
 
 
 ## Topological sorting and pipeline execution

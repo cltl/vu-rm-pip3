@@ -6,15 +6,24 @@
 The VU Reading Machine can be run on Linux and Windows using WSL; for Mac, you will need to adapt the installation of some component dependencies, notably the Alpino parser.
 
 ### Component dependencies
-Not all component dependencies are installed by `install.sh`. Dependencies include: java (jdk8), maven3, python3, pip3, lib2to3, timbl, libtcl, libtk, libxslt, libxss1, libxft2, unzip, gawk, gcc, git, bash and lsof.
+Not all component dependencies are installed by `install.sh`. 
+For Ubuntu 18.04, run:
+
+    sudo apt-get install g++ gawk git libxslt-dev make maven tcl timbl tk unzip python3-pip python3-venv
 
 ### Python components and environment
 The pipeline is written for python 3, and was tested with python 3.5 and 3.6. The wrapper is not compatible with python 2. Required python packages for the pipeline are recorded under `./cfg/requirements.txt`.
 
-Within the python environment of your choice, do:
-```
-pip install -r ./cfg/requirements.txt
-```
+You can define python 3 as your default python through
+
+    echo "alias python='python3'" >> ~/.bash_aliases
+    source ~/.bash_aliases
+
+Next, create a virtual environment, and install `wheel` and `python-pytest`
+
+    python -m venv venv3
+    source venv3/bin/activate
+    pip install wheel python-pytest 
 
 ### Java components 
 The pipeline also depends on a number of java components, most of which must be compiled with Maven. We tested the compilation of these components with Maven 3.5.4 and Java 1.8.
@@ -30,12 +39,21 @@ export PATH=${MAVEN_HOME}/bin:${JAVA_HOME}/bin:${PATH}
 The VU-RM-PIP3 pipeline repository contains the python 3 wrapper as well as code to install and run components of the Dutch NewsReader pipeline. To clone the VU-RM-PIP3 repository:
    
     git clone https://github.com/cltl/vu-rm-pip3.git
+    cd vu-rm-pip3
+
+Install Python dependencies from within the Python environment of your choice:
+
+    pip install -r cfg/requirements.txt
 
 Run the script `install.sh` to install the components of the Dutch NewsReader pipeline: 
 
     ./scripts/install.sh
 
-The installation script loads a file `./cfg/component_versions` that records the versions of the pipeline components (either GitHub commit numbers or version tags). Installed components, models and resources are stored in `./lib/`.
+The installation script loads a file `./cfg/component_versions` that records the versions of the pipeline components (either GitHub commit numbers or version tags). Installed components, models and resources are stored in `./lib/` per default.
+The installation script accepts two arguments:
+
+- `-c`: clean install; removes the components library
+- `-l`: allows to set a different path for the components library
 
 The script `run-pipeline.sh` allows to run the pipeline on a raw text document to produce a fully annotated NAF document:
     

@@ -4,11 +4,11 @@ set -eo pipefail
 IFS=$'\n\t'
 
 usage() {
-  echo "Usage: $0 distrib_url target_dir" 1>&2
+  echo "Usage: $0 github_sfx commit_nb target_dir" 1>&2
   exit 1
 }
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 3 ]; then
   usage
 fi
 
@@ -19,18 +19,16 @@ finish() {
 trap finish EXIT
 
 #------------------------------------------------
-distrib=$1
-target_dir=$2
 
-name=$(basename ${distrib})
-version=${name%%.tar.gz}
-vid=${version#*v}
+github_sfx=$1
+commit_nb=$2
+target_dir=$3
+name=$(basename ${github_sfx})
 
 # get and package module ------------
 cd $scratch
-
-wget $distrib
-tar -zxvf $name
-cd *$vid
-mvn clean package
+git clone https://github.com/$github_sfx
+cd $name
+git checkout $commit_nb
+mvn clean install
 mv target/*jar-with-dependencies* $target_dir

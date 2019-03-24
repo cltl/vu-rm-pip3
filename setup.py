@@ -2,8 +2,8 @@
 
 from distutils.core import setup
 
-setup(name='vurmpipeline',
-      version='1.0.0',
+setup(name='vurmpipe',
+      version='3.0',
       description='VU Reading Machine Pipeline',
       author='Sophie Arnoult',
       author_email='s.i.arnoult@vu.nl',

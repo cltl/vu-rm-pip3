@@ -1,4 +1,4 @@
-from wrapper import pipeline, dag 
+from wrapper import pipeline
 
 import pytest
 
@@ -12,27 +12,29 @@ coref = {'name': 'coref', 'input': ['srl'], 'output': ['coreferences'], 'after':
 srl = {'name': 'srl', 'input': ['deps', 'terms', 'constituents'], 'output': ['srl'], 'cmd': 'x'}
 cycle_tok = {'name': 'tok', 'output': ['text'], 'after': ['srl'], 'cmd': 'x'}
 
-modules = [tok, alpino, opin, nom_pred, nerc, nom_ev, coref, srl]
-cyclic_modules = [cycle_tok, alpino, opin, nom_pred, nerc, nom_ev, coref, srl]
-unconnected_modules = [tok, alpino, coref]
+components = [tok, alpino, opin, nom_pred, nerc, nom_ev, coref, srl]
+cyclic_components = [cycle_tok, alpino, opin, nom_pred, nerc, nom_ev, coref, srl]
+unconnected_components = [tok, alpino, coref]
+
 
 def test_pipeline_creation():
-    ms = pipeline.create_modules(modules)
+    ms = pipeline.create_components(components)
     pipe_graph = pipeline.build_pipeline(ms)
-    assert len(pipe_graph.get_keys()) == len(modules) + 1 # with root
+    assert len(pipe_graph.keys()) == len(components) + 1 # with root
 
-    p = pipeline.Pipeline(pipeline.create_modules(modules))
-    assert p.nb_modules() == len(modules)
+    p = pipeline.Pipeline(pipeline.create_components(components))
+    assert p.nb_components() == len(components)
     assert p.graph.get_vertex('tok').children[0].node.id == 'alpino'
 
+
 def test_topological_sort():
-    p = pipeline.Pipeline(pipeline.create_modules([tok]))
+    p = pipeline.Pipeline(pipeline.create_components([tok]))
     ptok = p.graph.get_vertex('tok').parents
     assert ptok[0].node.id == 'root'
     schedule = p.topological_sort()
     assert len(schedule) == 1
 
-    p = pipeline.Pipeline(pipeline.create_modules([tok, alpino]))
+    p = pipeline.Pipeline(pipeline.create_components([tok, alpino]))
     ctok = p.graph.get_vertex('tok').children
     assert ctok[0].node.id == 'alpino'
     palp = p.graph.get_vertex('alpino').parents
@@ -40,36 +42,41 @@ def test_topological_sort():
     schedule = p.topological_sort()
     assert len(schedule) == 2
 
-    p = pipeline.Pipeline(pipeline.create_modules(modules))
-    assert p.nb_modules() == len(modules) 
+    p = pipeline.Pipeline(pipeline.create_components(components))
+    assert p.nb_components() == len(components) 
+
 
 def test_filter_graph_by_layers():
-    p = pipeline.Pipeline(pipeline.create_modules(modules))
-    p.filter_until(['srl'], [])
-    assert p.nb_modules() == 5
-    p = pipeline.Pipeline(pipeline.create_modules(modules), goal_layers=['srl'])
-    assert p.nb_modules() == 5
+    p = pipeline.Pipeline(pipeline.create_components(components))
+    p.keep_until(['srl'])
+    assert p.nb_components() == 5
+    p = pipeline.Pipeline(pipeline.create_components(components), goal_layers=['srl'])
+    assert p.nb_components() == 5
+
 
 def test_filter_input_layers():
-    p = pipeline.Pipeline(pipeline.create_modules(modules), in_layers=['entities','coreferences'])
-    assert p.nb_modules() == 3
-    assert 'opin' in p.graph.get_keys()
-    assert 'nerc' in p.graph.get_keys()
-    assert 'coref' in p.graph.get_keys()
+    p = pipeline.Pipeline(pipeline.create_components(components), in_layers=['entities', 'coreferences'])
+    assert p.nb_components() == 3
+    assert 'opin' in p.graph.keys()
+    assert 'nerc' in p.graph.keys()
+    assert 'coref' in p.graph.keys()
+
 
 def test_unconnected_vertices():
-    p = pipeline.Pipeline(pipeline.create_modules(unconnected_modules))
-    with pytest.raises(ValueError) as e:
-        p.topological_sort()
+    with pytest.raises(ValueError):
+        pipeline.Pipeline(pipeline.create_components(unconnected_components))
+
    
 def test_cycle():
-    p = pipeline.Pipeline(pipeline.create_modules(cyclic_modules))
-    with pytest.raises(ValueError) as e:
+    p = pipeline.Pipeline(pipeline.create_components(cyclic_components))
+    with pytest.raises(ValueError):
         p.topological_sort()
+
        
 def test_rescheduling():       
-    p = pipeline.Pipeline(pipeline.create_modules(modules))
+    p = pipeline.Pipeline(pipeline.create_components(components))
     schedule = p.topological_sort()
     assert schedule[1].node.id == 'alpino'
     rescheduled = pipeline.reschedule([schedule[0]], schedule[2:])
     assert len(rescheduled) == 0
+

@@ -12,8 +12,8 @@ finish() {
 trap finish EXIT
   
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
-modulesdir=$workdir/lib/python
-mod=$modulesdir/vua-srl-nl
+source $workdir/.newsreader
+mod=$VURM_LIB/python/vua-srl-nl
 INPUTFILE=$scratch/inputfile
 FEATUREVECTOR=$scratch/csvfile
 TIMBLOUTPUTFILE=$scratch/timblpredictions
