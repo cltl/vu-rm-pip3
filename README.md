@@ -35,7 +35,7 @@ The script `scripts/bin/naf2sem-grasp.sh` allows to extract RDF files from pipel
 
 ## Documentation
 
-The Reading Machine is documented on [Read the Docs](https://vu-rm-pip3/readthedocs.io).
+The Reading Machine is documented on [Read the Docs](https://vu-rm-pip3.readthedocs.io).
 
 ## Contact
 
