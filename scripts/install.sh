@@ -118,7 +118,7 @@ function install-srl {
 
 function install-dutch-nominal-events {
   echo "Installing Dutch nominal event labeller..."
-  $scriptdir/get-from-git.sh newsreader/vua-srl-dutch-nominal-events $v_vua_srl_dutch_nominal_events $pythondir
+  $scriptdir/get-from-git.sh sarnoult/vua-srl-dutch-nominal-events $v_vua_srl_dutch_nominal_events $pythondir
   echo "Finished installing Dutch nominal event labeller."
 }
 

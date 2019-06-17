@@ -38,7 +38,7 @@ Our version of the Dutch NewsReader pipeline uses the following components:
 * opinion mining: `opinion_miner_deluxePP <https://github.com/rubenIzquierdo/opinion_miner_deluxePP>`_
 * event coreference: `EventCoreference <https://github.com/cltl/EventCoreference>`_
 * nominal event detection: `vua-nominal-event-detection <https://github.com/cltl/OntoTagger>`_
-* nominal event srl labelling:  `vua-srl-dutch-nominal-events <https://github.com/newsreader/vua-srl-dutch-nominal-events>`_
+* nominal event srl labelling:  `vua-srl-dutch-nominal-events <https://github.com/sarnoult`_
 * FrameNet labelling: `vua-framenet-classifier <https://github.com/cltl/OntoTagger>`_
 
 Component versions
