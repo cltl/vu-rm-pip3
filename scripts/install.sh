@@ -29,7 +29,7 @@ fi
 # sets VURM_LIB to libdir for execution scripts
 envvars=$workdir/.newsreader
 echo "export VURM_LIB=$libdir" > $envvars
-echo "export ALPINO_HOME=\$VURM_LIB/resources/Alpino" >> $envvars
+# echo "export ALPINO_HOME=\$VURM_LIB/resources/Alpino" >> $envvars
 
 cfgdir=$workdir/cfg
 javadir=$libdir/java
@@ -59,8 +59,9 @@ function install-text2naf {
 
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
-  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/${v_alpino}.tar.gz $resourcesdir/Alpino
-  $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl $v_morphosyntactic_parser_nl $pythondir 
+  #$scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/${v_alpino}.tar.gz $resourcesdir/Alpino
+  $scriptdir/get-from-git.sh Filter-Bubble/morphosyntactic_parser_nl master $pythondir 
+  docker pull rugcompling/alpino:latest
   echo "Finished installing the Alpino wrapper."
 }
 
@@ -136,7 +137,7 @@ function install-opinmin {
 
 function install-evcoref {
   echo "Installing event coreference module..."
-  $scriptdir/install-eventcoreference.sh cltl/EventCoreference $v_eventcoreference $javadir $resourcesdir/naf2sem
+  $scriptdir/install-eventcoreference.sh Filter-Bubble/EventCoreference master $javadir $resourcesdir/naf2sem
   echo "Finished installing event coreference module."
 }
 
