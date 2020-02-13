@@ -12,7 +12,7 @@ while getopts ":cl:" opt; do
   case "$opt" in
     c)
       clean=1 ;;
-    l) 
+    l)
       libdir=$OPTARG ;;
     *)
       usage ;;
@@ -51,16 +51,22 @@ done
 # Loads component versions
 source $cfgdir/component_versions
 
-function install-text2naf {	
+function install-text2naf {
   echo "Installing text2naf module ..."
   $scriptdir/install-java-component.sh cltl/text2naf $v_text2naf $javadir
   echo "Finished installing text2naf."
 }
 
+function install_stanfordnlp {
+  echo "Installing the Stanfordnlp parser and wrapper ..."
+  $scriptdir/install-stanfordnlp.sh Filter-Bubble/stanfordnlp_wrapper $v_stanfordnlp $pythondir
+  echo "Finished installing the StanfordNLP wrapper."
+}
+
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
   #$scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/${v_alpino}.tar.gz $resourcesdir/Alpino
-  $scriptdir/get-from-git.sh Filter-Bubble/morphosyntactic_parser_nl master $pythondir 
+  $scriptdir/get-from-git.sh Filter-Bubble/morphosyntactic_parser_nl master $pythondir
   docker pull rugcompling/alpino:latest
   echo "Finished installing the Alpino wrapper."
 }
@@ -82,13 +88,13 @@ function install-ned {
   tar -xzvf wikipedia-db.tar.gz
   rm *tar.gz
   wget https://sourceforge.net/projects/dbpedia-spotlight/files/spotlight/dbpedia-spotlight-${v_dbpedia_spotlight}.jar
-  mvn install:install-file -Dfile=dbpedia-spotlight-${v_dbpedia_spotlight}.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true 
+  mvn install:install-file -Dfile=dbpedia-spotlight-${v_dbpedia_spotlight}.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
   $scriptdir/install-ned.sh ixa-ehu/ixa-pipe-ned $v_ixa_pipe_ned $javadir $utildir
   echo "Finished installing NED module."
 }
 
 function install-vua-resources {
-  echo "Installing vua resources..." 
+  echo "Installing vua resources..."
   $scriptdir/get-vua-resources.sh cltl/vua-resources $v_vua_resources $resourcesdir/vua-resources
   echo "Finished installing vua resources."
 }
@@ -101,7 +107,7 @@ function install-wsd {
 
 function install-heideltime {
   echo "Installing time normalization ..."
-  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper $v_vuheideltimewrapper $javadir $resourcesdir 
+  $scriptdir/install-vuheideltimewrapper.sh cltl/vuheideltimewrapper $v_vuheideltimewrapper $javadir $resourcesdir
   echo "Finished installing time normalization."
 }
 
@@ -143,6 +149,7 @@ function install-evcoref {
 
 install-text2naf
 install-mor
+install_stanfordnlp
 install-ixa-pipes
 install-ned
 install-vua-resources

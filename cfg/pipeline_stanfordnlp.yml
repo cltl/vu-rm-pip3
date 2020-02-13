@@ -1,0 +1,19 @@
+- name: text2naf
+  input:
+  output:
+  - raw
+  cmd: text2naf.sh
+- name: ixa-pipe-tok
+  input:
+  - raw
+  output:
+  - text
+  cmd: ixa-pipe-tok.sh
+- name: stanfordnlp
+  input:
+  - text
+  output:
+  - terms
+  - deps
+  cmd: stanfordnlp.sh
+
