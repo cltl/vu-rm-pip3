@@ -19,10 +19,9 @@ v_vua_srl_dutch_nominal_events=28b9cff
 v_multilingual_factuality=cbad484
 v_opinion_miner_deluxePP=3d99e85
 v_ontotagger=c3796c5
-v_eventcoreference=3d4b32c
+v_eventcoreference=f1de443
 
 # Other sources
-
-v_alpino=Alpino-x86_64-Linux-glibc-2.23-21768-sicstus
+v_alpino=Alpino-x86_64-Linux-glibc-2.23-git116-sicstus
 v_ixa_pipes=1.1.1
 v_dbpedia_spotlight=0.7.1
