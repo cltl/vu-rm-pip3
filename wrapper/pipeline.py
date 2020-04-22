@@ -1,6 +1,7 @@
 from wrapper import dag
 import yaml 
 import shlex
+import re
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -32,11 +33,21 @@ def build_pipeline(components):
     return graph
 
 
+def is_alpino_text(line):
+    alpino1 = r"^\[.*\]"
+    alpino2 = r"^Q#[0-9].*"
+    return re.search(alpino1, line) or re.search(alpino2, line)
+
+
+def has_error_keyword(line):
+    return 'Exception' in line or 'Error' in line or 'error' in line or ' fault' in line
+
+
 def find_error(stderr_iterator):
     found_error = False
     for line in stderr_iterator:
         line = line.decode().strip()
-        if 'Exception' in line or 'Error' in line or 'error' in line or ' fault' in line:
+        if has_error_keyword(line) and not is_alpino_text(line):
             logger.error(line)
             found_error = True
         else:
