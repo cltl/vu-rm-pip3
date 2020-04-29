@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:3.6-slim-stretch
 
 WORKDIR /vurm
 RUN mkdir -p /usr/share/man/man1mkdir -p /usr/share/man/man1 \
