@@ -9,7 +9,7 @@
 # GitHub commit numbers
 
 v_text2naf=fa4178d
-v_morphosyntactic_parser_nl=85b7603
+v_morphosyntactic_parser_nl=master
 v_ixa_pipe_ned=062a983
 v_vua_resources=ef75f30
 v_svm_wsd=8bb5319
@@ -20,6 +20,8 @@ v_multilingual_factuality=cbad484
 v_opinion_miner_deluxePP=3d99e85
 v_ontotagger=c3796c5
 v_eventcoreference=3d4b32c
+v_stanfordnlp=master
+v_e2edutch=master
 
 # Other sources
 

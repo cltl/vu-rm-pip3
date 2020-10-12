@@ -71,6 +71,12 @@ function install-mor {
   echo "Finished installing the Alpino wrapper."
 }
 
+function install_e2edutch {
+  echo "Installing the e2e coreference finder ..."
+  $scriptdir/install-e2edutch.sh Filter-Bubble/e2e-Dutch $v_e2edutch $pythondir
+  echo "Finished installing the e2e coreference finder."
+}
+
 function install-ixa-pipes {
   echo "Installing the ixa-nerc models ..."
   $scriptdir/get-ixa-pipes.sh $v_ixa_pipes $javadir $resourcesdir
@@ -147,19 +153,20 @@ function install-evcoref {
   echo "Finished installing event coreference module."
 }
 
-install-text2naf
-install-mor
-install_stanfordnlp
-install-ixa-pipes
-install-ned
-install-vua-resources
-install-wsd
-install-heideltime
-install-onto
-install-srl
-install-dutch-nominal-events
-install-multi-factuality
-install-opinmin
-install-evcoref
+# install-text2naf
+# install-mor
+# install_stanfordnlp
+install_e2edutch
+# install-ixa-pipes
+# install-ned
+# install-vua-resources
+# install-wsd
+# install-heideltime
+# install-onto
+# install-srl
+# install-dutch-nominal-events
+# install-multi-factuality
+# install-opinmin
+# install-evcoref
 
 echo "Finished."
