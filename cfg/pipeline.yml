@@ -4,44 +4,50 @@
   - raw
   cmd: text2naf.sh
 - name: ixa-pipe-tok
-  input: 
+  input:
   - raw
-  output: 
+  output:
   - text
   cmd: ixa-pipe-tok.sh
 - name: vua-alpino
   input:
   - text
-  output: 
+  output:
   - terms
   - deps
   - constituents
   cmd: vua-alpino.sh
+- name: e2e
+  input:
+  - terms
+  output:
+  - coreferences
+  cmd: e2edutch.sh
 - name: ixa-pipe-nerc
   input:
   - text
   - terms
-  output: 
+  output:
   - entities
   cmd: ixa-pipe-nerc.sh
 - name: ixa-pipe-ned
   input:
   - entities
-  output: 
+  output:
   - entities
   cmd: ixa-pipe-ned.sh
 - name: vuheideltimewrapper
   input:
   - text
   - terms
-  output: 
+  output:
   - timex
   cmd: vuheideltimewrapper.sh
 - name: vua-wsd
   input:
   - text
   - terms
-  output: 
+  output:
   - terms
   cmd: vua-wsd.sh
 - name: vua-srl
@@ -49,22 +55,22 @@
   - terms
   - constituents
   - deps
-  output: 
+  output:
   - srl
   cmd: vua-srl.sh
 - name: vua-ontotagging
   input:
   - terms
-  output: 
+  output:
   - terms
   cmd: vua-ontotagging.sh
-  after: 
+  after:
   - vua-wsd
 - name: vua-nominal-event-detection
   input:
   - srl
   - terms
-  output: 
+  output:
   - srl
   cmd: vua-nominal-event-detection.sh
 - name: vua-srl-dutch-nominal-events
@@ -72,25 +78,25 @@
   - terms
   - deps
   - srl
-  output: 
+  output:
   - srl
   cmd: vua-srl-dutch-nominal-events.sh
-  after: 
+  after:
   - vua-nominal-event-detection
 - name: vua-framenet-classifier
   input:
   - terms
-  output: 
+  output:
   - srl
   cmd: vua-framenet-classifier.sh
-  after: 
+  after:
   - vua-ontotagging
   - vua-srl
 - name: vua-eventcoreference
   input:
   - srl
   - terms
-  output: 
+  output:
   - coreferences
   cmd: vua-eventcoreference.sh
 - name: opinion-miner
@@ -100,7 +106,7 @@
   - constituents
   - deps
   - entities
-  output: 
+  output:
   - opinions
   cmd: opinion-miner.sh
 - name: multilingual-factuality
@@ -108,6 +114,6 @@
   - terms
   - opinions
   - coreferences
-  output: 
+  output:
   - factualities
   cmd: multilingual-factuality.sh
