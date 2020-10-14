@@ -153,20 +153,20 @@ function install-evcoref {
   echo "Finished installing event coreference module."
 }
 
-# install-text2naf
-# install-mor
-# install_stanfordnlp
+install-text2naf
+install-mor
+install_stanfordnlp
 install_e2edutch
-# install-ixa-pipes
-# install-ned
-# install-vua-resources
-# install-wsd
-# install-heideltime
-# install-onto
-# install-srl
-# install-dutch-nominal-events
-# install-multi-factuality
-# install-opinmin
-# install-evcoref
+install-ixa-pipes
+install-ned
+install-vua-resources
+install-wsd
+install-heideltime
+install-onto
+install-srl
+install-dutch-nominal-events
+install-multi-factuality
+install-opinmin
+install-evcoref
 
 echo "Finished."

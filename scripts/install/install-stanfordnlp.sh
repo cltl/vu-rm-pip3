@@ -20,5 +20,4 @@ module=$(basename ${github_sfx})
 $scriptdir/get-from-git.sh $github_sfx $commit_nb $targetdir
 cd $targetdir/$module
 pip install -r requirements.txt
-python -c 'import stanfordnlp; stanfordnlp.download("nl", force=True)'
-# python -c 'import stanfordnlp; stanfordnlp.download("nl", force=True)'
+python -c 'import stanza; stanza.download("nl")'
