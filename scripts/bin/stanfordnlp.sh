@@ -14,4 +14,4 @@ source $workdir/.newsreader
 modulesdir=$VURM_LIB/python
 cd $modulesdir/stanfordnlp_wrapper
 
-python -m stanfordnlp_wrapper
+python -m stanza_wrapper
