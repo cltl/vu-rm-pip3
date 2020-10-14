@@ -1,5 +1,5 @@
 from wrapper import dag
-import yaml 
+import yaml
 import shlex
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -36,7 +36,7 @@ def find_error(stderr_iterator):
     found_error = False
     for line in stderr_iterator:
         line = line.decode().strip()
-        if 'Exception' in line or 'Error' in line or 'error' in line or ' fault' in line:
+        if 'Exception' in line or 'Error' in line or ' error' in line or ' fault' in line:
             logger.error(line)
             found_error = True
         else:
@@ -45,15 +45,15 @@ def find_error(stderr_iterator):
 
 
 def test_silent_failure(out):
-    out.seek(0, os.SEEK_END) 
-    if out.tell(): 
-        out.seek(0) 
+    out.seek(0, os.SEEK_END)
+    if out.tell():
+        out.seek(0)
         return False
     else:
-        return True 
+        return True
 
 
-def reschedule(completed, remaining): 
+def reschedule(completed, remaining):
     """
     determines which components in 'remaining' can be run based on the
     'completed' components
@@ -73,7 +73,7 @@ def reschedule(completed, remaining):
             visited.append(m.node.id)
             available_layers.update(m.node.out)
             to_run.append(m)
-    return to_run    
+    return to_run
 
 
 def run(scheduled, input_file, bindir):
@@ -91,7 +91,7 @@ def run(scheduled, input_file, bindir):
         not_run.remove(m)
 
         out = tempfile.TemporaryFile()
-        infile.seek(0) 
+        infile.seek(0)
         margs = shlex.split(m.node.cmd)
         margs[0] = bindir + margs[0]
         p = Popen(margs, stdin=infile, stdout=out, stderr=PIPE)
@@ -105,13 +105,13 @@ def run(scheduled, input_file, bindir):
             logger.info('pipeline can continue running with these components: {}'.format([m.node.id for m in components]))
         else:
             completed.append(m)
-            infile.close()   
+            infile.close()
             infile = out
-    infile.seek(0) 
+    infile.seek(0)
     print(infile.read().decode(), end="")
     infile.close()
     return update_status(scheduled, completed, failed, not_run)
-    
+
 
 def update_status(scheduled, completed, failed, not_run):
     status = {}
@@ -263,7 +263,7 @@ class Pipeline:
         """ensures that all required edges are present based on component definitions"""
         orphans = []
         for v in self.graph.vertices():
-            if not v.node.satisfies_dependencies([p.node for p in v.parents]): 
+            if not v.node.satisfies_dependencies([p.node for p in v.parents]):
                 orphans.append(v.node.id)
         if orphans:
             raise ValueError("Some config dependencies are missing from the pipeline for the following components: {}\nRefusing to build pipeline.".format(orphans))
@@ -278,5 +278,3 @@ class Pipeline:
         except ValueError as e:
             logger.error(e)
             logger.error("Pipeline cannot be executed. Exiting now.")
-
-
