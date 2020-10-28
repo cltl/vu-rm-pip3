@@ -1,0 +1,24 @@
+- name: text2naf
+  input:
+  output:
+  - raw
+  cmd: text2naf.sh
+- name: ixa-pipe-tok
+  input:
+  - raw
+  output:
+  - text
+  cmd: ixa-pipe-tok.sh
+- name: stanza
+  input:
+  - text
+  output:
+  - terms
+  - deps
+  cmd: stanza.sh
+- name: e2e
+  input:
+  - terms
+  output:
+  - coreferences
+  cmd: e2edutch.sh

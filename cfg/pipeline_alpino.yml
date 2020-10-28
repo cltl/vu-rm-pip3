@@ -1,0 +1,20 @@
+- name: text2naf
+  input:
+  output:
+  - raw
+  cmd: text2naf.sh
+- name: ixa-pipe-tok
+  input:
+  - raw
+  output:
+  - text
+  cmd: ixa-pipe-tok.sh
+- name: vua-alpino
+  input:
+  - text
+  output:
+  - terms
+  - deps
+  - constituents
+  cmd: vua-alpino.sh
+

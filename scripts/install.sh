@@ -57,10 +57,10 @@ function install-text2naf {
   echo "Finished installing text2naf."
 }
 
-function install_stanfordnlp {
-  echo "Installing the Stanfordnlp parser and wrapper ..."
-  $scriptdir/install-stanfordnlp.sh Filter-Bubble/stanfordnlp_wrapper $v_stanfordnlp $pythondir
-  echo "Finished installing the StanfordNLP wrapper."
+function install_stanza {
+  echo "Installing the Stanza parser and wrapper ..."
+  $scriptdir/install-stanza.sh Filter-Bubble/stanza_wrapper $v_stanza $pythondir
+  echo "Finished installing the Stanza wrapper."
 }
 
 function install-mor {
@@ -155,7 +155,7 @@ function install-evcoref {
 
 install-text2naf
 install-mor
-install_stanfordnlp
+install_stanza
 install_e2edutch
 install-ixa-pipes
 install-ned

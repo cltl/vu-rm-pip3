@@ -20,8 +20,8 @@ v_multilingual_factuality=cbad484
 v_opinion_miner_deluxePP=3d99e85
 v_ontotagger=c3796c5
 v_eventcoreference=3d4b32c
-v_stanfordnlp=stanza
-v_e2edutch=master
+v_stanza=v0.1.0
+v_e2edutch=v0.1.0
 
 # Other sources
 

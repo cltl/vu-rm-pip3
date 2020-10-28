@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# component: stanfordnlp
+# component: stanza
 #----------------------------------------------------
 
 usage() {
@@ -12,6 +12,6 @@ usage() {
 workdir=$(cd $(dirname "${BASH_SOURCE[0]}") && cd ../.. && pwd)
 source $workdir/.newsreader
 modulesdir=$VURM_LIB/python
-cd $modulesdir/stanfordnlp_wrapper
+cd $modulesdir/stanza_wrapper
 
 python -m stanza_wrapper

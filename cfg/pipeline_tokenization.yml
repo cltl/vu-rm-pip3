@@ -9,11 +9,4 @@
   output:
   - text
   cmd: ixa-pipe-tok.sh
-- name: stanfordnlp
-  input:
-  - text
-  output:
-  - terms
-  - deps
-  cmd: stanfordnlp.sh
 
