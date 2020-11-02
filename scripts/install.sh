@@ -57,7 +57,7 @@ function install-text2naf {
   echo "Finished installing text2naf."
 }
 
-function install_stanza {
+function install-stanza {
   echo "Installing the Stanza parser and wrapper ..."
   $scriptdir/install-stanza.sh Filter-Bubble/stanza_wrapper $v_stanza $pythondir
   echo "Finished installing the Stanza wrapper."
@@ -71,7 +71,7 @@ function install-mor {
   echo "Finished installing the Alpino wrapper."
 }
 
-function install_e2edutch {
+function install-e2edutch {
   echo "Installing the e2e coreference finder ..."
   $scriptdir/install-e2edutch.sh Filter-Bubble/e2e-Dutch $v_e2edutch $pythondir
   echo "Finished installing the e2e coreference finder."
@@ -155,8 +155,8 @@ function install-evcoref {
 
 install-text2naf
 install-mor
-install_stanza
-install_e2edutch
+install-stanza
+install-e2edutch
 install-ixa-pipes
 install-ned
 install-vua-resources
