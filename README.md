@@ -1,9 +1,13 @@
-# Welcome to the VU Reading Machine PIPeline with NAF3!
+The VU Reading Machine provides an up-to-date NewsReader pipeline for Dutch, for use on Linux or with Docker. 
 
-The VU Reading Machine processes Dutch texts and generates high-level semantic interpretations: annotated concepts, entities (people, organisations, places), events and roles, time expressions and opinions. The interpretations are interesting for humanities researchers and social scientists that want to investigate the content of large text collections.
+NewsReader pipelines processe Dutch texts and generates high-level semantic interpretations: annotated concepts, entities (people, organisations, places), events and roles, time expressions and opinions. The interpretations are interesting for humanities researchers and social scientists that want to investigate the content of large text collections.
 Documents are annotated with the Natural Language Annotation Format [NAF](https://github.com/newsreader/NAF), version 3.
 
-The VU Reading Machine wraps an up-to-date Dutch NewsReader pipeline in a flexible, language-independent python 3 scheduler. 
+The VU Reading Machine was developed with the intention to provide a robust and flexible pipeline. A simple scheduler allows to specify which components to run in a flexible manner, and attention has been brought to identify and report possible component failures as they occur to prevent silent failures. 
+
+## Documentation
+
+You will find detailed installation and usage instructions in the [documentation](https://vu-rm-pip3.readthedocs.io/en/latest/).
 
 ## Quick start
 ### Linux
@@ -32,10 +36,6 @@ To run the image on an input file `./example/test.txt`:
 ### RDF
 
 The script `scripts/bin/naf2sem-grasp.sh` allows to extract RDF files from pipeline output NAF files. 
-
-## Documentation
-
-The Reading Machine is documented on [Read the Docs](https://vu-rm-pip3.readthedocs.io).
 
 ## Contact
 

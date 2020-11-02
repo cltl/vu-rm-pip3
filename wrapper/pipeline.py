@@ -1,6 +1,7 @@
 from wrapper import dag
 import yaml
 import shlex
+import re
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -32,11 +33,21 @@ def build_pipeline(components):
     return graph
 
 
+def is_alpino_text(line):
+    alpino1 = r"^\[.*\]"
+    alpino2 = r"^Q#[0-9].*"
+    return re.search(alpino1, line) or re.search(alpino2, line)
+
+
+def has_error_keyword(line):
+    return 'Exception' in line or 'Error' in line or ' error' in line or ' fault' in line
+
+
 def find_error(stderr_iterator):
     found_error = False
     for line in stderr_iterator:
         line = line.decode().strip()
-        if 'Exception' in line or 'Error' in line or ' error' in line or ' fault' in line:
+        if has_error_keyword(line) and not is_alpino_text(line):
             logger.error(line)
             found_error = True
         else:
@@ -102,7 +113,8 @@ def run(scheduled, input_file, bindir):
             logger.error("component " + m.node.id + " failed")
             logger.info('\n-- Rebuilding pipeline with remaining components...')
             components = reschedule(completed, components)
-            logger.info('pipeline can continue running with these components: {}'.format([m.node.id for m in components]))
+            logger.info('pipeline can continue running with these components: {}'.format(
+                [m.node.id for m in components]))
         else:
             completed.append(m)
             infile.close()
@@ -156,6 +168,7 @@ def create_pipeline(yml_cfg, in_layers=[], goal_layers=[], excepted_components=[
 
 class Component:
     """ Defines a pipeline component. """
+
     def __init__(self, mdict):
         if 'input' in mdict and mdict['input']:
             self.ins = mdict['input']
@@ -196,7 +209,7 @@ class Component:
     def satisfies_dependencies(self, parents):
         """tests if config dependencies are all present in pipeline"""
         if self.after:
-            available = [ p.id for p in parents ]
+            available = [p.id for p in parents]
             return all(x in available for x in self.after)
         else:
             available = set()
@@ -247,7 +260,8 @@ class Pipeline:
                 path_to.update(self.graph.on_path_to(g))
 
             # prunes out components that do not depend on, or lead to the production of 'layers'
-            not_accounted_for = [x for x in self.graph.keys() if x not in path_from and x not in path_to]
+            not_accounted_for = [x for x in self.graph.keys(
+            ) if x not in path_from and x not in path_to]
             self.graph.prune(not_accounted_for)
 
             # detaches upstream components (that produce the layers required for running the pipeline from 'layers')
@@ -266,7 +280,8 @@ class Pipeline:
             if not v.node.satisfies_dependencies([p.node for p in v.parents]):
                 orphans.append(v.node.id)
         if orphans:
-            raise ValueError("Some config dependencies are missing from the pipeline for the following components: {}\nRefusing to build pipeline.".format(orphans))
+            raise ValueError(
+                "Some config dependencies are missing from the pipeline for the following components: {}\nRefusing to build pipeline.".format(orphans))
         else:
             logger.info("Pipeline is complete.")
 
