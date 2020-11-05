@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# Checks if connection to port 2060 (spotlight port for Dutch) 
+# Checks if connection to port 2060 (spotlight port for Dutch)
 # is open, and launches spotlight server otherwise.
 #-----------------------------------------------------
 spotlightdir=$1
-
+echo $spotlightdir
 if ! lsof -Pi :2060 >/dev/null ; then
   >&2 echo "launching dbpedia spotlight server"
-  java -jar -Xmx2000m $spotlightdir/dbpedia-spotlight-0.7.1.jar $spotlightdir/nl http://localhost:2060/rest &>/dev/null &
-  
+  java -jar -Xmx2000m $spotlightdir/dbpedia-spotlight-0.7.1.jar $spotlightdir/nl http://localhost:2060/rest &> spotlight.log &
+
   max=6
   i=0
   while ! lsof -Pi :2060 >/dev/null && [ $i -le $max ]; do
