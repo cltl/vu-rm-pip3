@@ -35,8 +35,6 @@
   output:
   - entities
   cmd: ixa-pipe-ned.sh
-  after:
-  - vuheideltimewrapper
 - name: vuheideltimewrapper
   input:
   - text

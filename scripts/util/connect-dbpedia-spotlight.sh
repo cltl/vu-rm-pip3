@@ -5,7 +5,6 @@
 #-----------------------------------------------------
 spotlightdir=$1
 port=$2
-echo $spotlightdir
 if ! curl -I http://localhost:$port/rest/ > /dev/null 2>&1; then
   >&2 echo "launching dbpedia spotlight server"
   java -jar -Xmx2000m $spotlightdir/dbpedia-spotlight-0.7.1.jar $spotlightdir/nl http://localhost:$port/rest &> spotlight.log &
