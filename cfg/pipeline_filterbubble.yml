@@ -49,15 +49,13 @@
   output:
   - terms
   cmd: vua-wsd.sh
-# To do: replace by stroll SRL
-# - name: vua-srl
-#   input:
-#   - terms
-#   - constituents
-#   - deps
-#   output:
-#   - srl
-#   cmd: vua-srl.sh
+- name: stroll
+  input:
+  - terms
+  - deps
+  output:
+  - srl
+  cmd: stroll.sh
 - name: vua-ontotagging
   input:
   - terms
@@ -66,39 +64,39 @@
   cmd: vua-ontotagging.sh
   after:
   - vua-wsd
-# - name: vua-nominal-event-detection
-#   input:
-#   - srl
-#   - terms
-#   output:
-#   - srl
-#   cmd: vua-nominal-event-detection.sh
-# - name: vua-srl-dutch-nominal-events
-#   input:
-#   - terms
-#   - deps
-#   - srl
-#   output:
-#   - srl
-#   cmd: vua-srl-dutch-nominal-events.sh
-#   after:
-#   - vua-nominal-event-detection
-# - name: vua-framenet-classifier
-#   input:
-#   - terms
-#   output:
-#   - srl
-#   cmd: vua-framenet-classifier.sh
-#   after:
-#   - vua-ontotagging
-#   - vua-srl
-# - name: vua-eventcoreference
-#   input:
-#   - srl
-#   - terms
-#   output:
-#   - coreferences
-#   cmd: vua-eventcoreference.sh
+- name: vua-nominal-event-detection
+  input:
+  - srl
+  - terms
+  output:
+  - srl
+  cmd: vua-nominal-event-detection.sh
+- name: vua-srl-dutch-nominal-events
+  input:
+  - terms
+  - deps
+  - srl
+  output:
+  - srl
+  cmd: vua-srl-dutch-nominal-events.sh
+  after:
+  - vua-nominal-event-detection
+- name: vua-framenet-classifier
+  input:
+  - terms
+  output:
+  - srl
+  cmd: vua-framenet-classifier.sh
+  after:
+  - vua-ontotagging
+  - stroll
+- name: vua-eventcoreference
+  input:
+  - srl
+  - terms
+  output:
+  - coreferences
+  cmd: vua-eventcoreference.sh
 # - name: opinion-miner
 #   input:
 #   - text

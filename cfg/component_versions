@@ -21,7 +21,8 @@ v_opinion_miner_deluxePP=3d99e85
 v_ontotagger=c3796c5
 v_eventcoreference=f1de443
 v_stanza=v0.1.0
-v_e2edutch=v0.1.0
+v_e2edutch=v0.2.0
+v_stroll=master
 
 # Other sources
 v_alpino=Alpino-x86_64-Linux-glibc-2.23-git167-sicstus

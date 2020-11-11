@@ -129,6 +129,12 @@ function install-srl {
   echo "Finished installing srl module"
 }
 
+function install-stroll {
+  echo "Installing stroll SRL..."
+  $scriptdir/install-stroll.sh Filter-Bubble/stroll $v_stroll $pythondir
+  echo "Finished installing stroll srl module"
+}
+
 function install-dutch-nominal-events {
   echo "Installing Dutch nominal event labeller..."
   $scriptdir/get-from-git.sh sarnoult/vua-srl-dutch-nominal-events $v_vua_srl_dutch_nominal_events $pythondir
@@ -164,6 +170,7 @@ install-wsd
 install-heideltime
 install-onto
 install-srl
+install-stroll
 install-dutch-nominal-events
 install-multi-factuality
 install-opinmin
