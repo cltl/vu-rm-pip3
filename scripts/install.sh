@@ -60,7 +60,7 @@ function install-text2naf {
 function install-mor {
   echo "Installing the Alpino parser and wrapper ..."
   # $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/${v_alpino}.tar.gz $resourcesdir/Alpino
-  $scriptdir/install-alpino.sh http://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.23-git335-sicstus.tar.gz $resourcesdir/Alpino
+  $scriptdir/install-alpino.sh https://www.let.rug.nl/vannoord/alp/Alpino/versions/binary/Alpino-x86_64-Linux-glibc-2.23-git388-sicstus.tar.gz $resourcesdir/Alpino
   $scriptdir/get-from-git.sh cltl/morphosyntactic_parser_nl $v_morphosyntactic_parser_nl $pythondir 
   echo "Finished installing the Alpino wrapper."
 }
