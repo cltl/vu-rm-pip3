@@ -11,4 +11,4 @@ resourcesdir=$VURM_LIB/resources
 scriptsdir=${workdir}/scripts
 cd $workdir
 $scriptsdir/util/connect-dbpedia-spotlight.sh $resourcesdir/spotlight
-java -jar $modulesdir/ixa-pipe-ned-1.1.6.jar -p 2060 -i $resourcesdir/spotlight/wikipedia-db -n nlEn
+java -jar $modulesdir/ixa-pipe-ned-1.1.6.jar -p 2010 -i $resourcesdir/spotlight/wikipedia-db -n nlEn
