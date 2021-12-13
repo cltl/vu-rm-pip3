@@ -1,5 +1,5 @@
 KafNafParserPy==1.89
-lxml==4.6.3
+lxml==4.6.5
 PyYAML==5.4
 requests==2.21.0
 six==1.12.0
