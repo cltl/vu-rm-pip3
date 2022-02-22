@@ -21,4 +21,4 @@ cd $modulesdir/e2e-Dutch
 
 INPUTFILE=$scratch/inputfile.naf
 cat > $INPUTFILE
-python scripts/predict.py -f naf final $INPUTFILE
+python -m e2edutch.predict -f naf final $INPUTFILE
